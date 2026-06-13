@@ -1,5 +1,5 @@
 /*!
- * Liquid Glass Kit v1.2 — 液態玻璃 UI 工具包(零依賴)
+ * Liquid Glass Kit v0.1 — 液態玻璃 UI 工具包(零依賴)
  * 透明玻璃 / 液態折射 / 發光背景 / 拖曳 / 儀表板元件(stat·meter·gauge·chart·toast)
  *
  * 折射原理:以 Snell 定律 (n=1.5) 對「凸超橢圓 (convex squircle)」斷面做
@@ -800,7 +800,7 @@
    * ------------------------------------------------------------------ */
   var inited = false;
   /* ------------------------------------------------------------------ *
-   * 13.5 儀表板元件 (v1.2) — .lg-stat / .lg-meter / .lg-gauge / .lg-chart
+   * 13.5 儀表板元件 (v0.1) — .lg-stat / .lg-meter / .lg-gauge / .lg-chart
    *      原則:玻璃只做容器,數字、sparkline、圖表本身是實心內容層
    *      (內容套玻璃會看不見,這是技術上必要的邊界)。
    *      數值一律「屬性驅動」:改 data-lg-value / data-lg-spark /
@@ -1158,7 +1158,7 @@
   }
 
   /* ------------------------------------------------------------------ *
-   * 13.6 Toast (v1.2) — LiquidGlass.toast({ title, message, icon, duration })
+   * 13.6 Toast (v0.1) — LiquidGlass.toast({ title, message, icon, duration })
    *      入場複用對話框的液滴落地物理(lg-droplet),自動消退,
    *      懸停暫停;折射實例在移除時 destroy,不洩漏濾鏡節點。
    * ------------------------------------------------------------------ */
@@ -1254,7 +1254,7 @@
   function refresh() { instances.forEach(function (g) { g.update(); }); }
 
   global.LiquidGlass = {
-    version: '1.2.0',
+    version: '0.1.0',
     supported: FULL,
     reducedMotion: REDUCED_MOTION,
     config: config,

@@ -10,7 +10,7 @@
 <style>
 /* ============ Liquid Glass Kit(內嵌)============ */
 /*!
- * Liquid Glass Kit v1.2 — 樣式層
+ * Liquid Glass Kit v0.1 — 樣式層
  * 設計 tokens / 玻璃材質 / 元件 / 降級 / 無障礙
  *
  * 兩種渲染模式(由 liquid-glass.js 在 <html> 上標記):
@@ -640,7 +640,7 @@ html.lg-fallback .lg-switch__track,
 }
 
 /* ==================================================================== *
- * 15. 儀表板元件 (v1.2)
+ * 15. 儀表板元件 (v0.1)
  *     .lg-stat / .lg-meter / .lg-gauge / .lg-chart / .lg-toast
  *     原則:玻璃只做容器;數字、sparkline、圖表是實心內容層
  * ==================================================================== */
@@ -1275,7 +1275,7 @@ body[data-view="ai"] #view-ai { display: block; }
 </style>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <style>
-/* ============ 首頁 v3:液態展廳版面 ============ */
+/* ============ 首頁:液態展廳版面 ============ */
 
 /* 滿版突圍與基礎 */
 #view-home { overflow-x: clip; }
@@ -1510,7 +1510,7 @@ body[data-view="home"] .home-dock { display: inline-flex; }
 .ctrl-slider output { font: 600 12px/1 ui-monospace, monospace; color: var(--lg-accent); text-align: right; }
 body:not([data-view="home"]) .ctrl-panel { display: none; }
 
-/* 畫作對話框 v3 */
+/* 畫作對話框 */
 .lg-modal__panel--wide { width: min(880px, 100%); padding: 14px; }
 .pm-grid { display: grid; grid-template-columns: 1.15fr 1fr; gap: 18px; }
 .pm-viewport {
@@ -1906,7 +1906,7 @@ window.ART = {
         <button class="lg-chip" data-goto="components"><svg class="ph" width="15" height="15"><use href="#ph-sparkle"/></svg>Play with the components</button>
         <button class="lg-chip" data-goto="ai"><svg class="ph" width="15" height="15"><use href="#ph-book-open"/></svg>Read the AI guide</button>
       </div>
-      <p class="home-footer__fine">All paintings are in the public domain · Built with Liquid Glass Kit v1.1</p>
+      <p class="home-footer__fine">All paintings are in the public domain · Built with Liquid Glass Kit v0.1</p>
     </div>
   </footer>
 
@@ -2511,7 +2511,7 @@ window.ART = {
   </div>
 </aside>
 
-<!-- 畫作細節對話框(v3:前後導覽、計數、滾輪/雙擊縮放、收藏) -->
+<!-- 畫作細節對話框(前後導覽、計數、滾輪/雙擊縮放、收藏) -->
 <div class="lg-modal" id="paintingModal" aria-hidden="true">
   <div class="lg-modal__overlay" data-lg-close></div>
   <div class="lg-modal__panel lg lg-modal__panel--wide" data-lg role="dialog" aria-modal="true" aria-labelledby="pmTitle">
@@ -2603,7 +2603,7 @@ window.ART = {
 <script>
 /* ============ Liquid Glass Kit(內嵌)============ */
 /*!
- * Liquid Glass Kit v1.2 — 液態玻璃 UI 工具包(零依賴)
+ * Liquid Glass Kit v0.1 — 液態玻璃 UI 工具包(零依賴)
  * 透明玻璃 / 液態折射 / 發光背景 / 拖曳 / 儀表板元件(stat·meter·gauge·chart·toast)
  *
  * 折射原理:以 Snell 定律 (n=1.5) 對「凸超橢圓 (convex squircle)」斷面做
@@ -3404,7 +3404,7 @@ window.ART = {
    * ------------------------------------------------------------------ */
   var inited = false;
   /* ------------------------------------------------------------------ *
-   * 13.5 儀表板元件 (v1.2) — .lg-stat / .lg-meter / .lg-gauge / .lg-chart
+   * 13.5 儀表板元件 (v0.1) — .lg-stat / .lg-meter / .lg-gauge / .lg-chart
    *      原則:玻璃只做容器,數字、sparkline、圖表本身是實心內容層
    *      (內容套玻璃會看不見,這是技術上必要的邊界)。
    *      數值一律「屬性驅動」:改 data-lg-value / data-lg-spark /
@@ -3762,7 +3762,7 @@ window.ART = {
   }
 
   /* ------------------------------------------------------------------ *
-   * 13.6 Toast (v1.2) — LiquidGlass.toast({ title, message, icon, duration })
+   * 13.6 Toast (v0.1) — LiquidGlass.toast({ title, message, icon, duration })
    *      入場複用對話框的液滴落地物理(lg-droplet),自動消退,
    *      懸停暫停;折射實例在移除時 destroy,不洩漏濾鏡節點。
    * ------------------------------------------------------------------ */
@@ -3858,7 +3858,7 @@ window.ART = {
   function refresh() { instances.forEach(function (g) { g.update(); }); }
 
   global.LiquidGlass = {
-    version: '1.2.0',
+    version: '0.1.0',
     supported: FULL,
     reducedMotion: REDUCED_MOTION,
     config: config,
@@ -4089,7 +4089,7 @@ document.querySelectorAll('#profileTabs [data-profile]').forEach(function (tab) 
 });
 </script>
 <script>
-/* ============ 首頁 v3:液態展廳互動模組 ============ */
+/* ============ 首頁:液態展廳互動模組 ============ */
 (function () {
   'use strict';
 
@@ -4319,7 +4319,7 @@ document.querySelectorAll('#profileTabs [data-profile]').forEach(function (tab) 
     requestAnimationFrame(function () { document.querySelector('#gallery').scrollIntoView({ behavior: 'smooth' }); });
   });
 
-  /* ---------- 畫作對話框 v3:前後導覽 / 朝游標縮放 / 收藏 ---------- */
+  /* ---------- 畫作對話框:前後導覽 / 朝游標縮放 / 收藏 ---------- */
   var modal = document.getElementById('paintingModal');
   var pmImg = document.getElementById('pmImg');
   var pmViewport = document.getElementById('pmViewport');

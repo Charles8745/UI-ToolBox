@@ -36,7 +36,7 @@ python3 build_site.py
 .
 ├── CLAUDE.md          ← 本檔
 ├── site.src.html      ← 網站唯一真實來源(編輯這個)
-├── liquid-glass.js    ← 工具包引擎 v1.2.0(編輯這個)
+├── liquid-glass.js    ← 工具包引擎 v0.1(編輯這個)
 ├── liquid-glass.css   ← 工具包樣式(編輯這個)
 ├── build_site.py      ← 建置腳本:三者 + assets → index.html
 ├── index.html         ← build 產物(可隨時重生;直接用瀏覽器開即為展示站)
@@ -50,7 +50,7 @@ python3 build_site.py
 
 ## 已知狀態與待人工確認
 
-- 工具包為 **v1.2.0**,含 18 件元件:按鈕、圖示按鈕、卡片、開關、滑桿、分頁、搜尋框、標籤與徽章、工具提示、對話框、導航列、Dock、拖曳,以及儀表板五件(統計卡 `.lg-stat`、進度條 `.lg-meter`、環形儀表 `.lg-gauge`、圖表 `.lg-chart`、通知 `LiquidGlass.toast`)。
+- 工具包為 **v0.1**,含 18 件元件:按鈕、圖示按鈕、卡片、開關、滑桿、分頁、搜尋框、標籤與徽章、工具提示、對話框、導航列、Dock、拖曳,以及儀表板五件(統計卡 `.lg-stat`、進度條 `.lg-meter`、環形儀表 `.lg-gauge`、圖表 `.lg-chart`、通知 `LiquidGlass.toast`)。
 - 儀表板的「即時數據」開關以屬性驅動模擬資料跳動;`prefers-reduced-motion` 時亮燈但不自動跳動。
 - 折射 / 動畫 / 顯影只能在 Chromium 系瀏覽器實看,程式環境無法渲染驗證。改動視覺後請在瀏覽器確認。
 
