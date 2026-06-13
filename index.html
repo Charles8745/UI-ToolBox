@@ -1680,8 +1680,9 @@ body.tour-on .home-dock { display: none !important; }
     var(--lg-tint);
 }
 .tile__stage--dash > * { width: 100%; }
-.tile__stage--dash.tile__stage--center { align-items: center; }
+.tile__stage--dash.tile__stage--center { align-items: center; justify-content: center; }
 .tile__stage--dash.tile__stage--center > * { width: auto; }
+.tile__stage--dash.tile__stage--center .lg-gauge { width: 132px; }  /* 環形儀表維持正方形,勿被上面的 width:auto 壓扁成橢圓 */
 
 /* ============ AI Guide:元件程式碼庫手風琴 ============ */
 .acc-list { display: grid; gap: 12px; }
