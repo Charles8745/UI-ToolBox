@@ -1,0 +1,2709 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" data-lg-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lumière — A Monet Exhibition · Liquid Glass Kit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500&family=Noto+Serif+TC:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* ============ Liquid Glass Kit(內嵌)============ */
+{{CSS}}
+</style>
+<style>
+/* ============ 網站版面 ============ */
+:root {
+  --background: 201 100% 13%;
+  --foreground: 0 0% 100%;
+  --muted-foreground: 240 4% 66%;
+  --border: 0 0% 18%;
+  --font-display: 'Instrument Serif', 'Noto Serif TC', 'Songti TC', serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'PingFang TC', 'Noto Sans TC', 'Microsoft JhengHei', sans-serif;
+}
+* { box-sizing: border-box; }
+html { height: 100%; }
+body {
+  margin: 0;
+  min-height: 100%;
+  background: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-family: var(--font-body);
+  font-weight: 400;
+}
+h1, h2, h3, .display { font-family: var(--font-display); font-weight: 400; }
+.muted { color: hsl(var(--muted-foreground)); }
+
+/* ---------- 背景層 ---------- */
+.bg-video {
+  position: fixed; inset: 0; z-index: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: none;
+}
+.bg-paint { position: fixed; inset: 0; z-index: 0; display: none; }
+.bg-paint .lg-glow, .bg-paint .lg-glow__image { position: absolute; inset: 0; }
+.bg-paint .dim {
+  position: absolute; inset: 0; z-index: 2;
+  background: linear-gradient(180deg, hsla(201, 80%, 8%, 0.52), hsla(201, 70%, 10%, 0.66));
+}
+body[data-view="home"]:not(.video-failed) .bg-video { display: block; }
+body[data-view="home"].video-failed .bg-paint--parasol { display: block; }
+body[data-view="components"] .bg-paint--bridge { display: block; }
+body[data-view="ai"] .bg-paint--sunflowers { display: block; }
+
+/* ---------- 頂部導航(照 prompt 版式)---------- */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+  transition: background 0.35s var(--lg-ease-out), backdrop-filter 0.35s;
+}
+.topbar__inner {
+  max-width: 1280px; margin: 0 auto;
+  padding: 22px 32px;
+  display: flex; align-items: center; justify-content: space-between; gap: 18px;
+  transition: padding 0.35s var(--lg-ease-out);
+}
+.topbar.is-scrolled {
+  background: hsla(201, 80%, 9%, 0.55);
+  -webkit-backdrop-filter: blur(18px) saturate(1.5);
+  backdrop-filter: blur(18px) saturate(1.5);
+  box-shadow: inset 0 -1px 0 hsla(0, 0%, 100%, 0.08);
+}
+.topbar.is-scrolled .topbar__inner { padding: 12px 32px; }
+.logo {
+  font-family: var(--font-display);
+  font-size: 30px; line-height: 1; letter-spacing: -0.02em;
+  color: hsl(var(--foreground));
+  cursor: pointer; background: none; border: 0; padding: 0;
+}
+.logo sup { font-size: 12px; }
+.topnav { display: flex; align-items: center; gap: 26px; }
+.topnav__link {
+  background: none; border: 0; padding: 4px 2px;
+  font: 400 14px/1 var(--font-body);
+  color: hsl(var(--muted-foreground));
+  cursor: pointer;
+  transition: color 0.25s;
+}
+.topnav__link:hover, .topnav__link.is-active { color: hsl(var(--foreground)); }
+.topbar .cta {
+  padding: 10px 24px;
+  font-size: 14px;
+  transition: transform 0.3s var(--lg-ease), box-shadow 0.3s var(--lg-ease-out);
+}
+.topbar .cta:hover { transform: scale(1.03); }
+.theme-btn {
+  background: none; border: 0; cursor: pointer;
+  color: hsl(var(--muted-foreground));
+  display: inline-flex; padding: 6px;
+  transition: color 0.25s;
+}
+.theme-btn:hover { color: hsl(var(--foreground)); }
+@media (max-width: 760px) {
+  .topbar__inner { padding: 16px 18px; }
+  .topbar.is-scrolled .topbar__inner { padding: 10px 18px; }
+  .logo { font-size: 24px; }
+  .topnav { gap: 16px; }
+  .topbar .cta { display: none; }
+}
+
+/* ---------- 分頁切換 ---------- */
+main { position: relative; z-index: 1; }
+.view { display: none; }
+body[data-view="home"] #view-home,
+body[data-view="components"] #view-components,
+body[data-view="ai"] #view-ai { display: block; }
+
+/* ---------- 進場動畫(照 prompt)---------- */
+@keyframes fade-rise {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-rise { animation: fade-rise 0.8s ease-out both; }
+.animate-fade-rise-delay { animation: fade-rise 0.8s ease-out 0.2s both; }
+.animate-fade-rise-delay-2 { animation: fade-rise 0.8s ease-out 0.4s both; }
+
+/* ---------- 首頁 Hero(照 prompt 版式)---------- */
+.hero-home {
+  position: relative;
+  min-height: 100svh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center;
+  padding: 150px 24px 120px;
+}
+.hero-home h1 {
+  margin: 0;
+  font-size: clamp(46px, 9vw, 96px);
+  line-height: 0.95;
+  letter-spacing: -2.46px;
+  max-width: 1280px;
+  color: hsl(var(--foreground));
+}
+.hero-home h1 em { font-style: normal; color: hsl(var(--muted-foreground)); }
+.hero-home .sub {
+  margin: 32px 0 0;
+  max-width: 640px;
+  font-size: clamp(15px, 1.8vw, 18px);
+  line-height: 1.85;
+  color: hsl(var(--muted-foreground));
+}
+.hero-home .cta-lg {
+  margin-top: 48px;
+  padding: 20px 56px;
+  font-size: 16px;
+  transition: transform 0.3s var(--lg-ease), box-shadow 0.3s var(--lg-ease-out);
+}
+.hero-home .cta-lg:hover { transform: scale(1.03); }
+@media (max-width: 640px) { .hero-home h1 { letter-spacing: -1.2px; } }
+
+/* ---------- 首頁內容區 ---------- */
+.home-section { max-width: 1160px; margin: 0 auto; padding: 90px 24px; scroll-margin-top: 80px; }
+.eyebrow {
+  display: inline-block;
+  font: 500 12px/1 var(--font-body);
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: hsl(var(--muted-foreground));
+  margin-bottom: 14px;
+}
+.home-section > h2, .view-head h2 {
+  margin: 0 0 12px;
+  font-size: clamp(32px, 4.4vw, 52px);
+  line-height: 1.1;
+  letter-spacing: -0.5px;
+  color: hsl(var(--foreground));
+}
+.home-section > .desc, .view-head .desc {
+  margin: 0 0 40px;
+  max-width: 38em;
+  line-height: 1.9;
+  font-size: 15px;
+  color: hsl(var(--muted-foreground));
+}
+
+/* 館藏卡片 */
+.art-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 22px; }
+.art-card { padding: 0; overflow: hidden; border-radius: var(--lg-radius-l); }
+.art-card img { display: block; width: 100%; aspect-ratio: 4 / 4.6; object-fit: cover; }
+.art-card__body { padding: 18px 20px 20px; }
+.art-card__body h3 { margin: 0 0 4px; font-size: 21px; letter-spacing: 0; }
+.art-card__body .meta { margin: 0 0 12px; font-size: 12.5px; color: var(--lg-text-dim); }
+.art-card__row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.art-card__row .lg-btn { margin-left: auto; }
+
+/* 關於印象派 */
+.about-wrap { display: grid; gap: 20px; }
+.about-panel { padding: 28px; border-radius: var(--lg-radius-l); min-height: 168px; }
+.about-panel h3 { margin: 0 0 10px; font-size: 22px; }
+.about-panel p { margin: 0; line-height: 1.95; font-size: 14.5px; color: var(--lg-text-dim); }
+.tab-panel { display: none; }
+.tab-panel.is-active { display: block; }
+
+.home-foot {
+  max-width: 1160px; margin: 0 auto;
+  padding: 0 24px 70px;
+  font-size: 12.5px; line-height: 1.8;
+  color: hsl(var(--muted-foreground));
+}
+
+/* ---------- 元件 / AI 分頁共用 ---------- */
+.view-page { max-width: 1080px; margin: 0 auto; padding: 140px 24px 110px; }
+.view-head { margin-bottom: 48px; }
+.view-section { margin: 0 0 78px; }
+.view-section > h2 {
+  margin: 0 0 10px;
+  font-size: clamp(26px, 3.4vw, 38px);
+  letter-spacing: -0.4px;
+  color: hsl(var(--foreground));
+}
+.view-section > .desc { margin: 0 0 30px; max-width: 38em; line-height: 1.9; font-size: 14.5px; color: hsl(var(--muted-foreground)); }
+
+/* 元件示範卡 */
+.gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: 22px; }
+.demo { border-radius: var(--lg-radius-l); overflow: hidden; }
+.demo--wide { grid-column: 1 / -1; }
+.demo__head { padding: 20px 24px 0; display: flex; align-items: baseline; gap: 10px; }
+.demo__head h3 { margin: 0; font-size: 18px; font-family: var(--font-body); font-weight: 600; }
+.demo__head span { font-size: 12.5px; color: var(--lg-text-dim); }
+.demo__stage {
+  padding: 30px 24px;
+  display: flex; flex-wrap: wrap; gap: 16px;
+  align-items: center; justify-content: center;
+  min-height: 110px;
+}
+.demo__stage--tall { min-height: 230px; position: relative; }
+@media (max-width: 860px) { .gallery { grid-template-columns: 1fr; } }
+
+/* 程式碼區塊 */
+.code {
+  position: relative; margin: 0;
+  background: rgba(10, 16, 26, 0.72);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+}
+.code--round { border-radius: var(--lg-radius-l); box-shadow: inset 0 0 0 1px hsla(0, 0%, 100%, 0.1); }
+.code pre {
+  margin: 0; padding: 20px 24px;
+  overflow-x: auto;
+  font: 12.5px/1.75 ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  color: #dbe5f1;
+  tab-size: 2;
+}
+.code .copy {
+  position: absolute; top: 10px; right: 10px;
+  border: 0; display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 12px; border-radius: 9px;
+  background: rgba(255, 255, 255, 0.12); color: #dbe5f1;
+  font: 500 12px/1 var(--font-body);
+  cursor: pointer; transition: background 0.2s;
+}
+.code .copy:hover { background: rgba(255, 255, 255, 0.24); }
+
+/* 調參面板 */
+.playground { padding: 28px; border-radius: var(--lg-radius-l); }
+.playground .row { display: grid; grid-template-columns: 130px 1fr 56px; align-items: center; gap: 16px; margin-bottom: 18px; }
+.playground label { font: 600 14px/1.3 var(--font-body); color: var(--lg-text); }
+.playground label small { display: block; font-weight: 400; font-size: 11.5px; color: var(--lg-text-dim); margin-top: 3px; }
+.playground output { font: 600 13px/1 ui-monospace, monospace; text-align: right; color: var(--lg-accent); }
+.playground .profiles { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-top: 6px; color: var(--lg-text); }
+@media (max-width: 640px) { .playground .row { grid-template-columns: 1fr 56px; } .playground .row label { grid-column: 1 / -1; } }
+
+/* 步驟卡 */
+.steps { display: grid; gap: 18px; }
+.step { border-radius: var(--lg-radius-l); overflow: hidden; }
+.step__head { display: flex; align-items: center; gap: 14px; padding: 18px 24px; }
+.step__head .no { font-family: var(--font-display); font-size: 27px; color: var(--lg-accent); min-width: 28px; }
+.step__head h3 { margin: 0; font-size: 16px; font-family: var(--font-body); font-weight: 600; }
+.step__head p { margin: 3px 0 0; font-size: 13px; color: var(--lg-text-dim); }
+.step__head .ph-lead {
+  width: 44px; height: 44px; border-radius: 13px; flex: none;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--lg-accent-soft); color: var(--lg-accent);
+}
+
+/* AI 分頁 */
+.flow { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; }
+.flow .principle { padding: 24px; border-radius: var(--lg-radius-l); }
+.flow .principle h3 { margin: 13px 0 8px; font-size: 16px; font-family: var(--font-body); font-weight: 600; }
+.flow .principle p { margin: 0; font-size: 13.5px; line-height: 1.85; color: var(--lg-text-dim); }
+.flow .ph-badge {
+  width: 44px; height: 44px; border-radius: 14px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--lg-accent-soft); color: var(--lg-accent);
+}
+.checklist { padding: 26px 28px; border-radius: var(--lg-radius-l); }
+.checklist ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 13px; }
+.checklist li { display: flex; gap: 11px; align-items: flex-start; font-size: 14px; line-height: 1.7; color: var(--lg-text); }
+.checklist li svg { flex: none; margin-top: 3px; color: var(--lg-accent); }
+
+.foot-note { padding: 22px 26px; border-radius: var(--lg-radius-l); font-size: 13px; line-height: 1.9; color: var(--lg-text-dim); }
+.foot-note strong { color: var(--lg-text); }
+
+.ph { fill: currentColor; flex: none; }
+</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+/* ============ 首頁 v3:液態展廳版面 ============ */
+
+/* 滿版突圍與基礎 */
+#view-home { overflow-x: clip; }
+.home-bleed { width: 100vw; position: relative; left: 50%; margin-left: -50vw; }
+.home-section { scroll-margin-top: 84px; }
+
+/* 區頭(編輯式字級) */
+.sec-head { max-width: 700px; margin-bottom: 36px; }
+.sec-head--center { margin-left: auto; margin-right: auto; text-align: center; }
+.sec-head h2 { font-size: clamp(34px, 5vw, 56px); line-height: 1.06; margin: 12px 0 18px; letter-spacing: -0.01em; }
+.sec-head .desc { font-size: 15.5px; }
+
+/* Hero:指標視差與捲動提示 */
+.hero-px { translate: var(--hx, 0px) var(--hy, 0px); transition: translate 0.3s ease-out; }
+.hero-px--soft { translate: calc(var(--hx, 0px) * 0.45) calc(var(--hy, 0px) * 0.45); }
+.scroll-cue { margin-top: 52px; width: 1px; height: 58px; position: relative; background: linear-gradient(to bottom, transparent, var(--lg-stroke-soft)); }
+.scroll-cue span { position: absolute; left: -2px; top: 0; width: 5px; height: 5px; border-radius: 50%; background: var(--lg-accent); animation: cueDrop 2.3s ease-in-out infinite; }
+@keyframes cueDrop { 0% { top: 0; opacity: 0; } 22% { opacity: 1; } 78% { top: 48px; opacity: 0; } 100% { top: 48px; opacity: 0; } }
+
+/* 捲動顯影 */
+.reveal { opacity: 0; translate: 0 30px; transition: opacity 0.85s ease, translate 0.85s var(--lg-ease); }
+.reveal.in { opacity: 1; translate: 0 0; }
+
+/* 工具列 */
+.toolbar { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; margin-bottom: 16px; color: var(--lg-text); }
+.toolbar-search { flex: 1; min-width: 250px; max-width: 460px; }
+.toolbar .lg-switch { color: hsl(var(--foreground)); }
+.gallery-count { margin-left: auto; font: 500 12px/1 var(--font-body); letter-spacing: 0.09em; text-transform: uppercase; color: var(--lg-text-dim); }
+.toolbar-tabs { margin-bottom: 34px; max-width: 100%; overflow-x: auto; }
+.lg-tabs__tab .lg-badge { margin-left: 7px; min-width: 18px; height: 18px; font-size: 10.5px; }
+
+/* 館藏:不裁切瀑布流(JS masonry + FLIP) */
+.art-grid { position: relative; min-height: 200px; }
+.art-grid .art-card {
+  position: absolute; top: 0; left: 0;
+  will-change: transform;
+  transition: transform 0.6s var(--lg-ease), opacity 0.35s var(--lg-ease-out), translate 0.3s var(--lg-ease);
+}
+.art-grid.no-anim .art-card { transition: translate 0.3s var(--lg-ease) !important; }
+.art-grid .art-card:hover { translate: 0 -5px; }
+.art-card.is-out {
+  --card-s: 0.82;
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transition: transform 0.45s var(--lg-ease), opacity 0.3s var(--lg-ease-out), visibility 0s 0.45s;
+}
+.art-card { padding: 0; overflow: hidden; border-radius: var(--lg-radius-l); }
+.art-card__imgbtn { display: block; width: 100%; border: 0; padding: 0; cursor: zoom-in; background: none; }
+.art-card__imgbtn img { display: block; width: 100%; height: auto; }
+.art-card__body { padding: 16px 18px 18px; }
+.art-card__body h3 { margin: 0 0 3px; font-size: 19.5px; letter-spacing: 0; cursor: pointer; }
+.art-card__body h3:hover { color: var(--lg-accent); }
+.art-card__body .meta { margin: 0 0 12px; font-size: 12px; color: var(--lg-text-dim); }
+.art-card__row { display: flex; flex-wrap: wrap; gap: 7px; align-items: center; }
+.art-card__row .spacer { flex: 1; }
+.art-card--demo { width: min(300px, 100%); }
+.icon-mini {
+  position: relative;
+  width: 34px; height: 34px; border: 0; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--lg-text);
+  background: var(--lg-tint-strong);
+  box-shadow: inset 1px 1px 0.5px -0.5px var(--lg-rim-hi), inset 0 0 0 1px var(--lg-stroke-soft);
+  transition: translate 0.25s var(--lg-ease), color 0.2s;
+}
+.icon-mini:hover { translate: 0 -2px; }
+.icon-mini.is-fav { color: var(--lg-accent); }
+.icon-mini:focus-visible { outline: 2px solid var(--lg-accent); outline-offset: 2px; }
+
+/* 收藏迸發微粒與徽章跳動 */
+.burst-p {
+  position: absolute; left: 50%; top: 50%;
+  width: 6px; height: 6px; margin: -3px 0 0 -3px;
+  border-radius: 50%; background: var(--lg-accent);
+  pointer-events: none; z-index: 5;
+  animation: burstFly 0.65s cubic-bezier(0.2, 0.7, 0.3, 1) forwards;
+}
+@keyframes burstFly {
+  from { transform: translate(0, 0) scale(1); opacity: 1; }
+  to   { transform: translate(var(--bx), var(--by)) scale(0.25); opacity: 0; }
+}
+.lg-badge.bump { animation: badgeBump 0.45s var(--lg-ease); }
+@keyframes badgeBump { 0% { transform: scale(1); } 40% { transform: scale(1.4); } 100% { transform: scale(1); } }
+
+.empty { margin-top: 22px; padding: 34px; text-align: center; border-radius: var(--lg-radius-l); }
+.empty p { margin: 0 0 16px; font-size: 15px; color: var(--lg-text-dim); }
+
+/* 細看:滿版帶,畫作不裁切置中,館牌收尾 */
+.study-band {
+  padding: 50px 4vw 44px;
+  background: linear-gradient(180deg, rgba(18, 23, 34, 0), rgba(18, 23, 34, 0.05) 14%, rgba(18, 23, 34, 0.05) 86%, rgba(18, 23, 34, 0));
+}
+.study { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 20px; }
+.study-frame { position: relative; display: inline-block; max-width: min(1180px, 94vw); }
+.study-frame img {
+  display: block; max-width: 100%; max-height: 76vh; width: auto;
+  border-radius: 14px;
+  box-shadow: 0 34px 90px -34px rgba(10, 15, 25, 0.55);
+  user-select: none; -webkit-user-drag: none;
+}
+.study-lens {
+  position: absolute; left: 12%; top: 22%;
+  width: 180px; height: 180px; border-radius: 50%;
+  z-index: 5; touch-action: none;
+}
+.study-lens::before {
+  box-shadow:
+    inset 2px 3px 1px -2px rgba(255, 255, 255, 0.95),
+    inset -2px -3px 1px -2px rgba(255, 255, 255, 0.5),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.3),
+    inset 0 0 30px rgba(255, 255, 255, 0.1);
+}
+.study-hint { position: absolute; left: 16px; bottom: 16px; z-index: 6; }
+.study-label { display: inline-flex; flex-direction: column; gap: 4px; padding: 13px 26px; border-radius: 14px; text-align: center; }
+.study-label strong { font: 600 15px/1.2 var(--font-body); color: var(--lg-text); }
+.study-label span { font-size: 12px; color: var(--lg-text-dim); }
+@media (max-width: 720px) { .study-lens { width: 130px; height: 130px; } }
+
+/* 地球:滿版深色帶,玻璃資訊卡浮其上 */
+.globe-band {
+  position: relative; overflow: hidden;
+  padding: 88px 5vw 92px;
+  background: radial-gradient(130% 105% at 72% 8%, #1a2c4a 0%, #0d1628 46%, #070d18 100%);
+  --lg-text: #eef3fc;
+  --lg-text-dim: rgba(224, 232, 248, 0.62);
+  --lg-tint: rgba(255, 255, 255, 0.07);
+  --lg-tint-strong: rgba(255, 255, 255, 0.13);
+  --lg-stroke-soft: rgba(255, 255, 255, 0.16);
+  --lg-rim-hi: rgba(255, 255, 255, 0.5);
+}
+.globe-band::before {
+  content: ''; position: absolute; inset: 0; pointer-events: none; opacity: 0.55;
+  background-image:
+    radial-gradient(1px 1px at 18% 26%, rgba(255, 255, 255, 0.8), transparent 55%),
+    radial-gradient(1px 1px at 64% 14%, rgba(255, 255, 255, 0.55), transparent 55%),
+    radial-gradient(1.4px 1.4px at 84% 38%, rgba(255, 255, 255, 0.7), transparent 55%),
+    radial-gradient(1px 1px at 38% 64%, rgba(255, 255, 255, 0.45), transparent 55%),
+    radial-gradient(1px 1px at 8% 78%, rgba(255, 255, 255, 0.5), transparent 55%),
+    radial-gradient(1.3px 1.3px at 52% 88%, rgba(255, 255, 255, 0.55), transparent 55%),
+    radial-gradient(1px 1px at 92% 72%, rgba(255, 255, 255, 0.5), transparent 55%);
+}
+.globe-band h2 { color: #fff; font-size: clamp(32px, 4.4vw, 50px); line-height: 1.08; margin: 12px 0 16px; }
+.globe-band .desc { color: var(--lg-text-dim); }
+.globe-inner {
+  position: relative; max-width: 1280px; margin: 0 auto;
+  display: grid; grid-template-columns: minmax(300px, 400px) 1fr;
+  gap: 44px; align-items: center; min-height: 560px;
+}
+.globe-copy { position: relative; z-index: 3; display: grid; gap: 26px; }
+.globe-head { max-width: 420px; }
+.globe-card { border-radius: var(--lg-radius-l); padding: 22px; }
+.globe-kicker { margin: 0 0 6px; font: 500 11.5px/1 var(--font-body); letter-spacing: 0.16em; text-transform: uppercase; color: var(--lg-text-dim); }
+.globe-card h3 { margin: 0 0 6px; font-size: 23px; line-height: 1.25; color: var(--lg-text); }
+.globe-city { display: flex; align-items: center; gap: 6px; margin: 0 0 18px; font-size: 13px; color: var(--lg-text-dim); }
+.globe-works { display: grid; gap: 8px; }
+.globe-work {
+  display: flex; align-items: center; gap: 11px;
+  border: 0; padding: 7px; border-radius: 14px;
+  background: var(--lg-tint);
+  box-shadow: inset 0 0 0 1px var(--lg-stroke-soft);
+  cursor: pointer; text-align: left; color: var(--lg-text);
+  transition: background 0.25s, translate 0.25s var(--lg-ease);
+}
+.globe-work:hover { background: var(--lg-tint-strong); translate: 3px 0; }
+.globe-work img { width: 42px; height: 42px; object-fit: cover; border-radius: 9px; flex: none; }
+.globe-work > span { display: flex; flex-direction: column; min-width: 0; }
+.globe-work .t { font: 600 13px/1.3 var(--font-body); }
+.globe-work .y { font: 400 11.5px/1 var(--font-body); color: var(--lg-text-dim); margin-top: 3px; }
+.globe-hint { display: flex; align-items: center; gap: 7px; margin: 18px 0 0; font-size: 12px; color: var(--lg-text-dim); }
+.globe-stage { position: relative; min-height: 560px; z-index: 2; }
+#globeCanvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; cursor: grab; touch-action: none; }
+#globeCanvas.is-dragging { cursor: grabbing; }
+#globeCanvas.is-hover { cursor: pointer; }
+.globe-labels { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.globe-label {
+  position: absolute; transform: translate(-50%, -130%);
+  pointer-events: auto; cursor: pointer;
+  white-space: nowrap;
+  opacity: 0; transition: opacity 0.25s;
+}
+.globe-label.is-front { opacity: 1; }
+.globe-label.is-active { color: var(--lg-accent); font-weight: 700; }
+.globe-fallback { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; gap: 14px; padding: 24px; font-size: 13.5px; color: var(--lg-text-dim); }
+.globe-fallback__list { display: flex; flex-wrap: wrap; gap: 8px; }
+@media (max-width: 920px) {
+  .globe-inner { grid-template-columns: 1fr; gap: 8px; min-height: 0; }
+  .globe-stage { min-height: 400px; order: 2; }
+  .globe-band { padding: 64px 6vw 70px; }
+}
+
+/* Dock(含目前區塊指示) */
+.home-dock {
+  position: fixed; bottom: 16px; left: 50%;
+  transform: translateX(-50%);
+  z-index: 55; display: none;
+}
+body[data-view="home"] .home-dock { display: inline-flex; }
+.lg-dock__item { position: relative; }
+.lg-dock__item.is-current::after {
+  content: ''; position: absolute; bottom: 3px; left: 50%;
+  width: 4px; height: 4px; margin-left: -2px;
+  border-radius: 50%; background: var(--lg-accent);
+}
+.dock-badge { position: absolute; top: -5px; right: -5px; z-index: 3; }
+@media (max-width: 640px) {
+  .home-dock { gap: 6px; padding: 9px 12px; }
+  .home-dock .lg-dock__item { width: 42px; height: 42px; }
+}
+
+/* 控制面板(預設收合,由 Dock 開啟) */
+.ctrl-panel {
+  position: fixed; right: 26px; top: 92px;
+  z-index: 56; width: 252px;
+  border-radius: var(--lg-radius-l);
+}
+.ctrl-panel[hidden] { display: none; }
+.ctrl-panel__head {
+  display: flex; align-items: center; gap: 8px;
+  padding: 13px 16px 9px;
+  font: 600 12.5px/1 var(--font-body);
+  color: var(--lg-text-dim);
+  user-select: none;
+}
+.ctrl-close {
+  margin-left: auto; border: 0; background: none;
+  color: var(--lg-text-dim); cursor: pointer;
+  display: inline-flex; padding: 4px; border-radius: 8px;
+}
+.ctrl-close:hover { color: var(--lg-text); background: var(--lg-tint-strong); }
+.ctrl-panel__body { display: grid; gap: 15px; padding: 4px 16px 18px; color: var(--lg-text); }
+.ctrl-slider { display: grid; grid-template-columns: auto 1fr 40px; align-items: center; gap: 8px; }
+.ctrl-slider__label { font: 500 14px/1 var(--font-body); }
+.ctrl-slider output { font: 600 12px/1 ui-monospace, monospace; color: var(--lg-accent); text-align: right; }
+body:not([data-view="home"]) .ctrl-panel { display: none; }
+
+/* 畫作對話框 v3 */
+.lg-modal__panel--wide { width: min(880px, 100%); padding: 14px; }
+.pm-grid { display: grid; grid-template-columns: 1.15fr 1fr; gap: 18px; }
+.pm-viewport {
+  position: relative; overflow: hidden;
+  border-radius: calc(var(--lg-radius-l) - 8px);
+  background: rgba(10, 14, 22, 0.4);
+  min-height: 320px; max-height: 460px;
+  touch-action: none;
+}
+.pm-viewport img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%; object-fit: contain;
+  transform-origin: center; will-change: transform;
+  user-select: none; -webkit-user-drag: none;
+}
+.pm-viewport.is-zoomed { cursor: grab; }
+.pm-viewport.is-panning { cursor: grabbing; }
+.pm-counter { position: absolute; top: 12px; left: 12px; z-index: 4; }
+.pm-nav {
+  position: absolute; top: 50%; margin-top: -20px;
+  width: 40px; height: 40px; z-index: 4;
+  background: rgba(14, 19, 30, 0.5);
+  color: #fff;
+  backdrop-filter: blur(8px) saturate(1.3);
+}
+.pm-nav--prev { left: 10px; }
+.pm-nav--next { right: 10px; }
+.pm-side { display: flex; flex-direction: column; gap: 12px; padding: 8px 8px 8px 0; }
+.pm-titlerow { display: flex; align-items: flex-start; gap: 10px; }
+.pm-titlerow h3 { flex: 1; margin: 0; font-size: 24px; line-height: 1.2; }
+#pmFav.is-fav { color: var(--lg-accent); }
+.pm-meta { margin: 0; font-size: 12.5px; color: var(--lg-text-dim); }
+.pm-desc { margin: 0; font-size: 13.5px; line-height: 1.85; color: var(--lg-text-dim); flex: 1; }
+.pm-chips { display: flex; flex-wrap: wrap; gap: 7px; }
+.pm-zoom { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: var(--lg-radius-pill); color: var(--lg-text-dim); }
+.pm-tip { margin: 0; font-size: 11.5px; line-height: 1.6; color: var(--lg-text-dim); opacity: 0.85; }
+.pm-actions { display: flex; gap: 10px; justify-content: flex-end; }
+@media (max-width: 760px) {
+  .pm-grid { grid-template-columns: 1fr; }
+  .pm-viewport { min-height: 240px; max-height: 300px; }
+  .pm-tip { display: none; }
+}
+
+/* 頁尾 */
+.home-footer {
+  margin-top: 96px;
+  padding: 78px 5vw 120px;
+  border-top: 1px solid var(--lg-stroke-soft);
+  background: linear-gradient(180deg, rgba(18, 23, 34, 0), rgba(18, 23, 34, 0.05));
+}
+.home-footer__inner { max-width: 760px; margin: 0 auto; text-align: center; display: grid; gap: 18px; justify-items: center; }
+.home-footer__mark { margin: 0; font-family: 'Instrument Serif', Georgia, serif; font-size: clamp(42px, 6vw, 60px); line-height: 1; color: var(--lg-text); }
+.home-footer__line { margin: 0; font-size: 14.5px; line-height: 1.9; color: var(--lg-text-dim); max-width: 540px; }
+.home-footer__chips { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+.home-footer__fine { margin: 8px 0 0; font-size: 11.5px; letter-spacing: 0.04em; color: var(--lg-text-dim); opacity: 0.7; }
+
+/* 導覽模式 */
+.tour-cap {
+  position: fixed; left: 50%; bottom: 22px;
+  transform: translateX(-50%);
+  z-index: 62;
+  width: min(460px, calc(100vw - 28px));
+  border-radius: var(--lg-radius-l);
+  padding: 18px 20px 14px;
+  display: grid; gap: 12px;
+}
+.tour-cap[hidden] { display: none; }
+.tour-cap__text { margin: 0; font-size: 14px; line-height: 1.75; color: var(--lg-text); }
+.tour-cap__row { display: flex; align-items: center; gap: 10px; }
+.tour-cap__row .spacer { flex: 1; }
+.tour-dots { display: flex; gap: 6px; }
+.tour-dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--lg-tint-strong); box-shadow: inset 0 0 0 1px var(--lg-stroke-soft); }
+.tour-dots i.on { background: var(--lg-accent); box-shadow: none; }
+body.tour-on .home-dock { display: none !important; }
+
+/* ============ 元件分頁:bento 展示 ============ */
+.bento { display: grid; grid-template-columns: repeat(6, 1fr); gap: 18px; }
+.tile { border-radius: var(--lg-radius-l); padding: 20px 20px 18px; display: flex; flex-direction: column; min-width: 0; }
+.t2 { grid-column: span 2; }
+.t3 { grid-column: span 3; }
+.t6 { grid-column: span 6; }
+.tall { grid-row: span 2; }
+.tile__head { margin-bottom: 14px; }
+.tile__head h3 { margin: 0; font: 650 16px/1.3 var(--font-body); letter-spacing: -0.006em; color: var(--lg-text); }
+.tile__stage { flex: 1; display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 12px; padding: 16px 0; min-height: 96px; }
+.tile__stage--col { flex-direction: column; }
+.tile__stage--pen { padding: 6px 0; }
+.demo-pen {
+  position: relative; width: 100%; min-height: 250px;
+  border-radius: 18px;
+  background: var(--lg-tint);
+  box-shadow: inset 0 0 0 1px var(--lg-stroke-soft);
+  overflow: hidden;
+}
+.demo-ball {
+  position: absolute; left: calc(50% - 55px); top: calc(50% - 55px);
+  width: 110px; height: 110px; border-radius: 50%;
+  cursor: grab; touch-action: none;
+}
+.demo-ball::before {
+  box-shadow:
+    inset 2px 3px 1px -2px rgba(255, 255, 255, 0.95),
+    inset -2px -3px 1px -2px rgba(255, 255, 255, 0.5),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.3),
+    inset 0 0 26px rgba(255, 255, 255, 0.12);
+}
+@media (max-width: 1000px) { .t2, .t3 { grid-column: span 3; } }
+@media (max-width: 640px) { .t2, .t3, .t6 { grid-column: span 6; } .tall { grid-row: auto; } }
+
+/* ============ 元件分頁:bento 區塊總提示 ============ */
+.bento-hint { margin: -2px 0 22px; font-size: 14px; line-height: 1.75; color: var(--lg-text-dim); max-width: 66ch; }
+
+/* ============ 元件分頁:迷你儀表板實景(彩色漸層底,讓全折射玻璃顯影)============ */
+.dash {
+  position: relative;
+  border-radius: var(--lg-radius-l);
+  padding: clamp(18px, 2.6vw, 26px);
+  overflow: hidden;
+  isolation: isolate;
+  background:
+    radial-gradient(135% 130% at 0% 0%, #ffd9ad 0%, rgba(255, 217, 173, 0) 42%),
+    radial-gradient(130% 130% at 100% 4%, #c0acff 0%, rgba(192, 172, 255, 0) 48%),
+    radial-gradient(150% 150% at 52% 118%, #9ed2ff 0%, rgba(158, 210, 255, 0) 56%),
+    linear-gradient(135deg, #f6c8da 0%, #cdbcff 52%, #abdcff 100%);
+}
+[data-lg-theme="dark"] .dash {
+  background:
+    radial-gradient(135% 130% at 0% 0%, #7a5a3a 0%, rgba(122, 90, 58, 0) 42%),
+    radial-gradient(130% 130% at 100% 4%, #4f3f86 0%, rgba(79, 63, 134, 0) 48%),
+    radial-gradient(150% 150% at 52% 118%, #355777 0%, rgba(53, 87, 119, 0) 56%),
+    linear-gradient(135deg, #3a2740 0%, #2a2350 52%, #1f3148 100%);
+}
+.dash__bar { display: flex; align-items: center; gap: 12px 18px; flex-wrap: wrap; margin-bottom: 18px; }
+.dash__title { margin: 0; font: 700 18px/1.2 var(--font-body); color: var(--lg-text); }
+.dash__sub { font: 500 12.5px/1 var(--font-body); color: var(--lg-text-dim); }
+.dash__controls { margin-left: auto; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.dash__live { display: inline-flex; align-items: center; gap: 8px; font: 600 12.5px/1 var(--font-body); color: var(--lg-text); cursor: pointer; }
+.dash__live .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--lg-text-dim); transition: background 0.3s var(--lg-ease); }
+.dash.is-live .dash__live .dot { background: var(--lg-up); animation: dash-pulse 1.6s ease-out infinite; }
+@keyframes dash-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(31, 158, 99, 0.45); }
+  70% { box-shadow: 0 0 0 7px rgba(31, 158, 99, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(31, 158, 99, 0); }
+}
+.dash__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.dash__grid .lg-stat { min-width: 0; }
+.dash__chart { grid-column: span 2; min-height: 212px; }
+.dash__side { grid-column: span 1; display: flex; flex-direction: column; gap: 14px; }
+.dash__sidecard { padding: 16px 18px; border-radius: var(--lg-radius-m); display: flex; flex-direction: column; gap: 14px; align-items: center; }
+.dash__meters { width: 100%; display: flex; flex-direction: column; gap: 13px; }
+.dash__meterrow { display: flex; flex-direction: column; gap: 7px; }
+.dash__meterhead { display: flex; align-items: baseline; justify-content: space-between; font: 600 12px/1 var(--font-body); color: var(--lg-text-dim); }
+.dash__meterhead b { font: 700 13px/1 var(--font-body); color: var(--lg-text); font-variant-numeric: tabular-nums; }
+@media (max-width: 760px) {
+  .dash__grid { grid-template-columns: 1fr; }
+  .dash__chart, .dash__side { grid-column: auto; }
+}
+
+/* 儀表板獨立 tile 的彩色 stage(讓全折射玻璃元件顯影) */
+.tile__stage--dash {
+  align-items: stretch;
+  border-radius: 16px;
+  padding: 20px 18px;
+  background:
+    radial-gradient(120% 120% at 6% 0%, rgba(255, 196, 150, 0.5), transparent 52%),
+    radial-gradient(120% 130% at 100% 100%, rgba(150, 168, 255, 0.46), transparent 56%),
+    var(--lg-tint);
+}
+.tile__stage--dash > * { width: 100%; }
+.tile__stage--dash.tile__stage--center { align-items: center; }
+.tile__stage--dash.tile__stage--center > * { width: auto; }
+
+/* ============ AI Guide:元件程式碼庫手風琴 ============ */
+.acc-list { display: grid; gap: 12px; }
+.acc { border-radius: var(--lg-radius-l); overflow: hidden; }
+.acc summary {
+  display: flex; align-items: center; gap: 12px;
+  padding: 17px 20px; cursor: pointer; list-style: none;
+  font: 600 15px/1 var(--font-body); color: var(--lg-text);
+  user-select: none;
+}
+.acc summary::-webkit-details-marker { display: none; }
+.acc__name em { font: 500 11px/1 var(--font-body); font-style: normal; color: var(--lg-text-dim); margin-left: 10px; letter-spacing: 0.08em; text-transform: uppercase; }
+.acc__caret { margin-left: auto; color: var(--lg-text-dim); transition: transform 0.3s var(--lg-ease); flex: none; }
+.acc[open] .acc__caret { transform: rotate(180deg); }
+.acc .code { margin: 0 14px 14px; }
+
+/* 環境動態關閉 */
+.no-ambient .lg-glow::before,
+.no-ambient .lg-glow::after { animation-play-state: paused !important; }
+
+/* 降階動態 */
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; translate: none; transition: none; }
+  .hero-px, .hero-px--soft { translate: none; transition: none; }
+  .scroll-cue span { animation: none; }
+  .art-grid .art-card { transition: none; }
+  .burst-p { display: none; }
+  .lg-badge.bump { animation: none; }
+}
+
+</style>
+</head>
+<body data-view="home">
+
+<!-- Phosphor Icons sprite(MIT License) -->
+{{ICON_SPRITE}}
+
+<script>
+/* 畫作資源(只內嵌一份,由 JS 指派給所有使用處) */
+window.ART = {
+  parasol: '{{IMG_PARASOL}}',
+  bridge: '{{IMG_BRIDGE}}',
+  sunflowers: '{{IMG_SUNFLOWERS}}',
+  madame: '{{IMG_MADAME}}',
+  cliffs: '{{IMG_CLIFFS}}',
+  wheat: '{{IMG_WHEAT}}',
+  rouen: '{{IMG_ROUEN}}',
+  poppyfields: '{{IMG_POPPYFIELDS}}',
+  poppies: '{{IMG_POPPIES}}',
+  poppiesXL: '{{IMG_POPPIES_XL}}',
+  gardener: '{{IMG_GARDENER}}',
+  earth: '{{IMG_EARTH}}'
+};
+</script>
+
+<!-- 背景:首頁影片(失效時自動換成莫內畫作) -->
+<video class="bg-video" id="bgVideo" autoplay loop muted playsinline preload="auto">
+  <source id="bgVideoSrc" src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260314_131748_f2ca2a28-fed7-44c8-b9a9-bd9acdd5ec31.mp4" type="video/mp4">
+</video>
+<div class="bg-paint bg-paint--parasol">
+  <div class="lg-glow" style="--lg-glow-base:#7d92ad;"><div class="lg-glow__image" data-art-bg="parasol"></div></div>
+  <div class="dim"></div>
+</div>
+<div class="bg-paint bg-paint--bridge">
+  <div class="lg-glow" style="--lg-glow-base:#7a9272;"><div class="lg-glow__image" data-art-bg="bridge"></div></div>
+  <div class="dim"></div>
+</div>
+<div class="bg-paint bg-paint--sunflowers">
+  <div class="lg-glow" style="--lg-glow-base:#9b8a6b;"><div class="lg-glow__image" data-art-bg="sunflowers"></div></div>
+  <div class="dim"></div>
+</div>
+
+<!-- TopBar:分頁切換 -->
+<div class="topbar" id="topbar">
+  <div class="topbar__inner">
+    <button class="logo" data-goto="home">Lumière<sup>®</sup></button>
+    <nav class="topnav" aria-label="Site sections">
+      <button class="topnav__link is-active" data-goto="home">Home</button>
+      <button class="topnav__link" data-goto="components">Components</button>
+      <button class="topnav__link" data-goto="ai">AI Guide</button>
+      <button class="theme-btn" id="navFavs" aria-label="Favourites" style="position:relative;"><svg class="ph" width="17" height="17"><use href="#ph-heart"/></svg><span class="lg-badge dock-badge" id="navFavBadge" hidden>0</span></button>
+      <button class="theme-btn" id="themeToggle" aria-label="Toggle theme"><svg class="ph" width="17" height="17"><use href="#ph-sun"/></svg></button>
+      <button class="lg lg-btn lg-btn--pill cta" data-lg data-goto="home" data-scroll="#gallery">Begin the Tour</button>
+    </nav>
+  </div>
+</div>
+
+<main>
+
+<!-- ==================== 分頁一:首頁範例(莫內線上展廳) ==================== -->
+<section class="view" id="view-home" lang="en">
+
+  <header class="hero-home" id="heroHome">
+    <h1 class="animate-fade-rise hero-px">Where <em>light</em> lingers,<br><em>long after it fades.</em></h1>
+    <p class="sub animate-fade-rise-delay hero-px hero-px--soft">Claude Monet spent a lifetime chasing the same sun — through sunflowers and wheatstacks, across cathedral stone and quiet water. Ten canvases from five museums, gathered in one gallery built of liquid glass.</p>
+    <button class="lg lg-btn lg-btn--pill cta-lg animate-fade-rise-delay-2" data-lg id="beginTour"><svg class="ph" width="17" height="17"><use href="#ph-play"/></svg>Begin the Tour</button>
+    <div class="scroll-cue animate-fade-rise-delay-2" aria-hidden="true"><span></span></div>
+  </header>
+
+  <section class="home-section" id="gallery">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Collection</span>
+      <h2>Ten canvases,<br>five cities.</h2>
+      <p class="desc">Search the collection, filter by theme, and keep your favourites. Every canvas is shown in its true proportions — open one to study it stroke by stroke, then follow it home on the globe.</p>
+    </div>
+
+    <div class="toolbar reveal">
+      <div class="lg lg-search toolbar-search" data-lg>
+        <svg class="ph" width="18" height="18"><use href="#ph-magnifying-glass"/></svg>
+        <input type="search" id="gallerySearch" placeholder="Search paintings, places, museums…" aria-label="Search the collection">
+        <kbd>⌘K</kbd>
+      </div>
+      <label class="lg-switch">
+        <input type="checkbox" id="favOnly">
+        <span class="lg-switch__track"><span class="lg-switch__thumb"></span></span>
+        Favourites only
+      </label>
+      <span class="gallery-count" id="galleryCount" role="status">10 works</span>
+    </div>
+    <div class="lg lg-tabs toolbar-tabs reveal" data-lg role="tablist" aria-label="Filter by theme" id="catTabs">
+      <span class="lg-tabs__pill" aria-hidden="true"></span>
+      <button class="lg-tabs__tab is-active" role="tab" aria-selected="true" data-cat="all">All<span class="lg-badge" data-count="all">10</span></button>
+      <button class="lg-tabs__tab" role="tab" aria-selected="false" data-cat="landscape">Landscapes<span class="lg-badge" data-count="landscape">4</span></button>
+      <button class="lg-tabs__tab" role="tab" aria-selected="false" data-cat="figure">Figures<span class="lg-badge" data-count="figure">2</span></button>
+      <button class="lg-tabs__tab" role="tab" aria-selected="false" data-cat="series">Series<span class="lg-badge" data-count="series">3</span></button>
+      <button class="lg-tabs__tab" role="tab" aria-selected="false" data-cat="still">Still Life<span class="lg-badge" data-count="still">1</span></button>
+    </div>
+
+    <div class="art-grid no-anim" id="artGrid"></div>
+
+    <div class="empty lg-static lg" id="galleryEmpty" hidden>
+      <p>No paintings match that light.</p>
+      <button class="lg lg-btn lg-btn--sm lg-btn--pill" data-lg id="clearFilters">Clear filters</button>
+    </div>
+  </section>
+
+  <section class="home-section home-section--study" id="study">
+    <div class="sec-head sec-head--center reveal">
+      <span class="eyebrow">Detail Study</span>
+      <h2>One stroke at a time.</h2>
+      <p class="desc">Drag the glass lens across <em style="font-style:italic;">Poppies</em>. Monet laid down each blossom as a single loaded stroke — the lens bends the light so you can see it.</p>
+    </div>
+    <div class="study-band home-bleed reveal">
+      <figure class="study">
+        <div class="study-frame">
+          <img data-art="poppiesXL" alt="Poppies by Claude Monet, 1873" draggable="false">
+          <div class="study-lens lg" data-lg data-lg-profile="circle" data-lg-bezel="58" data-lg-thickness="54" data-lg-refraction="1.5" data-lg-chromatic="0.7" data-lg-drag="parent" aria-hidden="true"></div>
+          <span class="lg-chip study-hint"><svg class="ph" width="15" height="15"><use href="#ph-hand-grabbing"/></svg>Drag the lens</span>
+        </div>
+        <figcaption class="study-label lg-static lg">
+          <strong>Poppies</strong>
+          <span>Claude Monet · 1873 · Musée d'Orsay, Paris</span>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="home-section home-section--globe" id="globe">
+    <div class="globe-band home-bleed">
+      <div class="globe-inner">
+        <div class="globe-copy">
+          <div class="globe-head reveal">
+            <span class="eyebrow">Atlas</span>
+            <h2>Where they live now.</h2>
+            <p class="desc">Monet's canvases drifted across the Atlantic long ago. Spin the earth, tap a marker — or press the locate button on any painting and the globe will carry you to its museum.</p>
+          </div>
+          <aside class="globe-card lg reveal" data-lg>
+            <p class="globe-kicker">Now visiting</p>
+            <h3 id="globeMuseum">The Metropolitan Museum of Art</h3>
+            <p class="globe-city" id="globeCity"><svg class="ph" width="15" height="15"><use href="#ph-map-pin"/></svg><span>New York, United States</span></p>
+            <div class="globe-works" id="globeWorks"></div>
+            <p class="globe-hint"><svg class="ph" width="14" height="14"><use href="#ph-hand-grabbing"/></svg>Drag to spin · tap a marker to visit</p>
+          </aside>
+        </div>
+        <div class="globe-stage" id="globeStage">
+          <canvas id="globeCanvas" aria-label="Interactive globe of museum locations" role="img"></canvas>
+          <div class="globe-labels" id="globeLabels" aria-hidden="true"></div>
+          <div class="globe-fallback" id="globeFallback" hidden>
+            <p>The 3D globe needs an internet connection (three.js CDN). The five museums:</p>
+            <div class="globe-fallback__list" id="globeFallbackList"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="home-section" id="about">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Impressionism</span>
+      <h2>A revolution<br>made of light.</h2>
+      <p class="desc">They left the studio, carried their easels to riverbanks and wheat fields, and raced to finish before the light changed.</p>
+    </div>
+    <div class="about-wrap reveal">
+      <div class="lg lg-tabs" data-lg role="tablist" aria-label="About Impressionism" id="aboutTabs">
+        <span class="lg-tabs__pill" aria-hidden="true"></span>
+        <button class="lg-tabs__tab is-active" role="tab" data-panel="movement" aria-selected="true">The Movement</button>
+        <button class="lg-tabs__tab" role="tab" data-panel="painter" aria-selected="false">The Painter</button>
+        <button class="lg-tabs__tab" role="tab" data-panel="garden" aria-selected="false">The Garden</button>
+      </div>
+      <div class="lg lg-static about-panel" data-panel-group>
+        <div class="tab-panel is-active" data-panel-id="movement">
+          <h3>Impression, Sunrise</h3>
+          <p>In 1874, a group of painters rejected by the official Salon staged their own exhibition. A critic mocked Monet's <em>Impression, Sunrise</em> as "merely an impression" — so they took the insult and made it a flag. The Impressionists refused to mix perfect brown shadows indoors; they faced the sun directly, catching the exact moment light lands on the world with broken strokes and side-by-side dabs of pure colour.</p>
+        </div>
+        <div class="tab-panel" data-panel-id="painter">
+          <h3>Claude Monet, 1840–1926</h3>
+          <p>Monet painted one thing all his life: the way light changes. The same wheatstack, the same cathedral façade — he painted them dozens of times, because dawn and dusk are two different colours entirely. Late in life, his eyesight failing, he was still at the pond's edge painting enormous water lilies; those nearly abstract surfaces went on to shape modern painting itself.</p>
+        </div>
+        <div class="tab-panel" data-panel-id="garden">
+          <h3>The garden at Giverny</h3>
+          <p>In 1883 Monet moved to Giverny and built two gardens with his own hands — a Norman flower garden and a Japanese water garden fed by a diverted stream. The green footbridge, the willows and the lily pond were both his home and the only model of his later years. <em>Bridge over a Pond of Water Lilies</em> in this collection is exactly how that bridge looked in the high summer of 1899.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="home-footer home-bleed">
+    <div class="home-footer__inner reveal">
+      <p class="home-footer__mark">Lumière</p>
+      <p class="home-footer__line">Every surface on this page — the navbar, the cards, the lens, the dock — is the same family of glass, bending the same light.</p>
+      <div class="home-footer__chips">
+        <button class="lg-chip" data-goto="components"><svg class="ph" width="15" height="15"><use href="#ph-sparkle"/></svg>Play with the components</button>
+        <button class="lg-chip" data-goto="ai"><svg class="ph" width="15" height="15"><use href="#ph-book-open"/></svg>Read the AI guide</button>
+      </div>
+      <p class="home-footer__fine">All paintings are in the public domain · Built with Liquid Glass Kit v1.1</p>
+    </div>
+  </footer>
+
+</section>
+
+
+<!-- ==================== 分頁二:元件展示與使用導引 ==================== -->
+<section class="view" id="view-components">
+  <div class="view-page">
+
+    <div class="view-head">
+      <span class="eyebrow">Components · 元件</span>
+      <h2 class="display">十八件玻璃元件</h2>
+      <p class="desc">十三件互動元件,加上一組會即時更新的儀表板實景。每一件都能按、能拖、能甩;程式碼一行不放——要抄的全在 AI Guide 的「元件程式碼庫」。</p>
+    </div>
+
+    <div class="view-section" id="playground">
+      <h2 class="display">先調玻璃,再玩元件</h2>
+      <p class="desc">這四支旋鈕寫入 LiquidGlass.config 後即時重算所有實例——下面整面牆的元件、甚至首頁展廳的玻璃,都會同步改變。</p>
+      <div class="playground lg" data-lg>
+        <div class="row">
+          <label>折射強度<small>refraction</small></label>
+          <input class="lg-slider__input" id="pgRefraction" type="range" min="0" max="2.5" step="0.05" value="1.25">
+          <output id="pgRefractionOut">1.25</output>
+        </div>
+        <div class="row">
+          <label>色散<small>chromatic</small></label>
+          <input class="lg-slider__input" id="pgChromatic" type="range" min="0" max="1" step="0.05" value="0.55">
+          <output id="pgChromaticOut">0.55</output>
+        </div>
+        <div class="row">
+          <label>霧化<small>blur</small></label>
+          <input class="lg-slider__input" id="pgBlur" type="range" min="0" max="6" step="0.1" value="1.6">
+          <output id="pgBlurOut">1.6</output>
+        </div>
+        <div class="row">
+          <label>飽和<small>saturate</small></label>
+          <input class="lg-slider__input" id="pgSaturate" type="range" min="1" max="2.5" step="0.05" value="1.55">
+          <output id="pgSaturateOut">1.55</output>
+        </div>
+        <div class="profiles">
+          <span style="font:600 14px/1 var(--font-body);">斷面形狀</span>
+          <div class="lg-tabs lg-static" id="profileTabs" role="tablist" aria-label="斷面形狀">
+            <span class="lg-tabs__pill" aria-hidden="true"></span>
+            <button class="lg-tabs__tab is-active" role="tab" data-profile="squircle" aria-selected="true">Squircle</button>
+            <button class="lg-tabs__tab" role="tab" data-profile="circle" aria-selected="false">Circle</button>
+            <button class="lg-tabs__tab" role="tab" data-profile="lip" aria-selected="false">Lip</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="view-section">
+      <p class="bento-hint">整面牆都能玩——按住感受擠壓回彈,抓著甩感受拉伸抖動,掃過 Dock 看液滴融合。</p>
+      <div class="bento">
+
+        <div class="tile lg-static lg t2">
+          <div class="tile__head"><h3>Button</h3></div>
+          <div class="tile__stage">
+            <button class="lg lg-btn" data-lg>次要動作</button>
+            <button class="lg lg-btn lg-btn--pill" data-lg><svg class="ph" width="17" height="17"><use href="#ph-paper-plane-tilt"/></svg>傳送</button>
+            <button class="lg lg-btn lg-btn--accent lg-btn--pill">主要動作</button>
+          </div>
+        </div>
+
+        <div class="tile lg-static lg t2">
+          <div class="tile__head"><h3>Icon Button</h3></div>
+          <div class="tile__stage">
+            <button class="lg lg-btn lg-btn--icon" data-lg aria-label="加入收藏"><svg class="ph" width="20" height="20"><use href="#ph-heart"/></svg></button>
+            <button class="lg lg-btn lg-btn--icon" data-lg aria-label="搜尋"><svg class="ph" width="20" height="20"><use href="#ph-magnifying-glass"/></svg></button>
+            <button class="lg lg-btn lg-btn--icon lg-btn--accent" aria-label="播放"><svg class="ph" width="20" height="20"><use href="#ph-play"/></svg></button>
+          </div>
+        </div>
+
+        <div class="tile lg-static lg t2 tall">
+          <div class="tile__head"><h3>Card</h3></div>
+          <div class="tile__stage tile__stage--col">
+            <article class="lg lg-static art-card art-card--demo" data-lg-press>
+              <div class="art-card__imgbtn"><img data-art="sunflowers" alt="向日葵花束" style="aspect-ratio:0.8094;" draggable="false"></div>
+              <div class="art-card__body">
+                <h3 style="cursor:default;">向日葵花束</h3>
+                <p class="meta">1881 · 大都會藝術博物館</p>
+                <div class="art-card__row">
+                  <span class="lg-chip">靜物</span>
+                  <span class="spacer"></span>
+                  <button class="icon-mini" data-lg-press aria-label="收藏" data-lg-tip="收藏"><svg class="ph" width="17" height="17"><use href="#ph-heart"/></svg></button>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <div class="tile lg-static lg t2">
+          <div class="tile__head"><h3>Switch</h3></div>
+          <div class="tile__stage tile__stage--col">
+            <label class="lg-switch">
+              <input type="checkbox" checked>
+              <span class="lg-switch__track"><span class="lg-switch__thumb"></span></span>
+              液態折射
+            </label>
+            <label class="lg-switch">
+              <input type="checkbox">
+              <span class="lg-switch__track"><span class="lg-switch__thumb"></span></span>
+              色散效果
+            </label>
+          </div>
+        </div>
+
+        <div class="tile lg-static lg t2">
+          <div class="tile__head"><h3>Slider</h3></div>
+          <div class="tile__stage">
+            <div class="lg lg-slider" data-lg style="width:min(330px,100%);">
+              <svg class="ph" width="18" height="18"><use href="#ph-sun"/></svg>
+              <input class="lg-slider__input" type="range" min="0" max="100" value="62" aria-label="亮度">
+            </div>
+          </div>
+        </div>
+
+        <div class="tile lg-static lg t3">
+          <div class="tile__head"><h3>Segmented Tabs</h3></div>
+          <div class="tile__stage">
+            <div class="lg lg-tabs" data-lg role="tablist" aria-label="畫派">
+              <span class="lg-tabs__pill" aria-hidden="true"></span>
+              <button class="lg-tabs__tab is-active" role="tab" aria-selected="true">印象派</button>
+              <button class="lg-tabs__tab" role="tab" aria-selected="false">野獸派</button>
+              <button class="lg-tabs__tab" role="tab" aria-selected="false">立體派</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="tile lg-static lg t3">
+          <div class="tile__head"><h3>Search</h3></div>
+          <div class="tile__stage">
+            <div class="lg lg-search" data-lg style="width:min(360px,100%);">
+              <svg class="ph" width="18" height="18"><use href="#ph-magnifying-glass"/></svg>
+              <input type="search" placeholder="搜尋印象派畫作…" aria-label="搜尋">
+              <kbd>⌘K</kbd>
+            </div>
+          </div>
+        </div>
+
+        <div class="tile lg-static lg t2">
+          <div class="tile__head"><h3>Chip · Badge</h3></div>
+          <div class="tile__stage">
+            <span class="lg-chip"><svg class="ph" width="15" height="15"><use href="#ph-palette"/></svg>印象派</span>
+            <span class="lg-chip"><svg class="ph" width="15" height="15"><use href="#ph-globe-hemisphere-west"/></svg>吉維尼</span>
+            <span class="lg-chip">通知<span class="lg-badge">3</span></span>
+          </div>
+        </div>
+
+        <div class="tile lg-static lg t2">
+          <div class="tile__head"><h3>Tooltip</h3></div>
+          <div class="tile__stage">
+            <button class="lg lg-btn lg-btn--icon" data-lg data-lg-tip="加入收藏" aria-label="加入收藏"><svg class="ph" width="20" height="20"><use href="#ph-star"/></svg></button>
+            <button class="lg lg-btn lg-btn--icon" data-lg data-lg-tip="開啟對話" aria-label="開啟對話"><svg class="ph" width="20" height="20"><use href="#ph-chat-circle"/></svg></button>
+            <button class="lg lg-btn lg-btn--icon" data-lg data-lg-tip="瀏覽圖庫" aria-label="瀏覽圖庫"><svg class="ph" width="20" height="20"><use href="#ph-image"/></svg></button>
+          </div>
+        </div>
+
+        <div class="tile lg-static lg t2">
+          <div class="tile__head"><h3>Modal</h3></div>
+          <div class="tile__stage">
+            <button class="lg lg-btn lg-btn--pill" data-lg data-lg-open="#demoModal"><svg class="ph" width="17" height="17"><use href="#ph-browser"/></svg>開啟對話框</button>
+          </div>
+        </div>
+
+        <div class="tile lg-static lg t6">
+          <div class="tile__head"><h3>Navbar</h3></div>
+          <div class="tile__stage">
+            <nav class="lg lg-navbar" data-lg style="width:min(520px,100%);">
+              <span class="lg-navbar__brand"><svg class="ph" width="17" height="17"><use href="#ph-sparkle"/></svg>Atelier</span>
+              <span class="lg-navbar__spacer"></span>
+              <button class="lg-navbar__link is-active">畫廊</button>
+              <button class="lg-navbar__link">典藏</button>
+              <button class="lg-navbar__link">展訊</button>
+              <button class="lg-navbar__link lg-btn--icon" style="width:36px;height:36px;padding:0;" aria-label="設定"><svg class="ph" width="16" height="16"><use href="#ph-gear-six"/></svg></button>
+            </nav>
+          </div>
+        </div>
+
+        <div class="tile lg-static lg t3">
+          <div class="tile__head"><h3>Dock</h3></div>
+          <div class="tile__stage">
+            <div class="lg lg-dock" data-lg>
+              <button class="lg-dock__item" data-lg-tip="首頁" aria-label="首頁"><svg class="ph" width="24" height="24"><use href="#ph-house"/></svg></button>
+              <button class="lg-dock__item" data-lg-tip="圖庫" aria-label="圖庫"><svg class="ph" width="24" height="24"><use href="#ph-image"/></svg></button>
+              <button class="lg-dock__item" data-lg-tip="音樂" aria-label="音樂"><svg class="ph" width="24" height="24"><use href="#ph-music-notes"/></svg></button>
+              <button class="lg-dock__item" data-lg-tip="檔案" aria-label="檔案"><svg class="ph" width="24" height="24"><use href="#ph-folder"/></svg></button>
+              <button class="lg-dock__item" data-lg-tip="調色盤" aria-label="調色盤"><svg class="ph" width="24" height="24"><use href="#ph-swatches"/></svg></button>
+              <button class="lg-dock__item" data-lg-tip="設定" aria-label="設定"><svg class="ph" width="24" height="24"><use href="#ph-gear-six"/></svg></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="tile lg-static lg t3">
+          <div class="tile__head"><h3>Draggable</h3></div>
+          <div class="tile__stage tile__stage--pen">
+            <div class="demo-pen">
+              <div class="demo-ball lg" data-lg data-lg-profile="circle" data-lg-bezel="50" data-lg-thickness="48" data-lg-refraction="1.6" data-lg-chromatic="0.7" data-lg-drag="parent" role="img" aria-label="可拋擲的玻璃球"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="view-section" id="dashboard">
+      <div class="view-head">
+        <span class="eyebrow">Dashboard · 儀表板</span>
+        <h2 class="display">把玻璃裝進儀表板</h2>
+        <p class="desc">五件資料元件:統計卡、進度條、環形儀表、圖表、通知。玻璃只做容器,數字與圖表本身是實心內容層——這是技術上必要的邊界。打開「即時數據」,看所有彈簧一起跳動。</p>
+      </div>
+
+      <div class="dash" id="liveDash">
+        <div class="dash__bar">
+          <div>
+            <h3 class="dash__title">Analytics Overview</h3>
+            <span class="dash__sub">Last 7 days</span>
+          </div>
+          <div class="dash__controls">
+            <div class="dash__live">
+              <span class="dot"></span>
+              <label class="lg-switch">
+                <input type="checkbox" id="liveToggle">
+                <span class="lg-switch__track"><span class="lg-switch__thumb"></span></span>
+                即時數據
+              </label>
+            </div>
+            <button class="lg lg-btn lg-btn--pill" data-lg data-lg-toast
+                    data-toast-title="Report exported"
+                    data-toast-msg="analytics-7d.csv 已可下載。"
+                    data-toast-icon="check"><svg class="ph" width="16" height="16"><use href="#ph-bell"/></svg>觸發通知</button>
+          </div>
+        </div>
+
+        <div class="dash__grid">
+          <div class="lg lg-stat" data-lg>
+            <span class="lg-stat__label"><svg class="ph"><use href="#ph-currency-circle-dollar"/></svg>Revenue</span>
+            <div class="lg-stat__row">
+              <span class="lg-stat__value" data-lg-value="48250" data-lg-prefix="$"></span>
+              <span class="lg-stat__delta" data-dash-delta><svg class="ph"><use href="#ph-trend-up"/></svg>12.4%</span>
+            </div>
+            <svg class="lg-stat__spark" data-lg-spark="28,31,30,36,34,40,44"></svg>
+          </div>
+
+          <div class="lg lg-stat" data-lg>
+            <span class="lg-stat__label"><svg class="ph"><use href="#ph-users"/></svg>Active Users</span>
+            <div class="lg-stat__row">
+              <span class="lg-stat__value" data-lg-value="3120"></span>
+              <span class="lg-stat__delta" data-dash-delta><svg class="ph"><use href="#ph-trend-up"/></svg>8.1%</span>
+            </div>
+            <svg class="lg-stat__spark" data-lg-spark="40,38,42,41,46,48,52"></svg>
+          </div>
+
+          <div class="lg lg-stat" data-lg>
+            <span class="lg-stat__label"><svg class="ph"><use href="#ph-cursor-click"/></svg>Conversion</span>
+            <div class="lg-stat__row">
+              <span class="lg-stat__value" data-lg-value="3.8" data-lg-suffix="%"></span>
+              <span class="lg-stat__delta lg-stat__delta--down" data-dash-delta><svg class="ph"><use href="#ph-trend-down"/></svg>1.2%</span>
+            </div>
+            <svg class="lg-stat__spark" data-lg-spark="5,4.6,4.8,4.2,4,3.9,3.8"></svg>
+          </div>
+
+          <div class="lg lg-chart dash__chart" data-lg>
+            <div class="lg-chart__head">
+              <h4 class="lg-chart__title">Weekly Traffic</h4>
+              <span class="lg-chart__meta">visits · 本週</span>
+            </div>
+            <svg class="lg-chart__svg" data-lg-chart="line" data-lg-points="1240,1390,1180,1620,1510,1880,2040" data-lg-labels="Mon,Tue,Wed,Thu,Fri,Sat,Sun"></svg>
+          </div>
+
+          <div class="dash__side">
+            <div class="dash__gaugewrap" style="display:flex;justify-content:center;">
+              <div class="lg lg-gauge" data-lg data-lg-press data-lg-profile="circle" data-lg-value="74" data-lg-unit="%" data-lg-label="Goal"></div>
+            </div>
+            <div class="lg dash__sidecard" data-lg>
+              <div class="dash__meters">
+                <div class="dash__meterrow" data-dash-meter>
+                  <div class="dash__meterhead"><span>Server Load</span><b>68%</b></div>
+                  <div class="lg-meter" data-lg-value="68"></div>
+                </div>
+                <div class="dash__meterrow" data-dash-meter>
+                  <div class="dash__meterhead"><span>Storage</span><b>43%</b></div>
+                  <div class="lg-meter" data-lg-value="43"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="view-section">
+      <div class="bento">
+
+        <div class="tile lg-static lg t2">
+          <div class="tile__head"><h3>Stat Card</h3></div>
+          <div class="tile__stage tile__stage--dash">
+            <div class="lg lg-stat" data-lg>
+              <span class="lg-stat__label"><svg class="ph"><use href="#ph-trend-up"/></svg>Monthly Revenue</span>
+              <div class="lg-stat__row">
+                <span class="lg-stat__value" data-lg-value="12840" data-lg-prefix="$"></span>
+                <span class="lg-stat__delta"><svg class="ph"><use href="#ph-trend-up"/></svg>6.2%</span>
+              </div>
+              <svg class="lg-stat__spark" data-lg-spark="20,24,22,28,30,34,33,38"></svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="tile lg-static lg t2">
+          <div class="tile__head"><h3>Meter</h3></div>
+          <div class="tile__stage tile__stage--dash tile__stage--col">
+            <div class="dash__meterrow">
+              <div class="dash__meterhead"><span>Upload</span><b>72%</b></div>
+              <div class="lg-meter" data-lg-value="72"></div>
+            </div>
+            <div class="dash__meterrow">
+              <div class="dash__meterhead"><span>Battery</span><b>34%</b></div>
+              <div class="lg-meter" data-lg-value="34"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tile lg-static lg t2">
+          <div class="tile__head"><h3>Gauge</h3></div>
+          <div class="tile__stage tile__stage--dash tile__stage--center">
+            <div class="lg lg-gauge" data-lg data-lg-press data-lg-profile="circle" data-lg-value="62" data-lg-unit="%" data-lg-label="CPU"></div>
+          </div>
+        </div>
+
+        <div class="tile lg-static lg t3">
+          <div class="tile__head"><h3>Chart</h3></div>
+          <div class="tile__stage tile__stage--dash">
+            <div class="lg lg-chart" data-lg>
+              <div class="lg-chart__head">
+                <h4 class="lg-chart__title">Revenue</h4>
+                <span class="lg-chart__meta">Q1–Q4</span>
+              </div>
+              <svg class="lg-chart__svg" data-lg-chart="bar" data-lg-points="32,45,38,56" data-lg-labels="Q1,Q2,Q3,Q4"></svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="tile lg-static lg t3">
+          <div class="tile__head"><h3>Toast</h3></div>
+          <div class="tile__stage">
+            <button class="lg lg-btn lg-btn--pill" data-lg data-lg-toast
+                    data-toast-title="已加入收藏"
+                    data-toast-msg="這幅畫作已存進你的收藏。"
+                    data-toast-icon="heart-fill"><svg class="ph" width="17" height="17"><use href="#ph-bell"/></svg>顯示通知</button>
+            <button class="lg lg-btn lg-btn--pill lg-btn--accent" data-lg-toast
+                    data-toast-title="Upgrade complete"
+                    data-toast-msg="You're now on the Pro plan."
+                    data-toast-icon="rocket-launch"><svg class="ph" width="17" height="17"><use href="#ph-rocket-launch"/></svg>成功通知</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ==================== 分頁三:AI 整合指南 ==================== -->
+<section class="view" id="view-ai">
+  <div class="view-page">
+
+    <div class="view-head">
+      <span class="eyebrow">AI Integration · AI 整合</span>
+      <h2 class="display">讓 AI 替你鋪玻璃</h2>
+      <p class="desc">把下方的「AI 規格書」交給 Claude Code、Cursor 或任何對話式 AI,它就知道這套工具包的全部用法——之後你只要描述想要的頁面,AI 會直接以 .lg 元件實作,而不是自己亂寫 backdrop-filter。</p>
+    </div>
+
+    <div class="view-section">
+      <div class="flow">
+        <div class="principle lg-static lg">
+          <span class="ph-badge"><svg class="ph" width="22" height="22"><use href="#ph-download-simple"/></svg></span>
+          <h3>一、放入檔案</h3>
+          <p>把 liquid-glass.css 與 liquid-glass.js 複製進專案,AI 產生的頁面會直接引用它們。</p>
+        </div>
+        <div class="principle lg-static lg">
+          <span class="ph-badge"><svg class="ph" width="22" height="22"><use href="#ph-file-text"/></svg></span>
+          <h3>二、餵入規格書</h3>
+          <p>依你的工具,把規格書存成 CLAUDE.md、Cursor 規則或 Copilot 指示檔;對話式 AI 則直接貼上。</p>
+        </div>
+        <div class="principle lg-static lg">
+          <span class="ph-badge"><svg class="ph" width="22" height="22"><use href="#ph-rocket-launch"/></svg></span>
+          <h3>三、下指令驗收</h3>
+          <p>用自然語言描述頁面,AI 以工具包元件實作;最後按下方清單驗收成果。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="view-section" id="quickstart">
+      <h2 class="display">三步安裝</h2>
+      <p class="desc">複製兩個檔案、引入、初始化——玻璃就在頁面上了。AI 產生的頁面也是同樣三步。</p>
+      <div class="flow">
+        <div class="step lg-static lg">
+          <div class="step__head">
+            <span class="ph-lead"><svg class="ph" width="22" height="22"><use href="#ph-file-text"/></svg></span>
+            <div><h3>一、引入樣式</h3><p>liquid-glass.css 含全部元件外觀與降級樣式。</p></div>
+          </div>
+          <div class="code"><button class="copy" data-copy><svg class="ph" width="14" height="14"><use href="#ph-copy"/></svg>複製</button><pre><code data-snippet="step1"></code></pre></div>
+        </div>
+        <div class="step lg-static lg">
+          <div class="step__head">
+            <span class="ph-lead"><svg class="ph" width="22" height="22"><use href="#ph-terminal-window"/></svg></span>
+            <div><h3>二、引入腳本並初始化</h3><p>init() 整頁呼叫一次,自動接上折射、拖曳與全部液態物理。</p></div>
+          </div>
+          <div class="code"><button class="copy" data-copy><svg class="ph" width="14" height="14"><use href="#ph-copy"/></svg>複製</button><pre><code data-snippet="step2"></code></pre></div>
+        </div>
+        <div class="step lg-static lg">
+          <div class="step__head">
+            <span class="ph-lead"><svg class="ph" width="22" height="22"><use href="#ph-rocket-launch"/></svg></span>
+            <div><h3>三、第一片玻璃</h3><p>data-lg 啟用折射;按下去就有擠壓回彈與鼓起。</p></div>
+          </div>
+          <div class="code"><button class="copy" data-copy><svg class="ph" width="14" height="14"><use href="#ph-copy"/></svg>複製</button><pre><code data-snippet="step3"></code></pre></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="view-section" id="componentCode">
+      <h2 class="display">元件程式碼庫</h2>
+      <p class="desc">展示頁只給效果,要抄的全在這裡——每段都是可直接貼上的最小結構。液態物理(擠壓、拉伸、黏滯融合、鼓起)由工具包自動接上,不需要額外程式碼;自訂元素加上 <code style="font-size:13px">data-lg-press</code> 也能獲得按壓物理。</p>
+      <div class="acc-list">
+        <details class="acc lg-static lg">
+          <summary><span class="acc__name">按鈕<em>Button</em></span><svg class="ph acc__caret" width="16" height="16"><use href="#ph-caret-down"/></svg></summary>
+          <div class="code"><button class="copy" data-copy><svg class="ph" width="14" height="14"><use href="#ph-copy"/></svg>複製</button><pre><code data-snippet="btn"></code></pre></div>
+        </details>
+        <details class="acc lg-static lg">
+          <summary><span class="acc__name">開關<em>Switch</em></span><svg class="ph acc__caret" width="16" height="16"><use href="#ph-caret-down"/></svg></summary>
+          <div class="code"><button class="copy" data-copy><svg class="ph" width="14" height="14"><use href="#ph-copy"/></svg>複製</button><pre><code data-snippet="switch"></code></pre></div>
+        </details>
+        <details class="acc lg-static lg">
+          <summary><span class="acc__name">卡片<em>Card</em></span><svg class="ph acc__caret" width="16" height="16"><use href="#ph-caret-down"/></svg></summary>
+          <div class="code"><button class="copy" data-copy><svg class="ph" width="14" height="14"><use href="#ph-copy"/></svg>複製</button><pre><code data-snippet="card"></code></pre></div>
+        </details>
+        <details class="acc lg-static lg">
+          <summary><span class="acc__name">搜尋框<em>Search</em></span><svg class="ph acc__caret" width="16" height="16"><use href="#ph-caret-down"/></svg></summary>
+          <div class="code"><button class="copy" data-copy><svg class="ph" width="14" height="14"><use href="#ph-copy"/></svg>複製</button><pre><code data-snippet="search"></code></pre></div>
+        </details>
+        <details class="acc lg-static lg">
+          <summary><span class="acc__name">滑桿<em>Slider</em></span><svg class="ph acc__caret" width="16" height="16"><use href="#ph-caret-down"/></svg></summary>
+          <div class="code"><button class="copy" data-copy><svg class="ph" width="14" height="14"><use href="#ph-copy"/></svg>複製</button><pre><code data-snippet="slider"></code></pre></div>
+        </details>
+        <details class="acc lg-static lg">
+          <summary><span class="acc__name">分頁<em>Segmented Tabs</em></span><svg class="ph acc__caret" width="16" height="16"><use href="#ph-caret-down"/></svg></summary>
+          <div class="code"><button class="copy" data-copy><svg class="ph" width="14" height="14"><use href="#ph-copy"/></svg>複製</button><pre><code data-snippet="tabs"></code></pre></div>
+        </details>
+        <details class="acc lg-static lg">
+          <summary><span class="acc__name">工具提示<em>Tooltip</em></span><svg class="ph acc__caret" width="16" height="16"><use href="#ph-caret-down"/></svg></summary>
+          <div class="code"><button class="copy" data-copy><svg class="ph" width="14" height="14"><use href="#ph-copy"/></svg>複製</button><pre><code data-snippet="tooltip"></code></pre></div>
+        </details>
+        <details class="acc lg-static lg">
+          <summary><span class="acc__name">對話框<em>Modal</em></span><svg class="ph acc__caret" width="16" height="16"><use href="#ph-caret-down"/></svg></summary>
+          <div class="code"><button class="copy" data-copy><svg class="ph" width="14" height="14"><use href="#ph-copy"/></svg>複製</button><pre><code data-snippet="modal"></code></pre></div>
+        </details>
+        <details class="acc lg-static lg">
+          <summary><span class="acc__name">標籤與徽章<em>Chip · Badge</em></span><svg class="ph acc__caret" width="16" height="16"><use href="#ph-caret-down"/></svg></summary>
+          <div class="code"><button class="copy" data-copy><svg class="ph" width="14" height="14"><use href="#ph-copy"/></svg>複製</button><pre><code data-snippet="chip"></code></pre></div>
+        </details>
+        <details class="acc lg-static lg">
+          <summary><span class="acc__name">導航列<em>Navbar</em></span><svg class="ph acc__caret" width="16" height="16"><use href="#ph-caret-down"/></svg></summary>
+          <div class="code"><button class="copy" data-copy><svg class="ph" width="14" height="14"><use href="#ph-copy"/></svg>複製</button><pre><code data-snippet="navbar"></code></pre></div>
+        </details>
+        <details class="acc lg-static lg">
+          <summary><span class="acc__name">Dock<em>Magnify + Goo</em></span><svg class="ph acc__caret" width="16" height="16"><use href="#ph-caret-down"/></svg></summary>
+          <div class="code"><button class="copy" data-copy><svg class="ph" width="14" height="14"><use href="#ph-copy"/></svg>複製</button><pre><code data-snippet="dock"></code></pre></div>
+        </details>
+        <details class="acc lg-static lg">
+          <summary><span class="acc__name">拖曳面板<em>Draggable</em></span><svg class="ph acc__caret" width="16" height="16"><use href="#ph-caret-down"/></svg></summary>
+          <div class="code"><button class="copy" data-copy><svg class="ph" width="14" height="14"><use href="#ph-copy"/></svg>複製</button><pre><code data-snippet="drag"></code></pre></div>
+        </details>
+        <details class="acc lg-static lg">
+          <summary><span class="acc__name">統計卡<em>Stat Card</em></span><svg class="ph acc__caret" width="16" height="16"><use href="#ph-caret-down"/></svg></summary>
+          <div class="code"><button class="copy" data-copy><svg class="ph" width="14" height="14"><use href="#ph-copy"/></svg>複製</button><pre><code data-snippet="stat"></code></pre></div>
+        </details>
+        <details class="acc lg-static lg">
+          <summary><span class="acc__name">進度條<em>Meter</em></span><svg class="ph acc__caret" width="16" height="16"><use href="#ph-caret-down"/></svg></summary>
+          <div class="code"><button class="copy" data-copy><svg class="ph" width="14" height="14"><use href="#ph-copy"/></svg>複製</button><pre><code data-snippet="meter"></code></pre></div>
+        </details>
+        <details class="acc lg-static lg">
+          <summary><span class="acc__name">環形儀表<em>Gauge</em></span><svg class="ph acc__caret" width="16" height="16"><use href="#ph-caret-down"/></svg></summary>
+          <div class="code"><button class="copy" data-copy><svg class="ph" width="14" height="14"><use href="#ph-copy"/></svg>複製</button><pre><code data-snippet="gauge"></code></pre></div>
+        </details>
+        <details class="acc lg-static lg">
+          <summary><span class="acc__name">圖表<em>Chart</em></span><svg class="ph acc__caret" width="16" height="16"><use href="#ph-caret-down"/></svg></summary>
+          <div class="code"><button class="copy" data-copy><svg class="ph" width="14" height="14"><use href="#ph-copy"/></svg>複製</button><pre><code data-snippet="chart"></code></pre></div>
+        </details>
+        <details class="acc lg-static lg">
+          <summary><span class="acc__name">通知<em>Toast</em></span><svg class="ph acc__caret" width="16" height="16"><use href="#ph-caret-down"/></svg></summary>
+          <div class="code"><button class="copy" data-copy><svg class="ph" width="14" height="14"><use href="#ph-copy"/></svg>複製</button><pre><code data-snippet="toast"></code></pre></div>
+        </details>
+      </div>
+    </div>
+
+    <div class="view-section" id="spec">
+      <h2 class="display">AI 規格書</h2>
+      <p class="desc">這份規格濃縮了工具包的規則、全部元件結構與屬性,是所有整合方式共用的核心。複製一次,到處可用。</p>
+      <div class="code code--round"><button class="copy" data-copy><svg class="ph" width="14" height="14"><use href="#ph-copy"/></svg>複製</button><pre><code id="specCode"></code></pre></div>
+    </div>
+
+    <div class="view-section">
+      <h2 class="display">整合到開發工具</h2>
+      <p class="desc">三種主流工具的設定位置與範例。原則相同:讓規格書常駐在 AI 的上下文裡。</p>
+      <div class="steps">
+
+        <div class="step lg-static lg">
+          <div class="step__head">
+            <span class="ph-lead"><svg class="ph" width="22" height="22"><use href="#ph-terminal-window"/></svg></span>
+            <div><h3>Claude Code</h3><p>規格書放進專案根目錄的 CLAUDE.md,每次對話自動載入。</p></div>
+          </div>
+          <div class="code"><button class="copy" data-copy><svg class="ph" width="14" height="14"><use href="#ph-copy"/></svg>複製</button><pre><code data-snippet="aiClaude"></code></pre></div>
+        </div>
+
+        <div class="step lg-static lg">
+          <div class="step__head">
+            <span class="ph-lead"><svg class="ph" width="22" height="22"><use href="#ph-cursor-click"/></svg></span>
+            <div><h3>Cursor</h3><p>存成專案規則 .cursor/rules/liquid-glass.mdc,以 frontmatter 控制套用範圍。</p></div>
+          </div>
+          <div class="code"><button class="copy" data-copy><svg class="ph" width="14" height="14"><use href="#ph-copy"/></svg>複製</button><pre><code data-snippet="aiCursor"></code></pre></div>
+        </div>
+
+        <div class="step lg-static lg">
+          <div class="step__head">
+            <span class="ph-lead"><svg class="ph" width="22" height="22"><use href="#ph-code"/></svg></span>
+            <div><h3>GitHub Copilot</h3><p>存成 .github/copilot-instructions.md,Copilot Chat 與 agent 都會遵循。</p></div>
+          </div>
+          <div class="code"><button class="copy" data-copy><svg class="ph" width="14" height="14"><use href="#ph-copy"/></svg>複製</button><pre><code data-snippet="aiCopilot"></code></pre></div>
+        </div>
+
+        <div class="step lg-static lg">
+          <div class="step__head">
+            <span class="ph-lead"><svg class="ph" width="22" height="22"><use href="#ph-chat-circle"/></svg></span>
+            <div><h3>對話式 AI(Claude、ChatGPT 等)</h3><p>沒有檔案系統就直接貼:下方按鈕會把「規格書 + 任務模板」一起複製。</p></div>
+          </div>
+          <div class="code"><button class="copy" id="copyChatTemplate"><svg class="ph" width="14" height="14"><use href="#ph-copy"/></svg>複製規格書 + 模板</button><pre><code data-snippet="aiChat"></code></pre></div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="view-section">
+      <h2 class="display">驗收清單</h2>
+      <p class="desc">AI 產出後,花三十秒檢查這六點,就能確保玻璃用得正確。</p>
+      <div class="checklist lg-static lg">
+        <ul>
+          <li><svg class="ph" width="17" height="17"><use href="#ph-check"/></svg>liquid-glass.css 與 liquid-glass.js 都有引入,且 LiquidGlass.init() 整頁只呼叫一次。</li>
+          <li><svg class="ph" width="17" height="17"><use href="#ph-check"/></svg>玻璃只用在浮動控制層(導航、卡片、對話框、dock),內文與圖片本身沒有上玻璃。</li>
+          <li><svg class="ph" width="17" height="17"><use href="#ph-check"/></svg>頁面有圖像或多彩背景——玻璃浮在純白上是看不見折射的。</li>
+          <li><svg class="ph" width="17" height="17"><use href="#ph-check"/></svg>大量重複的小元件(列表項、標籤)用了 .lg-static 而非 data-lg。</li>
+          <li><svg class="ph" width="17" height="17"><use href="#ph-check"/></svg>沒有手寫的 backdrop-filter 或自製玻璃 CSS,一律使用工具包 class。</li>
+          <li><svg class="ph" width="17" height="17"><use href="#ph-check"/></svg>動態插入的節點有呼叫 LiquidGlass.attach(el),拖曳元素有設定 bounds。</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="foot-note lg-static lg">
+      <strong>提示</strong> — 規格書約 1,500 字,常駐上下文的成本極低。若 AI 仍自己手寫玻璃效果,在指令裡加一句「只能使用 Liquid Glass Kit 的 class 與 API」通常就能修正。
+    </div>
+
+  </div>
+</section>
+
+</main>
+
+<!-- 首頁 Dock(快速導覽) -->
+<nav class="home-dock lg lg-dock" data-lg id="homeDock" aria-label="Quick navigation">
+  <button class="lg-dock__item" data-lg-tip="Collection" data-scroll="#gallery" aria-label="Collection"><svg class="ph" width="23" height="23"><use href="#ph-image"/></svg></button>
+  <button class="lg-dock__item" data-lg-tip="Detail Study" data-scroll="#study" aria-label="Detail study"><svg class="ph" width="23" height="23"><use href="#ph-magnifying-glass"/></svg></button>
+  <button class="lg-dock__item" data-lg-tip="Globe" data-scroll="#globe" aria-label="Globe"><svg class="ph" width="23" height="23"><use href="#ph-globe-hemisphere-west"/></svg></button>
+  <button class="lg-dock__item" data-lg-tip="About" data-scroll="#about" aria-label="About"><svg class="ph" width="23" height="23"><use href="#ph-book-open"/></svg></button>
+  <button class="lg-dock__item" data-lg-tip="Favourites" id="dockFavs" aria-label="Favourites"><svg class="ph" width="23" height="23"><use href="#ph-heart"/></svg><span class="lg-badge dock-badge" id="favBadge" hidden>0</span></button>
+  <button class="lg-dock__item" data-lg-tip="Exhibition controls" id="dockControls" aria-label="Exhibition controls"><svg class="ph" width="23" height="23"><use href="#ph-sliders-horizontal"/></svg></button>
+  <button class="lg-dock__item" data-lg-tip="Back to top" data-scroll-top aria-label="Back to top"><svg class="ph" width="23" height="23"><use href="#ph-arrow-up"/></svg></button>
+</nav>
+
+<!-- 展覽控制面板(可拖曳,預設收合) -->
+<aside class="ctrl-panel lg" data-lg data-lg-drag="viewport" data-lg-drag-handle=".ctrl-panel__head" id="ctrlPanel" aria-label="Exhibition controls" hidden>
+  <div class="ctrl-panel__head">
+    <svg class="ph" width="15" height="15"><use href="#ph-dots-six"/></svg>
+    <span>Exhibition Controls</span>
+    <button class="ctrl-close" id="ctrlClose" aria-label="Close controls"><svg class="ph" width="15" height="15"><use href="#ph-x"/></svg></button>
+  </div>
+  <div class="ctrl-panel__body">
+    <label class="lg-switch">
+      <input type="checkbox" id="ctrlMotion" checked>
+      <span class="lg-switch__track"><span class="lg-switch__thumb"></span></span>
+      Ambient motion
+    </label>
+    <label class="lg-switch">
+      <input type="checkbox" id="ctrlChroma" checked>
+      <span class="lg-switch__track"><span class="lg-switch__thumb"></span></span>
+      Chromatic fringe
+    </label>
+    <div class="ctrl-slider">
+      <span class="ctrl-slider__label">Refraction</span>
+      <input class="lg-slider__input" id="ctrlRefraction" type="range" min="0" max="2.5" step="0.05" value="1.25" aria-label="Refraction strength">
+      <output id="ctrlRefractionOut">1.25</output>
+    </div>
+  </div>
+</aside>
+
+<!-- 畫作細節對話框(v3:前後導覽、計數、滾輪/雙擊縮放、收藏) -->
+<div class="lg-modal" id="paintingModal" aria-hidden="true">
+  <div class="lg-modal__overlay" data-lg-close></div>
+  <div class="lg-modal__panel lg lg-modal__panel--wide" data-lg role="dialog" aria-modal="true" aria-labelledby="pmTitle">
+    <div class="pm-grid">
+      <div class="pm-viewport" id="pmViewport">
+        <img id="pmImg" alt="" draggable="false">
+        <span class="lg-chip pm-counter" id="pmCounter" aria-live="polite">1 / 10</span>
+        <button class="icon-mini pm-nav pm-nav--prev" id="pmPrev" data-lg-press aria-label="Previous painting"><svg class="ph" width="18" height="18"><use href="#ph-caret-left"/></svg></button>
+        <button class="icon-mini pm-nav pm-nav--next" id="pmNext" data-lg-press aria-label="Next painting"><svg class="ph" width="18" height="18"><use href="#ph-caret-right"/></svg></button>
+      </div>
+      <div class="pm-side">
+        <div class="pm-titlerow">
+          <h3 id="pmTitle" lang="en"></h3>
+          <button class="icon-mini" id="pmFav" data-lg-press aria-label="Favourite this painting"><svg class="ph" width="18" height="18"><use href="#ph-heart"/></svg></button>
+        </div>
+        <p class="pm-meta" id="pmMeta" lang="en"></p>
+        <p class="pm-desc" id="pmDesc" lang="en"></p>
+        <div class="pm-chips" id="pmChips"></div>
+        <div class="pm-zoom lg-static lg">
+          <svg class="ph" width="16" height="16"><use href="#ph-magnifying-glass-minus"/></svg>
+          <input class="lg-slider__input" id="pmZoom" type="range" min="1" max="3" step="0.05" value="1" aria-label="Zoom">
+          <svg class="ph" width="16" height="16"><use href="#ph-magnifying-glass-plus"/></svg>
+        </div>
+        <p class="pm-tip">Scroll to zoom toward the cursor · double-click to magnify · ← → to browse</p>
+        <div class="pm-actions">
+          <button class="lg lg-btn lg-btn--pill" data-lg data-lg-close>Close</button>
+          <button class="lg lg-btn lg-btn--accent lg-btn--pill" id="pmLocate"><svg class="ph" width="16" height="16"><use href="#ph-map-pin"/></svg>Locate on globe</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 導覽字卡(Begin the Tour) -->
+<div class="tour-cap lg" data-lg id="tourCap" hidden role="dialog" aria-label="Guided tour">
+  <p class="tour-cap__text" id="tourText"></p>
+  <div class="tour-cap__row">
+    <span class="tour-dots" id="tourDots" aria-hidden="true"></span>
+    <span class="spacer"></span>
+    <button class="lg lg-btn lg-btn--sm lg-btn--pill" data-lg id="tourEnd">End</button>
+    <button class="lg lg-btn lg-btn--sm lg-btn--pill lg-btn--accent" id="tourNext">Next</button>
+  </div>
+</div>
+
+
+<!-- ==================== 對話框 ==================== -->
+<div class="lg-modal" id="modalSunflowers" aria-hidden="true">
+  <div class="lg-modal__overlay" data-lg-close></div>
+  <div class="lg-modal__panel lg" data-lg role="dialog" aria-modal="true" aria-labelledby="mTitleSun">
+    <h3 id="mTitleSun" style="margin:0 0 4px;font-size:21px;font-family:var(--font-display);">向日葵花束</h3>
+    <p style="margin:0 0 14px;font-size:12.5px;color:var(--lg-text-dim);">Bouquet of Sunflowers · 1881 · 油彩,畫布 · 紐約大都會藝術博物館</p>
+    <p style="margin:0 0 22px;font-size:14px;line-height:1.9;color:var(--lg-text-dim);">在梵谷畫出他著名的向日葵之前七年,莫內已在阿讓特伊的花園剪下這束花。他不在乎花瓣的植物學細節——金黃、橙紅與綠在筆下互相侵入,連白色花瓶與紅桌布都在震動。梵谷後來在巴黎見到此作,寫信告訴弟弟:莫內的向日葵,比他想像的更好。</p>
+    <div style="display:flex;justify-content:flex-end;"><button class="lg lg-btn lg-btn--pill" data-lg data-lg-close>關閉</button></div>
+  </div>
+</div>
+
+<div class="lg-modal" id="modalBridge" aria-hidden="true">
+  <div class="lg-modal__overlay" data-lg-close></div>
+  <div class="lg-modal__panel lg" data-lg role="dialog" aria-modal="true" aria-labelledby="mTitleBridge">
+    <h3 id="mTitleBridge" style="margin:0 0 4px;font-size:21px;font-family:var(--font-display);">睡蓮池上的橋</h3>
+    <p style="margin:0 0 14px;font-size:12.5px;color:var(--lg-text-dim);">Bridge over a Pond of Water Lilies · 1899 · 油彩,畫布 · 紐約大都會藝術博物館</p>
+    <p style="margin:0 0 22px;font-size:14px;line-height:1.9;color:var(--lg-text-dim);">1899 年夏天,莫內站在自己親手設計的日式水園前,把畫架對準那座綠色木橋,一連畫了十八幅。這一幅裡沒有天空——天空全部沉在池水裡,與睡蓮、垂柳的倒影織成一片。橋是畫面上唯一的人造物,卻安靜得像是從植物裡長出來的。</p>
+    <div style="display:flex;justify-content:flex-end;"><button class="lg lg-btn lg-btn--pill" data-lg data-lg-close>關閉</button></div>
+  </div>
+</div>
+
+<div class="lg-modal" id="modalParasol" aria-hidden="true">
+  <div class="lg-modal__overlay" data-lg-close></div>
+  <div class="lg-modal__panel lg" data-lg role="dialog" aria-modal="true" aria-labelledby="mTitleParasol">
+    <h3 id="mTitleParasol" style="margin:0 0 4px;font-size:21px;font-family:var(--font-display);">撐陽傘的女人(面向左)</h3>
+    <p style="margin:0 0 14px;font-size:12.5px;color:var(--lg-text-dim);">Essai de figure en plein-air · 1886 · 油彩,畫布 · 巴黎奧塞美術館</p>
+    <p style="margin:0 0 22px;font-size:14px;line-height:1.9;color:var(--lg-text-dim);">莫內自己給它的名字是「戶外人物習作」——人物是誰並不重要,他刻意抹去了她的五官。重要的是逆光:陽光從身後穿透紗裙與陽傘,把人物的輪廓溶進天空,只留下胸前一點珊瑚紅。模特兒是繼女蘇珊,站姿令人想起十一年前同一題材裡的卡米爾。</p>
+    <div style="display:flex;justify-content:flex-end;"><button class="lg lg-btn lg-btn--pill" data-lg data-lg-close>關閉</button></div>
+  </div>
+</div>
+
+<div class="lg-modal" id="demoModal" aria-hidden="true">
+  <div class="lg-modal__overlay" data-lg-close></div>
+  <div class="lg-modal__panel lg" data-lg role="dialog" aria-modal="true" aria-labelledby="demoModalTitle">
+    <h3 id="demoModalTitle" style="margin:0 0 8px;font-size:18px;">啟用液態折射?</h3>
+    <p style="margin:0 0 22px;font-size:14px;line-height:1.8;color:var(--lg-text-dim);">折射會即時彎曲面板背後的畫面。這個對話框本身就是一片玻璃——注意邊緣如何扭曲背景。</p>
+    <div style="display:flex;gap:12px;justify-content:flex-end;">
+      <button class="lg lg-btn lg-btn--pill" data-lg data-lg-close>取消</button>
+      <button class="lg lg-btn lg-btn--accent lg-btn--pill" data-lg-close><svg class="ph" width="16" height="16"><use href="#ph-check"/></svg>啟用</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============ Liquid Glass Kit(內嵌)============ */
+{{JS}}
+</script>
+<script>
+/* ============ 網站邏輯 ============ */
+/* 指派畫作資源 */
+document.querySelectorAll('[data-art]').forEach(function (n) { n.src = window.ART[n.getAttribute('data-art')]; });
+document.querySelectorAll('[data-art-bg]').forEach(function (n) {
+  n.style.setProperty('--lg-bg-image', 'url("' + window.ART[n.getAttribute('data-art-bg')] + '")');
+});
+
+LiquidGlass.init();
+
+/* ---------- 分頁切換(hash 路由) ---------- */
+var VIEWS = ['home', 'components', 'ai'];
+var video = document.getElementById('bgVideo');
+
+function setView(name, scrollTarget) {
+  if (VIEWS.indexOf(name) < 0) name = 'home';
+  document.body.setAttribute('data-view', name);
+  document.querySelectorAll('.topnav__link[data-goto]').forEach(function (l) {
+    l.classList.toggle('is-active', l.getAttribute('data-goto') === name);
+  });
+  if (location.hash !== '#' + name) history.replaceState(null, '', '#' + name);
+  if (name === 'home') { if (!document.documentElement.classList.contains('no-ambient')) { video.play && video.play().catch(function () {}); } }
+  else { video.pause && video.pause(); }
+  requestAnimationFrame(function () {
+    LiquidGlass.refresh();
+    repositionTabs(document.getElementById('view-' + name));
+    if (scrollTarget) {
+      var t = document.querySelector(scrollTarget);
+      if (t) { t.scrollIntoView({ behavior: 'smooth' }); return; }
+    }
+    window.scrollTo(0, 0);
+  });
+}
+
+function repositionTabs(scope) {
+  (scope || document).querySelectorAll('.lg-tabs').forEach(function (root) {
+    var pill = root.querySelector('.lg-tabs__pill');
+    var tab = root.querySelector('.lg-tabs__tab.is-active');
+    if (pill && tab && tab.offsetWidth) {
+      pill.style.width = tab.offsetWidth + 'px';
+      pill.style.left = tab.offsetLeft + 'px';
+    }
+  });
+}
+
+document.addEventListener('click', function (e) {
+  var t = e.target.closest ? e.target.closest('[data-goto]') : null;
+  if (!t) return;
+  setView(t.getAttribute('data-goto'), t.getAttribute('data-scroll'));
+});
+document.querySelectorAll('[data-scroll]:not([data-goto])').forEach(function (b) {
+  b.addEventListener('click', function () {
+    var t = document.querySelector(b.getAttribute('data-scroll'));
+    if (t) t.scrollIntoView({ behavior: 'smooth' });
+  });
+});
+window.addEventListener('hashchange', function () { setView(location.hash.slice(1)); });
+setView(location.hash.slice(1) || 'home');
+
+/* ---------- TopBar 捲動樣式 ---------- */
+var topbar = document.getElementById('topbar');
+addEventListener('scroll', function () {
+  topbar.classList.toggle('is-scrolled', scrollY > 36);
+}, { passive: true });
+
+/* ---------- 影片備援:載入失敗自動換成莫內畫作 ---------- */
+function videoFail() { document.body.classList.add('video-failed'); }
+video.addEventListener('error', videoFail);
+document.getElementById('bgVideoSrc').addEventListener('error', videoFail);
+setTimeout(function () { if (video.readyState < 2) videoFail(); }, 8000);
+
+/* ---------- 關於印象派:分頁面板 ---------- */
+document.querySelectorAll('#aboutTabs [data-panel]').forEach(function (tab) {
+  tab.addEventListener('click', function () {
+    var id = tab.getAttribute('data-panel');
+    document.querySelectorAll('[data-panel-group] .tab-panel').forEach(function (p) {
+      p.classList.toggle('is-active', p.getAttribute('data-panel-id') === id);
+    });
+  });
+});
+
+/* ---------- 深淺色切換 ---------- */
+var themeBtn = document.getElementById('themeToggle');
+themeBtn.addEventListener('click', function () {
+  var root = document.documentElement;
+  var dark = root.getAttribute('data-lg-theme') === 'dark';
+  root.setAttribute('data-lg-theme', dark ? 'light' : 'dark');
+  themeBtn.innerHTML = '<svg class="ph" width="17" height="17"><use href="#ph-' + (dark ? 'sun' : 'moon') + '"/></svg>';
+});
+
+/* ---------- 元件程式碼片段 ---------- */
+var SNIPPETS = {
+  btn: '<button class="lg lg-btn" data-lg>次要動作</button>\n<button class="lg lg-btn lg-btn--accent lg-btn--pill">主要動作</button>\n<button class="lg lg-btn lg-btn--icon" data-lg aria-label="收藏">\n  <svg class="ph" width="20" height="20"><use href="#ph-heart"/></svg>\n</button>',
+  switch: '<label class="lg-switch">\n  <input type="checkbox" checked>\n  <span class="lg-switch__track">\n    <span class="lg-switch__thumb"></span>\n  </span>\n  液態折射\n</label>',
+  card: '<div class="lg lg-card" data-lg>\n  <h4 class="lg-card__title">標題</h4>\n  <p class="lg-card__meta">說明文字</p>\n</div>',
+  search: '<div class="lg lg-search" data-lg>\n  <svg class="ph" width="18" height="18"><use href="#ph-magnifying-glass"/></svg>\n  <input type="search" placeholder="搜尋…">\n  <kbd>⌘K</kbd>\n</div>',
+  slider: '<div class="lg lg-slider" data-lg>\n  <svg class="ph" width="18" height="18"><use href="#ph-sun"/></svg>\n  <input class="lg-slider__input" type="range" min="0" max="100" value="62">\n</div>',
+  tabs: '<div class="lg lg-tabs" data-lg role="tablist">\n  <span class="lg-tabs__pill" aria-hidden="true"></span>\n  <button class="lg-tabs__tab is-active" role="tab">印象派</button>\n  <button class="lg-tabs__tab" role="tab">野獸派</button>\n</div>',
+  tooltip: '<button class="lg lg-btn lg-btn--icon" data-lg data-lg-tip="加入收藏">\n  <svg class="ph" width="20" height="20"><use href="#ph-star"/></svg>\n</button>',
+  modal: '<button class="lg lg-btn" data-lg data-lg-open="#myModal">開啟</button>\n\n<div class="lg-modal" id="myModal" aria-hidden="true">\n  <div class="lg-modal__overlay" data-lg-close></div>\n  <div class="lg-modal__panel lg" data-lg role="dialog" aria-modal="true">\n    <h3>標題</h3>\n    <button class="lg lg-btn" data-lg data-lg-close>關閉</button>\n  </div>\n</div>',
+  chip: '<span class="lg-chip">\n  <svg class="ph" width="15" height="15"><use href="#ph-palette"/></svg>印象派\n</span>\n<span class="lg-chip">通知<span class="lg-badge">3</span></span>',
+  navbar: '<nav class="lg lg-navbar" data-lg>\n  <span class="lg-navbar__brand">Atelier</span>\n  <span class="lg-navbar__spacer"></span>\n  <button class="lg-navbar__link is-active">畫廊</button>\n  <button class="lg-navbar__link">典藏</button>\n</nav>',
+  dock: '<div class="lg lg-dock" data-lg>\n  <button class="lg-dock__item" aria-label="首頁">\n    <svg class="ph" width="24" height="24"><use href="#ph-house"/></svg>\n  </button>\n  <!-- 更多項目… -->\n</div>',
+  drag: '<!-- data-lg-drag="parent|viewport",handle 可選 -->\n<div class="lg lg-card" data-lg\n     data-lg-drag="parent"\n     data-lg-drag-handle=".drag-handle">\n  <div class="drag-handle">正在播放</div>\n  …\n</div>\n\n// 或以 JS 呼叫:\nLiquidGlass.draggable(el, { bounds: "viewport", inertia: true });',
+  stat: '<div class="lg lg-stat" data-lg>\n  <span class="lg-stat__label">Revenue</span>\n  <div class="lg-stat__row">\n    <span class="lg-stat__value" data-lg-value="48250" data-lg-prefix="$"></span>\n    <span class="lg-stat__delta"><svg class="ph"><use href="#ph-trend-up"/></svg>12.4%</span>\n  </div>\n  <svg class="lg-stat__spark" data-lg-spark="28,31,30,36,34,40,44"></svg>\n</div>',
+  meter: '<div class="lg-meter" data-lg-value="68"></div>\n<!-- 之後改 data-lg-value 即觸發液體晃動 -->',
+  gauge: '<div class="lg lg-gauge" data-lg\n     data-lg-value="74" data-lg-unit="%" data-lg-label="Goal"></div>',
+  chart: '<div class="lg lg-chart" data-lg>\n  <svg class="lg-chart__svg" data-lg-chart="line"\n       data-lg-points="1240,1390,1180,1620,1510,1880"\n       data-lg-labels="Mon,Tue,Wed,Thu,Fri,Sat"></svg>\n</div>\n<!-- data-lg-chart="bar" 可改長條圖 -->',
+  toast: 'LiquidGlass.toast({\n  title: \'已匯出報表\',\n  message: \'analytics.csv 已可下載。\',\n  icon: \'check\'        // Phosphor 圖示名(可選)\n});',
+  step1: 'your-project/\n├── liquid-glass.css\n├── liquid-glass.js\n└── index.html',
+  step2: '<link rel="stylesheet" href="liquid-glass.css">\n<script src="liquid-glass.js"><\/script>\n<script>\n  LiquidGlass.init({ refraction: 1.25, chromatic: 0.55 });\n<\/script>',
+  step3: '<!-- 玻璃材質 + 折射 -->\n<div class="lg lg-card" data-lg>…</div>\n\n<!-- 單一元素微調 -->\n<div class="lg lg-card" data-lg\n     data-lg-refraction="1.6"\n     data-lg-chromatic="0.8"\n     data-lg-blur="2">…</div>\n\n<!-- 輕量磨砂(不折射,適合小元件)-->\n<div class="lg lg-static">…</div>'
+};
+
+/* ---------- AI 規格書 ---------- */
+var SPEC = [
+  '# Liquid Glass Kit — AI 使用規格',
+  '零依賴液態玻璃 UI 工具包(透明玻璃、即時折射、發光背景、拖曳)。',
+  '專案內已有兩個檔案:liquid-glass.css、liquid-glass.js。',
+  '',
+  '## 初始化(每頁一次)',
+  '<link rel="stylesheet" href="liquid-glass.css">',
+  '<script src="liquid-glass.js"><\/script>',
+  '<script>LiquidGlass.init();<\/script>',
+  '',
+  '## 鐵則',
+  '1. 玻璃只用於浮在內容之上的控制層(導航、卡片、面板、對話框、dock);文章、圖片等內容本身不上玻璃。',
+  '2. 折射玻璃 = class="lg" + data-lg;小型或大量重複的元件(列表項、標籤)改用 class="lg lg-static"(磨砂、無折射、便宜)。',
+  '3. 頁面必須有圖像或多彩背景,玻璃效果才看得見。',
+  '4. 不要手寫 backdrop-filter 或自製玻璃 CSS,一律使用工具包的 class 與 API。',
+  '5. 動態插入的節點呼叫 LiquidGlass.attach(el);非 Chromium 瀏覽器會自動降級為磨砂,無需處理。',
+  '6. 儀表元件(統計卡/進度條/環形儀表/圖表)= 玻璃容器 + 實心內容層:數字、走勢圖、圖表本身不透明,只有外框是玻璃——內容上玻璃會看不見,這是技術上必要的邊界。',
+  '',
+  '## 元件結構',
+  '按鈕:<button class="lg lg-btn" data-lg>文字</button>(修飾:lg-btn--pill / --accent / --icon / --lg / --sm)',
+  '卡片:<div class="lg lg-card" data-lg><h4 class="lg-card__title">…</h4><p class="lg-card__meta">…</p></div>',
+  '導航:<nav class="lg lg-navbar" data-lg><span class="lg-navbar__brand">…</span><span class="lg-navbar__spacer"></span><button class="lg-navbar__link is-active">…</button></nav>',
+  '搜尋:<div class="lg lg-search" data-lg><svg>…</svg><input type="search"><kbd>⌘K</kbd></div>',
+  '開關:<label class="lg-switch"><input type="checkbox"><span class="lg-switch__track"><span class="lg-switch__thumb"></span></span>標籤</label>',
+  '滑桿:<div class="lg lg-slider" data-lg><input class="lg-slider__input" type="range"></div>',
+  '分頁:<div class="lg lg-tabs" data-lg role="tablist"><span class="lg-tabs__pill"></span><button class="lg-tabs__tab is-active" role="tab">…</button>…</div>',
+  '對話框:<div class="lg-modal" id="m1"><div class="lg-modal__overlay" data-lg-close></div><div class="lg-modal__panel lg" data-lg role="dialog">…</div></div>;以 <button data-lg-open="#m1"> 開啟、data-lg-close 關閉。',
+  'Dock:<div class="lg lg-dock" data-lg><button class="lg-dock__item">icon</button>…</div>(自帶鄰近放大)',
+  '標籤:<span class="lg-chip">…</span>;徽章:<span class="lg-badge">3</span>',
+  '工具提示:任何元素加 data-lg-tip="文字"',
+  '拖曳:元素加 data-lg-drag="viewport|parent"(可選 data-lg-drag-handle=".selector"),或 LiquidGlass.draggable(el, { bounds, inertia })',
+  '統計卡:<div class="lg lg-stat" data-lg><span class="lg-stat__label">標籤</span><div class="lg-stat__row"><span class="lg-stat__value" data-lg-value="48250" data-lg-prefix="$"></span><span class="lg-stat__delta"><svg><use href="#ph-trend-up"/></svg>12.4%</span></div><svg class="lg-stat__spark" data-lg-spark="28,31,30,36,40,44"></svg></div>(漲綠跌紅:徽章加 lg-stat__delta--down)',
+  '進度條:<div class="lg-meter" data-lg-value="68"></div>(本身非玻璃:凹槽軌道 + 實心液體填充,前緣有彎月鼓頭)',
+  '環形儀表:<div class="lg lg-gauge" data-lg data-lg-press data-lg-profile="circle" data-lg-value="74" data-lg-unit="%" data-lg-label="Goal"></div>',
+  '圖表:<div class="lg lg-chart" data-lg><div class="lg-chart__head"><h4 class="lg-chart__title">標題</h4></div><svg class="lg-chart__svg" data-lg-chart="line" data-lg-points="1240,1390,1180,1620" data-lg-labels="Mon,Tue,Wed,Thu"></svg></div>(data-lg-chart 可為 line 或 bar;手刻 SVG、零依賴、hover 顯數值)',
+  '通知:LiquidGlass.toast({ title, message, icon, duration })(JS 呼叫;右下堆疊、自動消退、最多 4 則)',
+  '發光背景:<div class="lg-glow" style="--lg-glow-base:#7d92ad;"><div class="lg-glow__image" style="--lg-bg-image:url(bg.jpg);"></div></div>',
+  '',
+  '## 屬性(單一元素覆寫)',
+  'data-lg-refraction(折射倍率,預設 1.25)、data-lg-chromatic(色散 0–1)、data-lg-blur、data-lg-saturate、data-lg-bezel(斜面 px)、data-lg-thickness(厚度 px)、data-lg-profile(squircle|circle|lip)',
+  '儀表資料(屬性驅動):data-lg-value(統計卡/進度條/環形儀表的目標值)、data-lg-spark(統計卡走勢逗號數列)、data-lg-points + data-lg-labels(圖表資料)、data-lg-prefix / -suffix / -decimals(數字格式)。改變 data-lg-value / -spark / -points 即觸發彈簧動畫(單一 MutationObserver 自動接手,無需手動呼叫)。',
+  '',
+  '## JS API',
+  'LiquidGlass.init(config?) / attach(el, opts?) / draggable(el, opts?) / refresh() / toast({ title, message, icon, duration }) / config / supported / reducedMotion',
+  '',
+  '## Tokens(:root 覆寫)',
+  '--lg-accent(品牌色,預設 #cf6045)、--lg-tint、--lg-text、--lg-radius-s/m/l/pill、--lg-blur-fallback、--lg-font',
+  '主題:<html data-lg-theme="dark">,不設則跟隨系統。'
+].join('\n');
+
+document.getElementById('specCode').textContent = SPEC;
+
+SNIPPETS.aiClaude = 'your-project/\n├── CLAUDE.md          ← 規格書放這裡\n├── liquid-glass.css\n└── liquid-glass.js\n\n# CLAUDE.md 內容:\n# (貼上上方「AI 規格書」全文,可再加上你的專案慣例)\n\n# 之後直接下指令,例如:\n$ claude "用 Liquid Glass Kit 做一個天氣面板頁面,\\\n  背景用漸層,含搜尋框、三張城市卡片與一個設定對話框"';
+SNIPPETS.aiCursor = 'your-project/\n└── .cursor/\n    └── rules/\n        └── liquid-glass.mdc\n\n# liquid-glass.mdc 內容:\n---\ndescription: Liquid Glass Kit 元件與用法\nglobs: ["**/*.html", "**/*.css", "**/*.js"]\nalwaysApply: false\n---\n\n(貼上上方「AI 規格書」全文)';
+SNIPPETS.aiCopilot = 'your-project/\n└── .github/\n    └── copilot-instructions.md\n\n# copilot-instructions.md 內容:\n## UI 元件規範\n本專案的玻璃擬態 UI 一律使用 Liquid Glass Kit,\n不要手寫 backdrop-filter。\n\n(貼上上方「AI 規格書」全文)';
+SNIPPETS.aiChat = '(以下模板會連同規格書一起複製)\n\n[AI 規格書全文]\n\n---\n請依上述規格,只使用 Liquid Glass Kit 的 class 與 API,\n替我製作:\n\n«在這裡描述你要的頁面,例如:\n 一個音樂播放器頁面,深色主題,\n 含導航列、正在播放卡片(可拖曳)、音量滑桿與播放清單»\n\n要求:單一 HTML 檔,引用 liquid-glass.css 與 liquid-glass.js,\n頁面要有圖像或漸層背景讓玻璃可見。';
+
+document.querySelectorAll('[data-snippet]').forEach(function (n) {
+  n.textContent = SNIPPETS[n.getAttribute('data-snippet')] || '';
+});
+
+/* ---------- 複製按鈕 ---------- */
+function bindCopy(btn, getText) {
+  btn.addEventListener('click', function () {
+    navigator.clipboard.writeText(getText()).then(function () {
+      var old = btn.innerHTML;
+      btn.innerHTML = '<svg class="ph" width="14" height="14"><use href="#ph-check"/></svg>已複製';
+      setTimeout(function () { btn.innerHTML = old; }, 1400);
+    });
+  });
+}
+document.querySelectorAll('.copy[data-copy]').forEach(function (btn) {
+  bindCopy(btn, function () { return btn.parentElement.querySelector('code').textContent; });
+});
+bindCopy(document.getElementById('copyChatTemplate'), function () {
+  var task = SNIPPETS.aiChat.split('---')[1] || '';
+  return SPEC + '\n\n---' + task;
+});
+
+/* ---------- 調參面板 ---------- */
+function bindParam(id, key) {
+  var input = document.getElementById(id);
+  var out = document.getElementById(id + 'Out');
+  input.addEventListener('input', function () {
+    LiquidGlass.config[key] = parseFloat(input.value);
+    out.textContent = input.value;
+    LiquidGlass.refresh();
+  });
+}
+bindParam('pgRefraction', 'refraction');
+bindParam('pgChromatic', 'chromatic');
+bindParam('pgBlur', 'blur');
+bindParam('pgSaturate', 'saturate');
+document.querySelectorAll('#profileTabs [data-profile]').forEach(function (tab) {
+  tab.addEventListener('click', function () {
+    LiquidGlass.config.profile = tab.getAttribute('data-profile');
+    LiquidGlass.refresh();
+  });
+});
+</script>
+<script>
+/* ============ 首頁 v3:液態展廳互動模組 ============ */
+(function () {
+  'use strict';
+
+  var RM = false;
+  try { RM = matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (err) {}
+
+  /* ---------- 資料 ---------- */
+  var MUSEUMS = {
+    met:   { name: 'The Metropolitan Museum of Art', city: 'New York', country: 'United States', lat: 40.7794, lng: -73.9632 },
+    nga:   { name: 'National Gallery of Art', city: 'Washington, D.C.', country: 'United States', lat: 38.8913, lng: -77.0199 },
+    orsay: { name: 'Mus\u00e9e d\u2019Orsay', city: 'Paris', country: 'France', lat: 48.8600, lng: 2.3266 },
+    aic:   { name: 'The Art Institute of Chicago', city: 'Chicago', country: 'United States', lat: 41.8796, lng: -87.6237 },
+    cma:   { name: 'The Cleveland Museum of Art', city: 'Cleveland', country: 'United States', lat: 41.5090, lng: -81.6121 }
+  };
+
+  var DATA = [
+    { id: 'sunflowers', key: 'sunflowers', ar: 0.8094, title: 'Bouquet of Sunflowers', year: '1881', museum: 'met', cat: 'still', tags: ['Still life', 'V\u00e9theuil'],
+      desc: 'Painted seven years before Van Gogh\u2019s famous series \u2014 and Van Gogh knew it. He saw this canvas in Paris and wrote to his brother that Monet\u2019s sunflowers were better than his own. Gold and orange invade one another until even the white vase and the red cloth seem to vibrate.' },
+    { id: 'bridge', key: 'bridge', ar: 0.9197, title: 'Bridge over a Pond of Water Lilies', year: '1899', museum: 'met', cat: 'series', tags: ['Giverny', 'Japanese bridge'],
+      desc: 'In the summer of 1899 Monet set his easel before the wooden footbridge of his own water garden and painted it eighteen times. There is no sky in this one \u2014 the sky has sunk entirely into the pond, woven among the lilies and the willow reflections.' },
+    { id: 'madame', key: 'madame', ar: 0.9174, title: 'Woman with a Parasol \u2013 Madame Monet and Her Son', year: '1875', museum: 'nga', cat: 'figure', tags: ['Camille', 'Plein air'],
+      desc: 'A walk on a windy day above Argenteuil: Camille seen from below against racing clouds, young Jean half-hidden in the grass. Painted quickly and entirely outdoors \u2014 the veil, the dress and the meadow all bend in the same gust of wind.' },
+    { id: 'parasol', key: 'parasol', ar: 0.9275, title: 'Woman with a Parasol (facing left)', year: '1886', museum: 'orsay', cat: 'figure', tags: ['Suzanne', 'Backlight'],
+      desc: 'Monet titled it simply \u201cstudy of a figure outdoors\u201d. The face is deliberately erased \u2014 what matters is the backlight pouring through gauze and parasol, dissolving the figure into the sky and leaving a single coral note at her chest. The model is his stepdaughter Suzanne, echoing Camille\u2019s pose of 1875.' },
+    { id: 'cliffs', key: 'cliffs', ar: 1.6779, title: 'Cliffs at Pourville', year: '1882', museum: 'nga', cat: 'landscape', tags: ['Normandy', 'The Channel'],
+      desc: 'From the clifftop at Pourville, sea and sky share one pale palette of blue, turquoise and mauve. Two women rest in the grass while three dozen sails scatter toward the horizon \u2014 leisure in the foreground, labour far away.' },
+    { id: 'wheat', key: 'wheat', ar: 1.7065, title: 'Stacks of Wheat (End of Summer)', year: '1890\u201391', museum: 'aic', cat: 'series', tags: ['Giverny', 'First series'],
+      desc: 'The beginning of Monet\u2019s great series. Two stacks stood in the field behind his house; he painted them through frost, snow and sunset \u2014 proving the real subject was never the wheat, but the hour of the day.' },
+    { id: 'rouen', key: 'rouen', ar: 0.9443, title: 'Rouen Cathedral, West Fa\u00e7ade, Sunlight', year: '1894', museum: 'nga', cat: 'series', tags: ['Rouen', 'Series'],
+      desc: 'More than thirty canvases of the same stone front, painted from a rented room across the square. Here the late-morning sun is so intense that the Gothic carving nearly dissolves \u2014 stone behaving like light.' },
+    { id: 'poppyfields', key: 'poppyfields', ar: 1.3605, title: 'Poppy Fields near Argenteuil', year: '1875', museum: 'met', cat: 'landscape', tags: ['Argenteuil', 'Summer'],
+      desc: 'Poplars, a hayfield and a ribbon of poppies under a moving sky. Painted the summer Monet lived at Argenteuil, when the new railway could carry Parisians \u2014 and painters \u2014 to the banks of the Seine within the hour.' },
+    { id: 'poppies', key: 'poppies', ar: 1.3193, title: 'Poppies', year: '1873', museum: 'orsay', cat: 'landscape', tags: ['Argenteuil', 'Camille & Jean'],
+      desc: 'Perhaps the most beloved field in French painting. Camille and Jean appear twice \u2014 at the hilltop and again at the foot of the slope \u2014 as if the same walk were painted in two moments. Every poppy is one loaded stroke of pure vermilion.' },
+    { id: 'gardener', key: 'gardener', ar: 1.4245, title: 'Gardener\u2019s House at Antibes', year: '1888', museum: 'cma', cat: 'landscape', tags: ['Antibes', 'Riviera'],
+      desc: 'Monet went south chasing Mediterranean light and found it almost too bright to paint. Pink roof tiles, spring branches and the blue bay of Antibes \u2014 he wrote that working here was like \u201cfencing with the sun\u201d.' }
+  ];
+  var BY_ID = {};
+  DATA.forEach(function (p) { BY_ID[p.id] = p; });
+
+  function esc(s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); }
+
+  /* ---------- 畫廊渲染(不裁切,原始比例) ---------- */
+  var grid = document.getElementById('artGrid');
+  var html = '';
+  DATA.forEach(function (p) {
+    var m = MUSEUMS[p.museum];
+    var search = (p.title + ' ' + p.year + ' ' + p.tags.join(' ') + ' ' + m.name + ' ' + m.city + ' ' + m.country + ' ' + p.cat).toLowerCase();
+    html += '<article class="lg lg-static art-card" data-lg-press data-id="' + p.id + '" data-cat="' + p.cat + '" data-search="' + esc(search) + '">' +
+      '<button class="art-card__imgbtn" data-open-painting="' + p.id + '" aria-label="Open ' + esc(p.title) + '">' +
+        '<img src="' + window.ART[p.key] + '" alt="' + esc(p.title) + ', ' + p.year + '" style="aspect-ratio:' + p.ar + ';" loading="lazy" draggable="false">' +
+      '</button>' +
+      '<div class="art-card__body">' +
+        '<h3 data-open-painting="' + p.id + '">' + esc(p.title) + '</h3>' +
+        '<p class="meta">' + p.year + ' \u00b7 ' + esc(m.name) + '</p>' +
+        '<div class="art-card__row">' +
+          p.tags.map(function (t) { return '<span class="lg-chip">' + esc(t) + '</span>'; }).join('') +
+          '<span class="spacer"></span>' +
+          '<button class="icon-mini" data-lg-press data-fav="' + p.id + '" data-lg-tip="Favourite" aria-pressed="false" aria-label="Add ' + esc(p.title) + ' to favourites"><svg class="ph" width="17" height="17"><use href="#ph-heart"/></svg></button>' +
+          '<button class="icon-mini" data-lg-press data-locate="' + p.museum + '" data-lg-tip="Locate on globe" aria-label="Locate on globe"><svg class="ph" width="17" height="17"><use href="#ph-map-pin"/></svg></button>' +
+        '</div>' +
+      '</div></article>';
+  });
+  grid.innerHTML = html;
+
+  /* ---------- 瀑布流(最短欄演算法 + FLIP:位移走 transition) ---------- */
+  var cards = [].slice.call(grid.querySelectorAll('.art-card'));
+  var visCards = cards.slice();
+  var GAP = 22;
+
+  function layout() {
+    var W = grid.clientWidth;
+    if (!W) return;
+    var cols = W >= 1020 ? 3 : W >= 660 ? 2 : 1;
+    var colW = Math.floor((W - GAP * (cols - 1)) / cols);
+    var hs = [], i;
+    for (i = 0; i < cols; i++) hs.push(0);
+    visCards.forEach(function (c) {
+      if (c.style.width !== colW + 'px') c.style.width = colW + 'px';
+    });
+    visCards.forEach(function (c) {
+      var h = c.offsetHeight;
+      var ci = 0;
+      for (i = 1; i < cols; i++) if (hs[i] < hs[ci]) ci = i;
+      c.style.transform = 'translate(' + (ci * (colW + GAP)) + 'px,' + hs[ci] + 'px) scale(var(--card-s,1))';
+      hs[ci] += h + GAP;
+    });
+    var max = 0;
+    for (i = 0; i < cols; i++) if (hs[i] > max) max = hs[i];
+    grid.style.height = (max ? max - GAP : 0) + 'px';
+  }
+
+  var loRaf = 0;
+  function scheduleLayout() {
+    if (loRaf) return;
+    loRaf = requestAnimationFrame(function () { loRaf = 0; layout(); });
+  }
+  new ResizeObserver(scheduleLayout).observe(grid);
+  addEventListener('load', scheduleLayout);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(scheduleLayout);
+
+  /* ---------- 過濾(分類 / 搜尋 / 收藏)+ 結果計數 ---------- */
+  var state = { cat: 'all', q: '', fav: false };
+  var favs = {};
+  var emptyEl = document.getElementById('galleryEmpty');
+  var countEl = document.getElementById('galleryCount');
+
+  function applyFilter() {
+    visCards = [];
+    cards.forEach(function (c) {
+      var ok = (state.cat === 'all' || c.getAttribute('data-cat') === state.cat) &&
+               (!state.q || c.getAttribute('data-search').indexOf(state.q) > -1) &&
+               (!state.fav || favs[c.getAttribute('data-id')]);
+      c.classList.toggle('is-out', !ok);
+      if (ok) visCards.push(c);
+    });
+    emptyEl.hidden = visCards.length > 0;
+    if (countEl) countEl.textContent = visCards.length === cards.length
+      ? cards.length + ' works'
+      : visCards.length + ' of ' + cards.length;
+    layout();
+  }
+  applyFilter();
+  requestAnimationFrame(function () {
+    requestAnimationFrame(function () { grid.classList.remove('no-anim'); });
+  });
+
+  document.querySelectorAll('#catTabs [data-cat]').forEach(function (tab) {
+    tab.addEventListener('click', function () {
+      state.cat = tab.getAttribute('data-cat');
+      applyFilter();
+    });
+  });
+
+  var searchInput = document.getElementById('gallerySearch');
+  searchInput.addEventListener('input', function () {
+    state.q = searchInput.value.trim().toLowerCase();
+    applyFilter();
+  });
+  document.addEventListener('keydown', function (e) {
+    if ((e.metaKey || e.ctrlKey) && (e.key === 'k' || e.key === 'K')) {
+      if (document.body.getAttribute('data-view') !== 'home') return;
+      e.preventDefault();
+      searchInput.focus();
+      searchInput.select();
+    }
+  });
+
+  var favOnly = document.getElementById('favOnly');
+  favOnly.addEventListener('change', function () { state.fav = favOnly.checked; applyFilter(); });
+
+  document.getElementById('clearFilters').addEventListener('click', function () {
+    state.q = ''; searchInput.value = '';
+    state.fav = false; favOnly.checked = false;
+    state.cat = 'all';
+    var allTab = document.querySelector('#catTabs [data-cat="all"]');
+    if (allTab) allTab.click();
+    applyFilter();
+  });
+
+  /* ---------- 收藏:迸發微粒 + 徽章跳動 ---------- */
+  var favBadge = document.getElementById('favBadge');
+  var navFavBadge = document.getElementById('navFavBadge');
+  function favCount() { var n = 0, k; for (k in favs) if (favs[k]) n++; return n; }
+  function paintBadges(bump) {
+    var n = favCount();
+    [favBadge, navFavBadge].forEach(function (b) {
+      if (!b) return;
+      b.textContent = n;
+      b.hidden = n === 0;
+      if (bump && n) {
+        b.classList.remove('bump');
+        void b.offsetWidth;
+        b.classList.add('bump');
+      }
+    });
+  }
+  function burst(btn) {
+    if (RM || !btn) return;
+    for (var i = 0; i < 7; i++) {
+      var p = document.createElement('i');
+      p.className = 'burst-p';
+      var a = (Math.PI * 2 * i) / 7 + Math.random() * 0.7;
+      var d = 20 + Math.random() * 16;
+      p.style.setProperty('--bx', (Math.cos(a) * d).toFixed(1) + 'px');
+      p.style.setProperty('--by', (Math.sin(a) * d).toFixed(1) + 'px');
+      btn.appendChild(p);
+      (function (node) { setTimeout(function () { node.remove(); }, 700); })(p);
+    }
+  }
+  function paintFavBtn(btn, on) {
+    if (!btn) return;
+    btn.classList.toggle('is-fav', on);
+    btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    var u = btn.querySelector('use');
+    if (u) u.setAttribute('href', on ? '#ph-heart-fill' : '#ph-heart');
+  }
+  function toggleFav(id, originBtn) {
+    favs[id] = !favs[id];
+    var cardBtn = grid.querySelector('[data-fav="' + id + '"]');
+    paintFavBtn(cardBtn, favs[id]);
+    if (pmFav && current && current.id === id) paintFavBtn(pmFav, favs[id]);
+    if (favs[id]) burst(originBtn || cardBtn);
+    paintBadges(favs[id]);
+    if (state.fav) applyFilter();
+  }
+
+  /* ---------- 委派點擊 ---------- */
+  document.addEventListener('click', function (e) {
+    var t;
+    if ((t = e.target.closest('[data-fav]'))) { toggleFav(t.getAttribute('data-fav'), t); return; }
+    if ((t = e.target.closest('[data-open-painting]'))) { openPainting(t.getAttribute('data-open-painting')); return; }
+    if ((t = e.target.closest('[data-locate]'))) { goGlobe(t.getAttribute('data-locate')); return; }
+    if ((t = e.target.closest('[data-scroll-top]'))) { window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
+  });
+
+  document.getElementById('dockFavs').addEventListener('click', function () {
+    favOnly.checked = !favOnly.checked;
+    favOnly.dispatchEvent(new Event('change'));
+    document.querySelector('#gallery').scrollIntoView({ behavior: 'smooth' });
+  });
+  var navFavs = document.getElementById('navFavs');
+  if (navFavs) navFavs.addEventListener('click', function () {
+    if (document.body.getAttribute('data-view') !== 'home') setView('home');
+    favOnly.checked = true;
+    favOnly.dispatchEvent(new Event('change'));
+    requestAnimationFrame(function () { document.querySelector('#gallery').scrollIntoView({ behavior: 'smooth' }); });
+  });
+
+  /* ---------- 畫作對話框 v3:前後導覽 / 朝游標縮放 / 收藏 ---------- */
+  var modal = document.getElementById('paintingModal');
+  var pmImg = document.getElementById('pmImg');
+  var pmViewport = document.getElementById('pmViewport');
+  var pmZoom = document.getElementById('pmZoom');
+  var pmCounter = document.getElementById('pmCounter');
+  var pmFav = document.getElementById('pmFav');
+  var current = null;
+  var navList = [];
+  var pan = { x: 0, y: 0 };
+
+  function applyZoom() {
+    var z = parseFloat(pmZoom.value);
+    var r = pmViewport.getBoundingClientRect();
+    var maxX = Math.max(0, (z - 1) * r.width / 2);
+    var maxY = Math.max(0, (z - 1) * r.height / 2);
+    pan.x = Math.max(-maxX, Math.min(maxX, pan.x));
+    pan.y = Math.max(-maxY, Math.min(maxY, pan.y));
+    pmImg.style.transform = 'translate(' + pan.x + 'px,' + pan.y + 'px) scale(' + z + ')';
+    pmViewport.classList.toggle('is-zoomed', z > 1.01);
+  }
+  pmZoom.addEventListener('input', applyZoom);
+
+  function zoomAt(nz, cx, cy) {
+    var z = parseFloat(pmZoom.value);
+    nz = Math.max(1, Math.min(3, nz));
+    if (Math.abs(nz - z) < 0.001) return;
+    pan.x = (pan.x - cx) * (nz / z) + cx;
+    pan.y = (pan.y - cy) * (nz / z) + cy;
+    pmZoom.value = nz;
+    applyZoom();
+  }
+  pmViewport.addEventListener('wheel', function (e) {
+    if (!modal.classList.contains('is-open')) return;
+    e.preventDefault();
+    var r = pmViewport.getBoundingClientRect();
+    var cx = e.clientX - (r.left + r.width / 2);
+    var cy = e.clientY - (r.top + r.height / 2);
+    var z = parseFloat(pmZoom.value);
+    zoomAt(z * (e.deltaY < 0 ? 1.12 : 1 / 1.12), cx, cy);
+  }, { passive: false });
+  pmViewport.addEventListener('dblclick', function (e) {
+    var r = pmViewport.getBoundingClientRect();
+    var cx = e.clientX - (r.left + r.width / 2);
+    var cy = e.clientY - (r.top + r.height / 2);
+    var z = parseFloat(pmZoom.value);
+    zoomAt(z > 1.3 ? 1 : 2.2, cx, cy);
+  });
+
+  var panning = false, ppid = null, lx = 0, ly = 0;
+  pmViewport.addEventListener('pointerdown', function (e) {
+    if (e.target.closest('.pm-nav')) return;
+    if (parseFloat(pmZoom.value) <= 1.01) return;
+    panning = true; ppid = e.pointerId; lx = e.clientX; ly = e.clientY;
+    pmViewport.setPointerCapture(ppid);
+    pmViewport.classList.add('is-panning');
+    e.preventDefault();
+  });
+  pmViewport.addEventListener('pointermove', function (e) {
+    if (!panning || e.pointerId !== ppid) return;
+    pan.x += e.clientX - lx; pan.y += e.clientY - ly;
+    lx = e.clientX; ly = e.clientY;
+    applyZoom();
+  });
+  function endPan(e) {
+    if (e.pointerId !== ppid) return;
+    panning = false;
+    pmViewport.classList.remove('is-panning');
+  }
+  pmViewport.addEventListener('pointerup', endPan);
+  pmViewport.addEventListener('pointercancel', endPan);
+
+  function openPainting(id) {
+    var p = BY_ID[id];
+    if (!p) return;
+    current = p;
+    navList = visCards.map(function (c) { return c.getAttribute('data-id'); });
+    if (navList.indexOf(id) === -1) navList = DATA.map(function (d) { return d.id; });
+    var m = MUSEUMS[p.museum];
+    pmImg.src = window.ART[p.key];
+    pmImg.alt = p.title + ', ' + p.year;
+    document.getElementById('pmTitle').textContent = p.title;
+    document.getElementById('pmMeta').textContent = p.year + ' \u00b7 Oil on canvas \u00b7 ' + m.name + ', ' + m.city;
+    document.getElementById('pmDesc').textContent = p.desc;
+    document.getElementById('pmChips').innerHTML = p.tags.map(function (t) {
+      return '<span class="lg-chip">' + esc(t) + '</span>';
+    }).join('') + '<span class="lg-chip"><svg class="ph" width="14" height="14"><use href="#ph-bank"/></svg>' + esc(m.city) + '</span>';
+    if (pmCounter) pmCounter.textContent = (navList.indexOf(id) + 1) + ' / ' + navList.length;
+    paintFavBtn(pmFav, !!favs[id]);
+    pmZoom.value = 1; pan.x = 0; pan.y = 0; applyZoom();
+    modal.classList.add('is-open');
+    modal.setAttribute('aria-hidden', 'false');
+    requestAnimationFrame(function () { LiquidGlass.refresh(); });
+  }
+
+  function pmNav(d) {
+    if (!current || !navList.length) return;
+    var i = navList.indexOf(current.id);
+    openPainting(navList[(i + d + navList.length) % navList.length]);
+  }
+  document.getElementById('pmPrev').addEventListener('click', function () { pmNav(-1); });
+  document.getElementById('pmNext').addEventListener('click', function () { pmNav(1); });
+  if (pmFav) pmFav.addEventListener('click', function () {
+    if (current) toggleFav(current.id, pmFav);
+  });
+  document.addEventListener('keydown', function (e) {
+    if (!modal.classList.contains('is-open')) return;
+    if (e.key === 'ArrowLeft') { pmNav(-1); e.preventDefault(); }
+    else if (e.key === 'ArrowRight') { pmNav(1); e.preventDefault(); }
+  });
+
+  document.getElementById('pmLocate').addEventListener('click', function () {
+    if (!current) return;
+    var mid = current.museum;
+    modal.classList.remove('is-open');
+    modal.setAttribute('aria-hidden', 'true');
+    setTimeout(function () { goGlobe(mid); }, 120);
+  });
+
+  function goGlobe(mid) {
+    document.querySelector('#globe').scrollIntoView({ behavior: 'smooth' });
+    if (window.__globe) window.__globe.select(mid, true);
+    else updateMuseumPanel(mid);
+  }
+
+  /* ---------- 展覽控制面板(預設收合) ---------- */
+  var ctrlPanel = document.getElementById('ctrlPanel');
+  var video = document.getElementById('bgVideo');
+  document.getElementById('dockControls').addEventListener('click', function () {
+    ctrlPanel.hidden = !ctrlPanel.hidden;
+    if (!ctrlPanel.hidden) requestAnimationFrame(function () { LiquidGlass.refresh(); });
+  });
+  document.getElementById('ctrlClose').addEventListener('click', function () { ctrlPanel.hidden = true; });
+
+  document.getElementById('ctrlMotion').addEventListener('change', function (e) {
+    var on = e.target.checked;
+    document.documentElement.classList.toggle('no-ambient', !on);
+    if (on) { if (document.body.getAttribute('data-view') === 'home') video.play && video.play().catch(function () {}); }
+    else { video.pause && video.pause(); }
+  });
+  document.getElementById('ctrlChroma').addEventListener('change', function (e) {
+    LiquidGlass.config.chromatic = e.target.checked ? 0.55 : 0;
+    LiquidGlass.refresh();
+  });
+  var ctrlR = document.getElementById('ctrlRefraction');
+  var ctrlROut = document.getElementById('ctrlRefractionOut');
+  ctrlR.addEventListener('input', function () {
+    LiquidGlass.config.refraction = parseFloat(ctrlR.value);
+    ctrlROut.textContent = ctrlR.value;
+    LiquidGlass.refresh();
+  });
+
+  /* ---------- 地球資訊卡 ---------- */
+  function updateMuseumPanel(mid) {
+    var m = MUSEUMS[mid];
+    document.getElementById('globeMuseum').textContent = m.name;
+    document.getElementById('globeCity').querySelector('span').textContent = m.city + ', ' + m.country;
+    document.getElementById('globeWorks').innerHTML = DATA.filter(function (p) { return p.museum === mid; }).map(function (p) {
+      return '<button class="globe-work" data-lg-press data-open-painting="' + p.id + '">' +
+        '<img src="' + window.ART[p.key] + '" alt="">' +
+        '<span><span class="t">' + esc(p.title) + '</span><span class="y">' + p.year + '</span></span>' +
+      '</button>';
+    }).join('');
+  }
+  updateMuseumPanel('met');
+
+  /* ---------- Three.js 地球(滿版深色帶;標籤防撞:只顯示選中與懸停) ---------- */
+  function initGlobe() {
+    var stage = document.getElementById('globeStage');
+    var canvas = document.getElementById('globeCanvas');
+    var labelsWrap = document.getElementById('globeLabels');
+    var D2R = Math.PI / 180;
+
+    function latLngToVec(lat, lng, r) {
+      var phi = (90 - lat) * D2R;
+      var theta = (lng + 180) * D2R;
+      return new THREE.Vector3(
+        -r * Math.sin(phi) * Math.cos(theta),
+        r * Math.cos(phi),
+        r * Math.sin(phi) * Math.sin(theta)
+      );
+    }
+
+    var renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(38, 1, 0.1, 20);
+    camera.position.set(0, 0, 2.85);
+
+    scene.add(new THREE.AmbientLight(0xffffff, 0.92));
+    var sun = new THREE.DirectionalLight(0xfff2dc, 0.5);
+    sun.position.set(2.5, 1.6, 3);
+    scene.add(sun);
+
+    var pitchGroup = new THREE.Group();
+    var yawGroup = new THREE.Group();
+    pitchGroup.add(yawGroup);
+    scene.add(pitchGroup);
+
+    var tex = new THREE.TextureLoader().load(window.ART.earth);
+    var globe = new THREE.Mesh(
+      new THREE.SphereGeometry(1, 64, 64),
+      new THREE.MeshPhongMaterial({ map: tex, shininess: 6 })
+    );
+    yawGroup.add(globe);
+
+    var accent = 0xe06a47;
+    var markers = {}, hitMeshes = [], labels = {};
+    Object.keys(MUSEUMS).forEach(function (mid) {
+      var m = MUSEUMS[mid];
+      var v = latLngToVec(m.lat, m.lng, 1.006);
+      var dot = new THREE.Mesh(new THREE.SphereGeometry(0.014, 16, 16), new THREE.MeshBasicMaterial({ color: accent }));
+      dot.position.copy(v);
+      yawGroup.add(dot);
+      var ring = new THREE.Mesh(
+        new THREE.RingGeometry(0.024, 0.038, 32),
+        new THREE.MeshBasicMaterial({ color: accent, transparent: true, opacity: 0.9, side: THREE.DoubleSide })
+      );
+      ring.position.copy(v);
+      ring.lookAt(v.clone().multiplyScalar(2));
+      ring.visible = false;
+      yawGroup.add(ring);
+      var hit = new THREE.Mesh(new THREE.SphereGeometry(0.07, 8, 8), new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false }));
+      hit.position.copy(v);
+      hit.userData.mid = mid;
+      yawGroup.add(hit);
+      hitMeshes.push(hit);
+      markers[mid] = { v: v, dot: dot, ring: ring };
+
+      var label = document.createElement('button');
+      label.className = 'lg-chip globe-label';
+      label.textContent = m.city;
+      label.addEventListener('click', function () { api.select(mid, true); });
+      labelsWrap.appendChild(label);
+      labels[mid] = label;
+    });
+
+    var yaw = 0, pitch = 0.35;
+    var fly = null, lastInteract = 0, active = null, hovered = null;
+
+    function targetsFor(mid) {
+      var v = markers[mid].v;
+      var ty = Math.atan2(-v.x, v.z);
+      var h = Math.sqrt(v.x * v.x + v.z * v.z);
+      var tp = Math.atan2(v.y, h);
+      return { yaw: ty, pitch: Math.max(-1.1, Math.min(1.1, tp)) };
+    }
+
+    function shortest(from, to) {
+      var d = (to - from) % (Math.PI * 2);
+      if (d > Math.PI) d -= Math.PI * 2;
+      if (d < -Math.PI) d += Math.PI * 2;
+      return d;
+    }
+
+    var api = {
+      select: function (mid, flyThere) {
+        active = mid;
+        Object.keys(markers).forEach(function (k) { markers[k].ring.visible = k === mid; });
+        Object.keys(labels).forEach(function (k) { labels[k].classList.toggle('is-active', k === mid); });
+        updateMuseumPanel(mid);
+        if (flyThere) {
+          var t = targetsFor(mid);
+          fly = { y0: yaw, p0: pitch, dy: shortest(yaw, t.yaw), dp: t.pitch - pitch, start: performance.now(), dur: 1300 };
+          lastInteract = performance.now();
+        }
+      }
+    };
+    window.__globe = api;
+
+    /* 拖曳旋轉 + 點選 */
+    var dragging = false, dpid = null, dlx = 0, dly = 0, moved = 0;
+    var ray = new THREE.Raycaster();
+    function pickAt(clientX, clientY) {
+      var r = canvas.getBoundingClientRect();
+      if (!r.width || !r.height) return null;
+      var ndc = new THREE.Vector2(
+        ((clientX - r.left) / r.width) * 2 - 1,
+        -((clientY - r.top) / r.height) * 2 + 1
+      );
+      ray.setFromCamera(ndc, camera);
+      var hits = ray.intersectObjects(hitMeshes);
+      return hits.length ? hits[0].object.userData.mid : null;
+    }
+
+    canvas.addEventListener('pointerdown', function (e) {
+      dragging = true; dpid = e.pointerId; dlx = e.clientX; dly = e.clientY; moved = 0;
+      canvas.setPointerCapture(dpid);
+      canvas.classList.add('is-dragging');
+      fly = null;
+      lastInteract = performance.now();
+    });
+    var hoverRaf = 0;
+    canvas.addEventListener('pointermove', function (e) {
+      if (dragging && e.pointerId === dpid) {
+        var dx = e.clientX - dlx, dy = e.clientY - dly;
+        moved += Math.abs(dx) + Math.abs(dy);
+        yaw += dx * 0.0055;
+        pitch = Math.max(-1.1, Math.min(1.1, pitch + dy * 0.0045));
+        dlx = e.clientX; dly = e.clientY;
+        lastInteract = performance.now();
+        return;
+      }
+      if (hoverRaf) return;
+      hoverRaf = requestAnimationFrame(function () {
+        hoverRaf = 0;
+        hovered = pickAt(e.clientX, e.clientY);
+        canvas.classList.toggle('is-hover', !!hovered);
+      });
+    });
+    canvas.addEventListener('pointerleave', function () {
+      hovered = null;
+      canvas.classList.remove('is-hover');
+    });
+    canvas.addEventListener('pointerup', function (e) {
+      if (e.pointerId !== dpid) return;
+      dragging = false;
+      canvas.classList.remove('is-dragging');
+      if (moved < 6) {
+        var mid = pickAt(e.clientX, e.clientY);
+        if (mid) api.select(mid, true);
+      }
+    });
+    canvas.addEventListener('pointercancel', function () { dragging = false; canvas.classList.remove('is-dragging'); });
+
+    function resize() {
+      var w = stage.clientWidth, h = stage.clientHeight;
+      if (!w || !h) return;
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+    }
+    new ResizeObserver(resize).observe(stage);
+    resize();
+
+    var inView = false;
+    new IntersectionObserver(function (entries) {
+      inView = entries[0].isIntersecting;
+    }, { threshold: 0.04 }).observe(stage);
+
+    function easeInOutCubic(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
+
+    var tmpV = new THREE.Vector3();
+    function loop(now) {
+      requestAnimationFrame(loop);
+      if (document.hidden || !inView || document.body.getAttribute('data-view') !== 'home') return;
+
+      if (fly) {
+        var t = Math.min(1, (now - fly.start) / fly.dur);
+        var k = easeInOutCubic(t);
+        yaw = fly.y0 + fly.dy * k;
+        pitch = fly.p0 + fly.dp * k;
+        if (t >= 1) fly = null;
+      } else if (!dragging && now - lastInteract > 4500) {
+        yaw -= 0.0014;
+      }
+
+      yawGroup.rotation.y = yaw;
+      pitchGroup.rotation.x = pitch;
+
+      if (active) {
+        var s = 1 + 0.3 * Math.sin(now * 0.004);
+        markers[active].ring.scale.setScalar(s);
+      }
+
+      renderer.render(scene, camera);
+
+      /* DOM 標籤投影:只顯示選中與懸停,避免東岸四館標籤相撞 */
+      var w = stage.clientWidth, h = stage.clientHeight;
+      Object.keys(markers).forEach(function (mid) {
+        markers[mid].dot.getWorldPosition(tmpV);
+        var front = tmpV.z > 0.18;
+        tmpV.project(camera);
+        var label = labels[mid];
+        label.style.left = ((tmpV.x * 0.5 + 0.5) * w).toFixed(1) + 'px';
+        label.style.top = ((-tmpV.y * 0.5 + 0.5) * h).toFixed(1) + 'px';
+        var show = front && (mid === active || mid === hovered);
+        label.classList.toggle('is-front', show);
+        label.tabIndex = show ? 0 : -1;
+      });
+    }
+    requestAnimationFrame(loop);
+
+    api.select('met', false);
+    var t0 = targetsFor('met');
+    yaw = t0.yaw; pitch = t0.pitch;
+  }
+
+  function globeFallback() {
+    document.getElementById('globeFallback').hidden = false;
+    document.getElementById('globeCanvas').style.display = 'none';
+    document.getElementById('globeLabels').style.display = 'none';
+    document.getElementById('globeFallbackList').innerHTML = Object.keys(MUSEUMS).map(function (mid) {
+      var m = MUSEUMS[mid];
+      return '<span class="lg-chip"><svg class="ph" width="14" height="14"><use href="#ph-map-pin"/></svg>' + esc(m.name) + ' \u00b7 ' + esc(m.city) + '</span>';
+    }).join('');
+  }
+  var tries = 0;
+  (function waitThree() {
+    if (typeof THREE !== 'undefined') { try { initGlobe(); } catch (err) { globeFallback(); } return; }
+    if (++tries > 30) { globeFallback(); return; }
+    setTimeout(waitThree, 200);
+  })();
+
+  /* ---------- Dock 高亮目前區塊 ---------- */
+  (function dockCurrent() {
+    var pairs = [];
+    ['#gallery', '#study', '#globe', '#about'].forEach(function (sel) {
+      var sec = document.querySelector(sel);
+      var item = document.querySelector('.home-dock [data-scroll="' + sel + '"]');
+      if (sec && item) pairs.push({ sec: sec, item: item });
+    });
+    if (!pairs.length) return;
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        pairs.forEach(function (p) { p.item.classList.toggle('is-current', p.sec === en.target); });
+      });
+    }, { rootMargin: '-38% 0px -52% 0px', threshold: 0 });
+    pairs.forEach(function (p) { io.observe(p.sec); });
+  })();
+
+  /* ---------- 捲動顯影 ---------- */
+  (function reveals() {
+    var els = [].slice.call(document.querySelectorAll('#view-home .reveal'));
+    if (!els.length) return;
+    if (RM || !('IntersectionObserver' in window)) {
+      els.forEach(function (el) { el.classList.add('in'); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        en.target.classList.add('in');
+        io.unobserve(en.target);
+      });
+    }, { threshold: 0.12 });
+    els.forEach(function (el) { io.observe(el); });
+  })();
+
+  /* ---------- Hero 指標視差 ---------- */
+  (function heroParallax() {
+    if (RM) return;
+    var hero = document.getElementById('heroHome');
+    if (!hero) return;
+    var raf = 0;
+    hero.addEventListener('pointermove', function (e) {
+      if (raf) return;
+      raf = requestAnimationFrame(function () {
+        raf = 0;
+        var nx = e.clientX / innerWidth - 0.5;
+        var ny = e.clientY / innerHeight - 0.5;
+        hero.style.setProperty('--hx', (nx * 16).toFixed(1) + 'px');
+        hero.style.setProperty('--hy', (ny * 10).toFixed(1) + 'px');
+      });
+    }, { passive: true });
+    hero.addEventListener('pointerleave', function () {
+      hero.style.setProperty('--hx', '0px');
+      hero.style.setProperty('--hy', '0px');
+    });
+  })();
+
+  /* ---------- 導覽模式(Begin the Tour) ---------- */
+  (function tour() {
+    var TOUR = [
+      { sel: '#gallery', text: 'Ten canvases from five museums, each shown in its true proportions. Search them, filter by theme, and tap the heart to keep your favourites.' },
+      { sel: '#study', text: 'Grab the glass lens and drag it across the field. Monet laid down every poppy as a single loaded stroke \u2014 the lens bends the light so you can see it.' },
+      { sel: '#globe', text: 'These paintings crossed an ocean long ago. Spin the earth, or tap a marker to see exactly what hangs where.' },
+      { sel: '#about', text: 'One last room: how a critic\u2019s insult \u2014 \u201cmerely an impression\u201d \u2014 became the name of the movement itself.' }
+    ];
+    var cap = document.getElementById('tourCap');
+    var txt = document.getElementById('tourText');
+    var dots = document.getElementById('tourDots');
+    var btnNext = document.getElementById('tourNext');
+    var btnEnd = document.getElementById('tourEnd');
+    var begin = document.getElementById('beginTour');
+    if (!cap || !begin) return;
+    var idx = -1;
+
+    function paintDots() {
+      var s = '';
+      for (var i = 0; i < TOUR.length; i++) s += '<i' + (i <= idx ? ' class="on"' : '') + '></i>';
+      dots.innerHTML = s;
+    }
+    function show(i) {
+      idx = i;
+      var stop = TOUR[i];
+      var sec = document.querySelector(stop.sel);
+      if (sec) sec.scrollIntoView({ behavior: RM ? 'auto' : 'smooth', block: 'start' });
+      txt.textContent = stop.text;
+      btnNext.textContent = i === TOUR.length - 1 ? 'Finish' : 'Next';
+      paintDots();
+      if (cap.hidden) {
+        cap.hidden = false;
+        requestAnimationFrame(function () { LiquidGlass.refresh(); });
+      }
+    }
+    function end() {
+      if (idx === -1) return;
+      idx = -1;
+      cap.hidden = true;
+      document.body.classList.remove('tour-on');
+    }
+    begin.addEventListener('click', function () {
+      document.body.classList.add('tour-on');
+      show(0);
+    });
+    btnNext.addEventListener('click', function () {
+      if (idx >= TOUR.length - 1) end();
+      else show(idx + 1);
+    });
+    btnEnd.addEventListener('click', end);
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') end();
+    });
+    new MutationObserver(function () {
+      if (document.body.getAttribute('data-view') !== 'home') end();
+    }).observe(document.body, { attributes: true, attributeFilter: ['data-view'] });
+  })();
+
+})();
+
+</script>
+<script>
+/* ============================================================
+ * 儀表板實景:Toast 觸發 + 「即時數據」模擬
+ * Toast 採事件委派,涵蓋實景列與 Toast tile 的所有按鈕。
+ * 即時模擬只查詢 #liveDash 內的元件;下方獨立元件 tile 為
+ * 靜態範例,不受影響。reducedMotion 時亮燈但不自動跳動。
+ * ============================================================ */
+(function () {
+  var LG = window.LiquidGlass;
+  if (!LG) return;
+
+  /* ---- Toast 觸發(委派)---- */
+  document.addEventListener('click', function (e) {
+    var btn = e.target && e.target.closest ? e.target.closest('[data-lg-toast]') : null;
+    if (!btn) return;
+    LG.toast({
+      title: btn.getAttribute('data-toast-title') || '',
+      message: btn.getAttribute('data-toast-msg') || '',
+      icon: btn.getAttribute('data-toast-icon') || ''
+    });
+  });
+
+  /* ---- 即時數據模擬 ---- */
+  var dash = document.getElementById('liveDash');
+  var toggle = document.getElementById('liveToggle');
+  if (!dash || !toggle) return;
+
+  function clamp(v, lo, hi) { return v < lo ? lo : (v > hi ? hi : v); }
+  function rnd(a, b) { return a + Math.random() * (b - a); }
+  function decimalsOf(s) { var d = String(s).indexOf('.'); return d < 0 ? 0 : (String(s).length - d - 1); }
+
+  /* 隨機漫步:保留原字串的小數位(Conversion 的 3.8 不會被取整)*/
+  function walk(curStr, pct, lo, hi) {
+    var cur = parseFloat(curStr) || 0;
+    var dec = decimalsOf(curStr);
+    var next = clamp(cur * (1 + rnd(-pct, pct)), lo, hi);
+    return { str: next.toFixed(dec), cur: cur, next: next };
+  }
+
+  function tick() {
+    if (LG.reducedMotion) return; /* 降級保險 */
+
+    /* 統計卡:數值滾動 + 漲跌徽章(方向依本次變化)*/
+    [].forEach.call(dash.querySelectorAll('.lg-stat'), function (card) {
+      var valEl = card.querySelector('.lg-stat__value[data-lg-value]');
+      if (!valEl) return;
+      var r = walk(valEl.getAttribute('data-lg-value'), 0.05, 1, 1e12);
+      valEl.setAttribute('data-lg-value', r.str);
+      var delta = card.querySelector('[data-dash-delta]');
+      if (delta) {
+        var up = r.next >= r.cur;
+        var pct = r.cur ? Math.abs((r.next - r.cur) / r.cur * 100) : 0;
+        var href = up ? '#ph-trend-up' : '#ph-trend-down';
+        delta.className = 'lg-stat__delta' + (up ? '' : ' lg-stat__delta--down');
+        delta.innerHTML = '<svg class="ph"><use href="' + href + '"/></svg>' + pct.toFixed(1) + '%';
+      }
+    });
+
+    /* sparkline:獨立漫步(與數值脫鉤),左移一格、尾端進新點 */
+    [].forEach.call(dash.querySelectorAll('.lg-stat__spark[data-lg-spark]'), function (sp) {
+      var arr = sp.getAttribute('data-lg-spark').split(',').map(parseFloat).filter(isFinite);
+      if (arr.length < 2) return;
+      var nx = clamp(arr[arr.length - 1] * (1 + rnd(-0.08, 0.1)), 0.01, 1e9);
+      arr.shift(); arr.push(Math.round(nx * 10) / 10);
+      sp.setAttribute('data-lg-spark', arr.join(','));
+    });
+
+    /* 折線圖:左移一格、尾端進新點 */
+    [].forEach.call(dash.querySelectorAll('svg[data-lg-chart][data-lg-points]'), function (ch) {
+      var arr = ch.getAttribute('data-lg-points').split(',').map(parseFloat).filter(isFinite);
+      if (arr.length < 2) return;
+      var nx = clamp(Math.round(arr[arr.length - 1] * (1 + rnd(-0.12, 0.14))), 1, 1e9);
+      arr.shift(); arr.push(nx);
+      ch.setAttribute('data-lg-points', arr.join(','));
+    });
+
+    /* 環形儀表:0–100 漫步 */
+    [].forEach.call(dash.querySelectorAll('.lg-gauge[data-lg-value]'), function (g) {
+      g.setAttribute('data-lg-value', walk(g.getAttribute('data-lg-value'), 0.12, 1, 100).str);
+    });
+
+    /* 進度條:0–100 漫步 + 更新數字回顯 */
+    [].forEach.call(dash.querySelectorAll('[data-dash-meter]'), function (row) {
+      var m = row.querySelector('.lg-meter[data-lg-value]');
+      if (!m) return;
+      var r = walk(m.getAttribute('data-lg-value'), 0.16, 2, 100);
+      m.setAttribute('data-lg-value', r.str);
+      var b = row.querySelector('.dash__meterhead b');
+      if (b) b.textContent = Math.round(r.next) + '%';
+    });
+  }
+
+  var timer = null;
+  toggle.addEventListener('change', function () {
+    if (toggle.checked) {
+      dash.classList.add('is-live');
+      if (!LG.reducedMotion && !timer) timer = setInterval(tick, 2000);
+    } else {
+      dash.classList.remove('is-live');
+      if (timer) { clearInterval(timer); timer = null; }
+    }
+  });
+})();
+</script>
+</body>
+</html>
