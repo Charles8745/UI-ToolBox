@@ -1,202 +1,157 @@
 # Liquid Glass Kit
 
-> 零依賴的「液態玻璃」UI 工具包。透明玻璃材質、以 Snell 定律即時計算的液態折射與色散、發光背景、慣性拖曳,加上 **18 個現成元件**。複製兩個檔案(`liquid-glass.css` + `liquid-glass.js`)就能用在任何 Web / WebView / Electron 介面,**不需要建置工具、不需要框架**。
+> 零依賴的「液態玻璃」UI 工具包 —— 18 個現成元件、以 Snell 定律即時計算的折射與色散、發光背景、慣性拖曳。複製兩個檔案(`liquid-glass.css` + `liquid-glass.js`)就能用,不需建置工具、不需框架。**而且特別為「直接交給 AI 開發介面」而設計**:一份規格書貼給 Claude / Cursor / Copilot,它就會用這套元件替你拼介面。
 
-![Liquid Glass Kit — 液態玻璃首頁 hero](docs/hero.jpeg)
+![Liquid Glass Kit hero](docs/hero.gif)
 
-折射只用一句 `backdrop-filter` 即時彎曲元件背後的真實內容,因此**畫面有圖片或多彩背景時最好看**。此效果僅 Chromium 引擎(Chrome / Edge / Arc / Electron…)完整支援,其他瀏覽器**自動降級為磨砂玻璃**,版面與互動完全不變。
-
----
-
-## 用這套工具包能做出什麼
-
-下面三張全部是 `index.html` 的實際畫面 —— **每一片玻璃、每一個圖表都是工具包的 class 拼出來的,沒有一行自訂玻璃 CSS**。打開 `index.html` 就能看到、調參、複製。
-
-### 🖼 內容展廳 / 作品集網站
-
-玻璃導覽列、底部 Dock、搜尋框、篩選分頁與卡片**漂浮在畫作之上**,內容是主角、玻璃只做控制層。
-
-![莫內線上展廳:玻璃導覽、Dock、搜尋、篩選分頁與卡片漂浮在畫作上](docs/gallery.jpeg)
-
-### 📊 分析儀表板
-
-統計卡、折線圖、環形儀表、進度條組成的儀表板浮在彩色漸層上。打開「即時數據」開關,所有數字、走勢圖、弧線會以彈簧一起跳動 —— 全靠改一個 `data-lg-value` 屬性驅動。
-
-![分析儀表板:統計卡、折線圖、環形儀表、進度條,即時數據動畫](docs/dashboard.jpeg)
-
-### 🌙 深色主題,一鍵切換
-
-同一套元件,在 `<html>` 加上 `data-lg-theme="dark"` 即整體換膚(不設則跟隨系統)。
-
-![深色主題下的按鈕、卡片、開關、滑桿](docs/dark-theme.jpeg)
+> 折射僅 Chromium 引擎(Chrome / Edge / Arc / Electron…)完整支援,其他瀏覽器**自動降級為磨砂玻璃**,版面與互動完全不變。
 
 ---
 
-## 元件總覽
+## 用這套能做出什麼
 
-18 件元件,分四組。每件的完整 HTML 都能在 `index.html` 的「元件與指引」分頁即時調參並一鍵複製。
+下面全部是 `index.html` 的實際畫面 —— **每一片玻璃、每一個圖表都是工具包的 class 拼出來的,沒有一行自訂玻璃 CSS**。
 
-### 基礎:按鈕 · 圖示按鈕 · 卡片
+**內容展廳 / 作品集** — 玻璃導覽列、Dock、搜尋、篩選分頁與卡片漂浮在畫作之上:
 
-![Button、Icon Button、Card 元件](docs/components-core.jpeg)
+![內容展廳](docs/gallery.gif)
 
-| 元件 | Class | 說明 |
-| --- | --- | --- |
-| 按鈕 | `.lg-btn` | 修飾子 `--pill` `--accent` `--icon` `--lg` `--sm`;按下有彈簧擠壓、放開欠阻尼回彈,折射玻璃同步鼓起 |
-| 圖示按鈕 | `.lg-btn--icon` | 圓形,適合工具列與浮動操作 |
-| 卡片 | `.lg-card` | 標題 `.lg-card__title`、說明 `.lg-card__meta`,可內嵌圖片、chip 與操作 |
+**分析儀表板** — 統計卡、折線圖、環形儀表、進度條;改一個 `data-lg-value` 屬性,數字與弧線就以彈簧一起跳動:
 
-### 控制:開關 · 滑桿 · 分頁 · 搜尋
+![分析儀表板](docs/dashboard.gif)
 
-![Switch、Slider、Segmented Tabs、Search 元件](docs/components-controls.jpeg)
+**深色主題** — 同一套元件,`<html data-lg-theme="dark">` 一鍵換膚:
 
-| 元件 | Class | 說明 |
-| --- | --- | --- |
-| 開關 | `.lg-switch` | 純 CSS、原生 checkbox;切換時錨點液滴被拉斷並在另一端重聚 |
-| 滑桿 | `.lg-slider` | 包住原生 `range`,玻璃軌道 + 珊瑚紅填充 |
-| 分頁 | `.lg-tabs` | 膠囊指示器在切換時「液滴遷移」:途中拉長、抵達擠壓 |
-| 搜尋框 | `.lg-search` | 內建圖示與 `⌘K` 快捷鍵標示 |
+![深色主題](docs/dark-theme.gif)
 
-### 導覽與互動:導覽列 · Dock · 拖曳
+---
 
-![Navbar、Dock、Draggable 元件](docs/components-nav.jpeg)
+## 🤖 讓 AI 用這套工具開發
 
-| 元件 | Class / 屬性 | 說明 |
-| --- | --- | --- |
-| 導覽列 | `.lg-navbar` | brand + 連結 + `__spacer` 撐開的彈性排版 |
-| Dock | `.lg-dock` | 自帶游標鄰近放大與底部液滴黏滯融合 |
-| 拖曳 | `data-lg-drag="viewport \| parent"` | 拖動時沿速度方向拉伸、釋放後慣性滑行並以果凍抖動收斂 |
-| 工具提示 | `data-lg-tip="文字"` | 任何元素加屬性即可 |
-| 對話框 | `.lg-modal` | `data-lg-open="#id"` 開啟、`data-lg-close` 關閉;出場為液滴落地回彈,支援 Esc |
-| 標籤 / 徽章 | `.lg-chip` / `.lg-badge` | 輕量,建議用 `.lg-static` 磨砂版 |
+這套工具包**為 AI 協作而生**:元件是固定的 class 與 API、規則濃縮成一份規格書,AI 不必(也不該)自己手刻 `backdrop-filter`,只要照規格用 `.lg` class 即可。給對話式 AI、Claude Code、Cursor、Copilot 都適用。
 
-### 資料視覺化:統計卡 · 進度條 · 環形儀表 · 圖表 · 通知
+**三步驟讓 AI 接手:**
 
-![Stat Card、Meter、Gauge、Chart、Toast 元件](docs/components-data.jpeg)
+1. 把 `liquid-glass.css` 與 `liquid-glass.js` 放進專案。
+2. 把下面的「AI 使用規格」存成你的 AI 工具讀得到的設定檔:
 
-| 元件 | Class / API | 說明 |
-| --- | --- | --- |
-| 統計卡 | `.lg-stat` | 數值 + 漲跌徽章(漲綠跌紅)+ sparkline 走勢 |
-| 進度條 | `.lg-meter` | 凹槽軌道 + 實心液體填充,前緣有彎月鼓頭 |
-| 環形儀表 | `.lg-gauge` | 玻璃圓 + SVG 弧,結構由 JS 注入 |
-| 圖表 | `.lg-chart` | `line` 或 `bar`,手刻 SVG、零依賴、hover 顯數值 |
-| 通知 | `LiquidGlass.toast({ title, message, icon, duration })` | 右下堆疊、自動消退、最多 4 則 |
+   | AI 工具 | 規格書放哪 |
+   | --- | --- |
+   | **Claude Code** | 專案根目錄 `CLAUDE.md` |
+   | **Cursor** | `.cursor/rules/liquid-glass.mdc` |
+   | **GitHub Copilot** | `.github/copilot-instructions.md` |
+   | **ChatGPT / Claude.ai 等對話式 AI** | 直接貼進對話,後面接上你的任務描述 |
 
-> **重點:這幾件是「玻璃容器 + 實心內容層」。** 外框是玻璃,但數字、sparkline、圖表本身**不透明**——內容上玻璃會看不見,這是技術上必要的邊界。資料全部「屬性驅動」:改 `data-lg-value` / `-spark` / `-points` 就會觸發彈簧動畫(展示站的「即時數據」開關正是如此每 2 秒跳動)。
+3. 然後就交代任務,例如「**用 Liquid Glass Kit 做一個帶導覽列與三張統計卡的儀表板**」。AI 會用 `.lg` class 與 `LiquidGlass` API 來實作,而不是自己亂寫玻璃樣式。
+
+> `index.html` 的「AI 整合」分頁內也有同一份規格書的一鍵複製按鈕。
+
+<details>
+<summary><strong>📋 AI 使用規格(點此展開 / 複製,即是要貼給 AI 的全文)</strong></summary>
+
+```text
+# Liquid Glass Kit — AI 使用規格
+零依賴液態玻璃 UI 工具包(透明玻璃、即時折射、發光背景、拖曳)。
+專案內已有兩個檔案:liquid-glass.css、liquid-glass.js。
+
+## 初始化(每頁一次)
+<link rel="stylesheet" href="liquid-glass.css">
+<script src="liquid-glass.js"></script>
+<script>LiquidGlass.init();</script>
+
+## 鐵則
+1. 玻璃只用於浮在內容之上的控制層(導航、卡片、面板、對話框、dock);文章、圖片等內容本身不上玻璃。
+2. 折射玻璃 = class="lg" + data-lg;小型或大量重複的元件(列表項、標籤)改用 class="lg lg-static"(磨砂、無折射、便宜)。
+3. 頁面必須有圖像或多彩背景,玻璃效果才看得見。
+4. 不要手寫 backdrop-filter 或自製玻璃 CSS,一律使用工具包的 class 與 API。
+5. 動態插入的節點呼叫 LiquidGlass.attach(el);非 Chromium 瀏覽器會自動降級為磨砂,無需處理。
+6. 儀表元件(統計卡/進度條/環形儀表/圖表)= 玻璃容器 + 實心內容層:數字、走勢圖、圖表本身不透明,只有外框是玻璃——內容上玻璃會看不見,這是技術上必要的邊界。
+
+## 元件結構
+按鈕:<button class="lg lg-btn" data-lg>文字</button>(修飾:lg-btn--pill / --accent / --icon / --lg / --sm)
+卡片:<div class="lg lg-card" data-lg><h4 class="lg-card__title">…</h4><p class="lg-card__meta">…</p></div>
+導航:<nav class="lg lg-navbar" data-lg><span class="lg-navbar__brand">…</span><span class="lg-navbar__spacer"></span><button class="lg-navbar__link is-active">…</button></nav>
+搜尋:<div class="lg lg-search" data-lg><svg>…</svg><input type="search"><kbd>⌘K</kbd></div>
+開關:<label class="lg-switch"><input type="checkbox"><span class="lg-switch__track"><span class="lg-switch__thumb"></span></span>標籤</label>
+滑桿:<div class="lg lg-slider" data-lg><input class="lg-slider__input" type="range"></div>
+分頁:<div class="lg lg-tabs" data-lg role="tablist"><span class="lg-tabs__pill"></span><button class="lg-tabs__tab is-active" role="tab">…</button>…</div>
+對話框:<div class="lg-modal" id="m1"><div class="lg-modal__overlay" data-lg-close></div><div class="lg-modal__panel lg" data-lg role="dialog">…</div></div>;以 <button data-lg-open="#m1"> 開啟、data-lg-close 關閉。
+Dock:<div class="lg lg-dock" data-lg><button class="lg-dock__item">icon</button>…</div>(自帶鄰近放大)
+標籤:<span class="lg-chip">…</span>;徽章:<span class="lg-badge">3</span>
+工具提示:任何元素加 data-lg-tip="文字"
+拖曳:元素加 data-lg-drag="viewport|parent"(可選 data-lg-drag-handle=".selector"),或 LiquidGlass.draggable(el, { bounds, inertia })
+統計卡:<div class="lg lg-stat" data-lg><span class="lg-stat__label">標籤</span><div class="lg-stat__row"><span class="lg-stat__value" data-lg-value="48250" data-lg-prefix="$"></span><span class="lg-stat__delta"><svg><use href="#ph-trend-up"/></svg>12.4%</span></div><svg class="lg-stat__spark" data-lg-spark="28,31,30,36,40,44"></svg></div>(漲綠跌紅:徽章加 lg-stat__delta--down)
+進度條:<div class="lg-meter" data-lg-value="68"></div>(本身非玻璃:凹槽軌道 + 實心液體填充,前緣有彎月鼓頭)
+環形儀表:<div class="lg lg-gauge" data-lg data-lg-press data-lg-profile="circle" data-lg-value="74" data-lg-unit="%" data-lg-label="Goal"></div>
+圖表:<div class="lg lg-chart" data-lg><div class="lg-chart__head"><h4 class="lg-chart__title">標題</h4></div><svg class="lg-chart__svg" data-lg-chart="line" data-lg-points="1240,1390,1180,1620" data-lg-labels="Mon,Tue,Wed,Thu"></svg></div>(data-lg-chart 可為 line 或 bar;手刻 SVG、零依賴、hover 顯數值)
+通知:LiquidGlass.toast({ title, message, icon, duration })(JS 呼叫;右下堆疊、自動消退、最多 4 則)
+發光背景:<div class="lg-glow" style="--lg-glow-base:#7d92ad;"><div class="lg-glow__image" style="--lg-bg-image:url(bg.jpg);"></div></div>
+
+## 屬性(單一元素覆寫)
+data-lg-refraction(折射倍率,預設 1.25)、data-lg-chromatic(色散 0–1)、data-lg-blur、data-lg-saturate、data-lg-bezel(斜面 px)、data-lg-thickness(厚度 px)、data-lg-profile(squircle|circle|lip)
+儀表資料(屬性驅動):data-lg-value(統計卡/進度條/環形儀表的目標值)、data-lg-spark(統計卡走勢逗號數列)、data-lg-points + data-lg-labels(圖表資料)、data-lg-prefix / -suffix / -decimals(數字格式)。改變 data-lg-value / -spark / -points 即觸發彈簧動畫(單一 MutationObserver 自動接手,無需手動呼叫)。
+
+## JS API
+LiquidGlass.init(config?) / attach(el, opts?) / draggable(el, opts?) / refresh() / toast({ title, message, icon, duration }) / config / supported / reducedMotion
+
+## Tokens(:root 覆寫)
+--lg-accent(品牌色,預設 #cf6045)、--lg-tint、--lg-text、--lg-radius-s/m/l/pill、--lg-blur-fallback、--lg-font
+主題:<html data-lg-theme="dark">,不設則跟隨系統。
+```
+
+</details>
+
+---
+
+## 元件一覽
+
+18 件元件,分四組。完整 HTML 都在上面的規格書,也能在 `index.html` 的「元件與指引」分頁即時調參、一鍵複製。
+
+**基礎** — 按鈕 `.lg-btn`(修飾 `--pill` `--accent` `--icon` `--lg` `--sm`)、圖示按鈕 `.lg-btn--icon`、卡片 `.lg-card`。按下有彈簧擠壓回彈。
+
+![基礎元件:按鈕、圖示按鈕、卡片](docs/components-core.gif)
+
+**控制** — 開關 `.lg-switch`(純 CSS)、滑桿 `.lg-slider`、分頁 `.lg-tabs`(膠囊液態遷移)、搜尋框 `.lg-search`。
+
+![控制元件:開關、滑桿、分頁、搜尋](docs/components-controls.gif)
+
+**導覽與互動** — 導覽列 `.lg-navbar`、Dock `.lg-dock`(游標鄰近放大)、拖曳 `data-lg-drag`(慣性 + 拉伸)、工具提示 `data-lg-tip`、對話框 `.lg-modal`、標籤 `.lg-chip` · 徽章 `.lg-badge`。
+
+![導覽元件:導覽列、Dock、拖曳](docs/components-nav.gif)
+
+**資料視覺化** — 統計卡 `.lg-stat`、進度條 `.lg-meter`、環形儀表 `.lg-gauge`、圖表 `.lg-chart`、通知 `LiquidGlass.toast()`。全部「屬性驅動」:改 `data-lg-value` / `-spark` / `-points` 即觸發彈簧動畫。
+
+![資料元件:統計卡、進度條、環形儀表、圖表](docs/components-data.gif)
+
+> 這幾件是「玻璃容器 + 實心內容層」:外框是玻璃,但數字、走勢圖、圖表本身不透明——內容上玻璃會看不見,這是技術上必要的邊界。
 
 ---
 
 ## 快速開始
 
-1. 複製 `liquid-glass.css` 與 `liquid-glass.js` 到專案。
-2. 引入並初始化(每頁一次):
-
 ```html
 <link rel="stylesheet" href="liquid-glass.css">
 <script src="liquid-glass.js"></script>
-<script>
-  LiquidGlass.init({ refraction: 1.25, chromatic: 0.55 });
-</script>
-```
+<script>LiquidGlass.init();</script>
 
-3. 替元素加上玻璃:
-
-```html
-<!-- 玻璃材質 + 液態折射 -->
+<!-- 玻璃材質 + 即時折射 -->
 <div class="lg lg-card" data-lg>內容</div>
-
-<!-- 單一元素微調 -->
-<div class="lg lg-card" data-lg data-lg-refraction="1.6" data-lg-chromatic="0.8">內容</div>
 
 <!-- 輕量磨砂(不折射,適合小或大量重複的元件) -->
 <span class="lg lg-static">內容</span>
 ```
 
-`class="lg"` 提供材質(底色、鏡面 rim light、動態光澤、陰影);`data-lg` 啟用折射引擎,兩者通常一起用。動態插入的節點呼叫 `LiquidGlass.attach(el)`。
-
-頁面需要一個有圖像或多彩的背景,玻璃才看得見:
-
-```html
-<div class="lg-glow" style="--lg-glow-base:#7d92ad;">
-  <div class="lg-glow__image" style="--lg-bg-image:url('bg.jpg');"></div>
-  <!-- 其上的內容 -->
-</div>
-```
-
----
-
-## 運作原理
-
-工具包對每個玻璃元素生成一張位移貼圖:沿圓角矩形邊緣取「凸超橢圓(convex squircle)」斷面,以 Snell 定律(折射率 1.5)做光線追蹤,算出光線穿過玻璃後的橫向偏移,寫入貼圖的 R(X 位移)與 G(Y 位移)通道,再透過 SVG `feDisplacementMap` 搭配 `backdrop-filter` 即時折射元素背後的真實內容。色散由 RGB 三通道以略微不同的位移倍率合成。凸面斷面讓位移永遠指向元件內部,邊緣取樣不會越界。
+`class="lg"` 提供材質,`data-lg` 啟用折射,通常一起用;動態插入的節點呼叫 `LiquidGlass.attach(el)`。頁面要有圖像或多彩背景,玻璃才看得見(可用 `.lg-glow` 容器)。其餘元件結構、屬性與 API 全在上面的規格書。
 
 ## 瀏覽器支援
 
 | 環境 | 行為 |
 | --- | --- |
-| Chrome、Edge、Arc、Opera、Electron 等 Chromium | 完整液態折射與色散 |
-| Safari、Firefox、iOS 全部瀏覽器 | 自動降級為磨砂玻璃(blur + saturate),版面與互動完全相同 |
-| 系統開啟「降低透明度」 | 改用近不透明面板,停用折射與模糊 |
-| 系統開啟「減少動態效果」 | 停用發光漂移、慣性與彈性動畫 |
+| Chrome / Edge / Arc / Opera / Electron 等 Chromium | 完整液態折射與色散 |
+| Safari / Firefox / iOS 全部瀏覽器 | 自動降級為磨砂玻璃,版面與互動完全相同 |
+| 系統「降低透明度 / 減少動態」 | 自動停用折射 / 動畫 |
 
-偵測是自動的:`liquid-glass.js` 會在 `<html>` 標上 `lg-full` 或 `lg-fallback`,不需手動處理。
-
-## JavaScript API
-
-| 方法 / 屬性 | 說明 |
-| --- | --- |
-| `LiquidGlass.init(config?)` | 偵測能力、套用全域設定、掃描 `data-lg` 並啟動所有元件。整頁呼叫一次。 |
-| `LiquidGlass.attach(el, opts?)` | 手動替元素掛折射(動態節點)。回傳實例,含 `update()` `setOptions()` `destroy()` `setBulge(k)`。 |
-| `LiquidGlass.draggable(el, opts?)` | 啟用拖曳。`opts = { handle, bounds: 'viewport'\|'parent', inertia }`。回傳 `{ destroy() }`。 |
-| `LiquidGlass.toast({ title, message, icon, duration })` | 顯示右下角通知。 |
-| `LiquidGlass.refresh()` | 全域設定改變後同步所有實例(只改濾鏡倍率,不重算貼圖,代價極低)。 |
-| `LiquidGlass.Spring(value, opts)` | 自訂彈簧動畫:`{ stiffness, damping, onUpdate, onRest }`。 |
-| `LiquidGlass.config` / `.supported` / `.reducedMotion` | 全域設定物件 / 是否完整折射 / 是否減少動態。 |
-
-### 全域設定(`init()` 參數 / `LiquidGlass.config`)
-
-| 鍵 | 預設 | 說明 |
-| --- | --- | --- |
-| `refraction` | `1.25` | 折射強度倍率,1 為物理值 |
-| `chromatic` | `0.55` | 色散強度 0–1 |
-| `blur` | `1.6` | 玻璃內霧化 px |
-| `saturate` | `1.55` | 透過玻璃的飽和度 |
-| `bezel` | `0.16` | 邊緣斜面寬,佔短邊比例 |
-| `thickness` | `28` | 玻璃厚度 px |
-| `profile` | `'squircle'` | 斷面:`squircle` `circle` `lip` |
-| `ior` | `1.5` | 折射率 |
-| `maxWidth` | `900` | 超過此寬度自動減弱折射,保護 GPU |
-
-### HTML 屬性
-
-| 屬性 | 說明 |
-| --- | --- |
-| `data-lg` | 啟用折射 |
-| `data-lg-refraction` `-chromatic` `-blur` `-saturate` `-bezel` `-thickness` `-profile` | 覆寫單一元素的對應設定 |
-| `data-lg-value` `-spark` `-points` `-labels` `-prefix` `-suffix` `-decimals` | 儀表元件的資料來源(改值即觸發彈簧動畫) |
-| `data-lg-drag="viewport \| parent"` · `data-lg-drag-handle=".sel"` | 拖曳與把手 |
-| `data-lg-tip="文字"` | 工具提示 |
-| `data-lg-open="#id"` / `data-lg-close` | 開關對話框 |
-| `data-lg-theme="dark"`(加在 `<html>`) | 手動切換暗色;不加則跟隨系統 |
-
-## CSS Tokens
-
-所有顏色與節奏都可在 `:root` 覆寫。常用:`--lg-tint`(玻璃底色)、`--lg-accent`(品牌色,預設為莫內畫中胸花的珊瑚紅 `#cf6045`,換成品牌色即整體換膚)、`--lg-text` / `--lg-text-dim`、`--lg-radius-s/m/l/pill`、`--lg-shadow`、`--lg-ease`(液態回彈曲線)、`--lg-blur-fallback`、`--lg-font`。完整清單見 `liquid-glass.css` 第一節。
-
-## 效能準則
-
-折射成本與面積成正比。大面板留給真正重要的層;小而大量重複的元件(列表項、標籤)用 `.lg-static` 磨砂即可。寬度超過 `maxWidth`(預設 900px)會自動減弱折射。位移貼圖以尺寸為鍵快取,同尺寸元件共用同一張;調整 `refraction` / `chromatic` / `blur` / `saturate` 不會觸發重算。
-
-## 無障礙
-
-互動元件具備鍵盤焦點樣式(`:focus-visible`)、分頁支援方向鍵、對話框支援 Esc 關閉並歸還焦點、開關以原生 checkbox 實作。`prefers-reduced-transparency` 與 `prefers-reduced-motion` 皆有對應降級。玻璃上的文字請維持足夠對比,必要時提高該元素的 `--lg-tint` 不透明度。
-
-## 設計準則
-
-玻璃是控制層,內容才是主角。只把玻璃用在漂浮於內容之上的導航、工具列、面板與對話框;內容本身(文章、圖片、表格)不上玻璃。層級靠深度與折射傳達——愈靠近使用者的層,玻璃感愈明確。克制使用:整個畫面只有少數幾片玻璃時,材質才珍貴。
-
-## AI 開發工具整合
-
-`index.html` 的「AI 整合」分頁內含一份可一鍵複製的 AI 規格書(濃縮全部元件結構、屬性與鐵則)。把它存成專案根目錄的 `CLAUDE.md`(Claude Code)、`.cursor/rules/liquid-glass.mdc`(Cursor)或 `.github/copilot-instructions.md`(GitHub Copilot),AI 之後就會以工具包的 class 與 API 實作介面,而不是自己手寫 backdrop-filter;對話式 AI 直接貼上規格書加任務描述即可。
+偵測是自動的,不需手動處理。
 
 ## 授權與素材
 
