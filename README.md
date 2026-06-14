@@ -2,7 +2,7 @@
 
 > 零依賴的「液態玻璃」UI 工具包 —— 18 個現成元件、以 Snell 定律即時計算的折射與色散、發光背景、慣性拖曳。複製兩個檔案(`liquid-glass.css` + `liquid-glass.js`)就能用,不需建置工具、不需框架。**而且特別為「直接交給 AI 開發介面」而設計**:一份規格書貼給 Claude / Cursor / Copilot,它就會用這套元件替你拼介面。
 
-![Liquid Glass Kit hero](docs/hero.gif)
+![Liquid Glass Kit hero](docs/hero.webp)
 
 > 折射僅 Chromium 引擎(Chrome / Edge / Arc / Electron…)完整支援,其他瀏覽器**自動降級為磨砂玻璃**,版面與互動完全不變。
 
@@ -14,15 +14,15 @@
 
 **內容展廳 / 作品集** — 玻璃導覽列、Dock、搜尋、篩選分頁與卡片漂浮在畫作之上:
 
-![內容展廳](docs/gallery.gif)
+![內容展廳](docs/gallery.webp)
 
 **分析儀表板** — 統計卡、折線圖、環形儀表、進度條;改一個 `data-lg-value` 屬性,數字與弧線就以彈簧一起跳動:
 
-![分析儀表板](docs/dashboard.gif)
+![分析儀表板](docs/dashboard.webp)
 
 **深色主題** — 同一套元件,`<html data-lg-theme="dark">` 一鍵換膚:
 
-![深色主題](docs/dark-theme.gif)
+![深色主題](docs/dark-theme.webp)
 
 ---
 
@@ -109,19 +109,19 @@ LiquidGlass.init(config?) / attach(el, opts?) / draggable(el, opts?) / refresh()
 
 **基礎** — 按鈕 `.lg-btn`(修飾 `--pill` `--accent` `--icon` `--lg` `--sm`)、圖示按鈕 `.lg-btn--icon`、卡片 `.lg-card`。按下有彈簧擠壓回彈。
 
-![基礎元件:按鈕、圖示按鈕、卡片](docs/components-core.gif)
+![基礎元件:按鈕、圖示按鈕、卡片](docs/components-core.webp)
 
 **控制** — 開關 `.lg-switch`(純 CSS)、滑桿 `.lg-slider`、分頁 `.lg-tabs`(膠囊液態遷移)、搜尋框 `.lg-search`。
 
-![控制元件:開關、滑桿、分頁、搜尋](docs/components-controls.gif)
+![控制元件:開關、滑桿、分頁、搜尋](docs/components-controls.webp)
 
 **導覽與互動** — 導覽列 `.lg-navbar`、Dock `.lg-dock`(游標鄰近放大)、拖曳 `data-lg-drag`(慣性 + 拉伸)、工具提示 `data-lg-tip`、對話框 `.lg-modal`、標籤 `.lg-chip` · 徽章 `.lg-badge`。
 
-![導覽元件:導覽列、Dock、拖曳](docs/components-nav.gif)
+![導覽元件:導覽列、Dock、拖曳](docs/components-nav.webp)
 
 **資料視覺化** — 統計卡 `.lg-stat`、進度條 `.lg-meter`、環形儀表 `.lg-gauge`、圖表 `.lg-chart`、通知 `LiquidGlass.toast()`。全部「屬性驅動」:改 `data-lg-value` / `-spark` / `-points` 即觸發彈簧動畫。
 
-![資料元件:統計卡、進度條、環形儀表、圖表](docs/components-data.gif)
+![資料元件:統計卡、進度條、環形儀表、圖表](docs/components-data.webp)
 
 > 這幾件是「玻璃容器 + 實心內容層」:外框是玻璃,但數字、走勢圖、圖表本身不透明——內容上玻璃會看不見,這是技術上必要的邊界。
 
