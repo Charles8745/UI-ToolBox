@@ -652,6 +652,7 @@ body.tour-on .home-dock { display: none !important; }
 
 /* ============ 元件分頁:bento 區塊總提示 ============ */
 .bento-hint { margin: -2px 0 22px; font-size: 14px; line-height: 1.75; color: var(--lg-text-dim); max-width: 66ch; }
+.shrink-demo { position: sticky; top: 12px; z-index: 20; margin-bottom: 44px; }
 
 /* ============ 元件分頁:迷你儀表板實景(背景同其他展示元件:lg lg-static 霧面玻璃)============ */
 .dash {
@@ -934,6 +935,23 @@ window.ART = {
       <p class="desc">十三件互動元件,加上一組會即時更新的儀表板實景。每一件都能按、能拖、能甩;程式碼一行不放——要抄的全在 AI Guide 的「元件程式碼庫」。</p>
     </div>
 
+    <div class="shrink-demo">
+      <p class="bento-hint" style="margin:0 0 10px;">↓ 捲動頁面:看這條工具列縮小、回捲展開(iOS 26 行為)</p>
+      <nav class="lg lg-navbar" data-lg data-lg-shrink>
+        <span class="lg-navbar__brand"><svg class="ph" width="17" height="17"><use href="#ph-sparkle"/></svg>Atelier</span>
+        <span class="lg-navbar__spacer"></span>
+        <button class="lg-navbar__link is-active">畫廊</button>
+        <button class="lg-navbar__link">典藏</button>
+        <button class="lg-navbar__link">展訊</button>
+      </nav>
+      <div class="lg lg-tabs" data-lg data-lg-shrink role="tablist" aria-label="畫派示範" style="margin-top:10px;">
+        <span class="lg-tabs__pill" aria-hidden="true"></span>
+        <button class="lg-tabs__tab is-active" role="tab" aria-selected="true">印象派</button>
+        <button class="lg-tabs__tab" role="tab" aria-selected="false">野獸派</button>
+        <button class="lg-tabs__tab" role="tab" aria-selected="false">立體派</button>
+      </div>
+    </div>
+
     <div class="view-section" id="playground">
       <h2 class="display">先調玻璃,再玩元件</h2>
       <p class="desc">這四支旋鈕寫入 LiquidGlass.config 後即時重算所有實例——下面整面牆的元件、甚至首頁展廳的玻璃,都會同步改變。</p>
@@ -1056,7 +1074,7 @@ window.ART = {
         <div class="tile lg-static lg t3">
           <div class="tile__head"><h3>Segmented Tabs</h3></div>
           <div class="tile__stage">
-            <div class="lg lg-tabs" data-lg data-lg-shrink role="tablist" aria-label="畫派">
+            <div class="lg lg-tabs" data-lg role="tablist" aria-label="畫派">
               <span class="lg-tabs__pill" aria-hidden="true"></span>
               <button class="lg-tabs__tab is-active" role="tab" aria-selected="true">印象派</button>
               <button class="lg-tabs__tab" role="tab" aria-selected="false">野獸派</button>
@@ -1104,7 +1122,7 @@ window.ART = {
         <div class="tile lg-static lg t6">
           <div class="tile__head"><h3>Navbar</h3></div>
           <div class="tile__stage">
-            <nav class="lg lg-navbar" data-lg data-lg-shrink style="width:min(520px,100%);">
+            <nav class="lg lg-navbar" data-lg style="width:min(520px,100%);">
               <span class="lg-navbar__brand"><svg class="ph" width="17" height="17"><use href="#ph-sparkle"/></svg>Atelier</span>
               <span class="lg-navbar__spacer"></span>
               <button class="lg-navbar__link is-active">畫廊</button>

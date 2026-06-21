@@ -590,9 +590,11 @@
       lastY = y;
       subs.forEach(function (cb) { cb(s); });
     }
-    t.addEventListener('scroll', function () { if (!raf) raf = requestAnimationFrame(tick); }, { passive: true });
+    function onScroll() { if (!raf) raf = requestAnimationFrame(tick); }
+    t.addEventListener('scroll', onScroll, { passive: true });
     return {
-      subscribe: function (cb) { subs.push(cb); var y0 = getY(); cb({ y: y0, dy: 0, atTop: y0 <= 1, atBottom: y0 >= maxY() - 1 }); }
+      subscribe: function (cb) { subs.push(cb); var y0 = getY(); cb({ y: y0, dy: 0, atTop: y0 <= 1, atBottom: y0 >= maxY() - 1 }); },
+      destroy: function () { t.removeEventListener('scroll', onScroll); subs = []; }
     };
   }
   var _winScroll = null;
