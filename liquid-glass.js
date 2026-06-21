@@ -84,6 +84,12 @@
     maxWidth: 900       // 超過此寬度自動減弱折射,避免 GPU 卡頓
   };
 
+  // 材質變體(B6):現狀 = Clear;Regular 較霧較不透,內容上可讀(數值可實機微調)
+  var MATERIALS = {
+    clear:   { blur: 1.6, saturate: 1.55, refraction: 1.25 },
+    regular: { blur: 7.0, saturate: 1.20, refraction: 0.90 }
+  };
+
   /* ------------------------------------------------------------------ *
    * 2. 斷面函數 — 距邊緣 t∈[0,1] 處的玻璃相對高度
    *    Apple 偏好 squircle:平面到曲面的過渡最柔和
@@ -362,6 +368,8 @@
     if (w < 2 || h < 2) return;
 
     var o = this.opts;
+    var mat = elm.classList.contains('lg--regular') ? MATERIALS.regular
+            : elm.classList.contains('lg--clear')   ? MATERIALS.clear : null;
     var profile = o.profile || config.profile;
     var thickness = isNaN(o.thickness) ? config.thickness : o.thickness;
     var bezel = isNaN(o.bezel)
@@ -373,15 +381,15 @@
     var map = buildMap(w, h, radius, bezel, thickness, profile, config.ior);
 
     // 折射倍率(大面積自動減弱)
-    var refraction = isNaN(o.refraction) ? config.refraction : o.refraction;
+    var refraction = !isNaN(o.refraction) ? o.refraction : (mat ? mat.refraction : config.refraction);
     if (w > config.maxWidth) refraction *= config.maxWidth / w;
     // 貼圖編碼為 (C-0.5) ∈ ±0.5,故 scale 乘 2 才等於 maxMag 像素的實際位移
     var scale = map.maxMag * refraction * 2;
 
     // 色散:三通道位移差
     var ca = (isNaN(o.chromatic) ? config.chromatic : o.chromatic) * 0.12;
-    var blur = isNaN(o.blur) ? config.blur : o.blur;
-    var sat = isNaN(o.saturate) ? config.saturate : o.saturate;
+    var blur = !isNaN(o.blur) ? o.blur : (mat ? mat.blur : config.blur);
+    var sat = !isNaN(o.saturate) ? o.saturate : (mat ? mat.saturate : config.saturate);
 
     // filter 區域維持 0%–100%(objectBoundingBox),feImage 用元素像素尺寸
     var img = this.nodes.image;

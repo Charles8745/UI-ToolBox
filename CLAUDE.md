@@ -143,6 +143,9 @@ data-lg-concentric(同心圓角:子半徑自動 = 最近 lg 父層半徑 − 內
 ## JS API
 LiquidGlass.init(config?) / attach(el, opts?) / draggable(el, opts?) / refresh() / toast({ title, message, icon, duration }) / config / supported / reducedMotion
 
+## 材質變體
+材質變體:class 加 lg--clear(預設,較透)或 lg--regular(較霧,內容上用)。優先序:單元素 data-lg-* > 材質 class > 全域 config。
+
 ## Tokens(:root 覆寫)
 --lg-accent(品牌色,預設 #cf6045)、--lg-tint、--lg-text、--lg-radius-s/m/l/pill、--lg-blur-fallback、--lg-font
 主題:<html data-lg-theme="dark">,不設則跟隨系統。

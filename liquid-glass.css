@@ -123,6 +123,13 @@ html.lg-fallback .lg,
   backdrop-filter: blur(var(--lg-blur-fallback)) saturate(var(--lg-saturate-fallback));
 }
 
+/* 降級模式下 regular 材質加重磨砂(特異度 0,3,0 > 上方 0,2,1,穩勝) */
+html.lg-fallback .lg--regular,
+html.lg-fallback .lg.lg--regular {
+  -webkit-backdrop-filter: blur(calc(var(--lg-blur-fallback) * 1.7)) saturate(1.2);
+  backdrop-filter: blur(calc(var(--lg-blur-fallback) * 1.7)) saturate(1.2);
+}
+
 /* 鏡面高光:左上亮、右下暗的 rim light + 內緣柔光 */
 .lg::before {
   content: "";
