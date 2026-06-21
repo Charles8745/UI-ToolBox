@@ -642,12 +642,13 @@
       var mode = el.getAttribute('data-lg-scroll-edge') || 'both';
       var useTop = mode === 'top' || mode === 'both';
       var useBot = mode === 'bottom' || mode === 'both';
-      var FADE = 28; // 漸隱帶 px(可實機微調)
+      var FADE = 36;
       makeScrollWatcher(el).subscribe(function (s) {
-        var t = useTop && !s.atTop ? FADE : 0;
-        var b = useBot && !s.atBottom ? FADE : 0;
-        if (!t && !b) { el.style.webkitMaskImage = ''; el.style.maskImage = ''; return; }   // 無漸隱時不留多餘 mask
-        var m = 'linear-gradient(to bottom, transparent 0, #000 ' + t + 'px, #000 calc(100% - ' + b + 'px), transparent 100%)';
+        var max = el.scrollHeight - el.clientHeight;
+        var t = useTop ? Math.max(0, Math.min(s.y, FADE)) : 0;         // 距頂越遠,頂緣漸隱帶越長(平滑淡入)
+        var b = useBot ? Math.max(0, Math.min(max - s.y, FADE)) : 0;   // 距底越遠,底緣漸隱帶越長
+        if (!t && !b) { el.style.webkitMaskImage = ''; el.style.maskImage = ''; return; }
+        var m = 'linear-gradient(to bottom, transparent 0, #000 ' + t.toFixed(1) + 'px, #000 calc(100% - ' + b.toFixed(1) + 'px), transparent 100%)';
         el.style.webkitMaskImage = m;
         el.style.maskImage = m;
       });
