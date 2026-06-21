@@ -56,6 +56,43 @@ python3 build_site.py
 
 ---
 
+## 已知陷阱:動態建立的玻璃在「整頁重載 / SPA」可能不顯影折射(Chromium)
+
+**症狀**:用 JS 動態建立 `.lg [data-lg]` 面板(SPA、框架渲染、或 dev server 存檔觸發的整頁重載)後,面板只剩平面磨砂底色、**沒有折射**;但只要存一次 CSS 檔(dev server 的 CSS 熱抽換)折射就「突然出現」。純靜態 HTML(`file://`,濾鏡在首次繪製前就存在)通常正常,所以這個 bug 看起來時有時無。`attach()` 有呼叫、`el._lgGlass` 也在、`backdrop-filter: url(#lg-f-N)` 也掛上了 —— 但就是沒合成。
+
+**根因**:折射用 SVG `<filter>` 的 `<feImage>`,位移貼圖是 canvas `toDataURL()` 的 PNG **data-URI,Chromium 非同步解碼**。面板的 `backdrop-filter` 合成節點在「首次繪製」就被光柵化(那時 PNG 還沒解碼完),而 Chromium **不會在貼圖解碼完成後重建這個合成節點** → 面板停在「只有底色、無折射」,直到一次**文件層級的樣式重算**強迫重建。
+
+**為什麼存 CSS 檔會修好**:dev server 換掉 `<link>` / 注入 `<style>`,改變「有效樣式表集合」→ 觸發 Blink 全文件 style 重算 → 重新解析 `url(#filter)` 並用**已解碼**的 `feImage` 重建合成節點。
+**為什麼改 inline 樣式沒用**:`el.style.*` 或 `documentElement.style.setProperty('--var',…)` 只是單一元素的快速重算,不會重新解析 SVG 資源、也不會重建合成節點。切 `opacity`、改 CSS 變數都救不回來。
+
+**可靠解法(實測有效)**:面板建立並 `attach()` 後,**等位移貼圖解碼穩定**,再對每個面板做「拆掉 backdrop-filter → 還原 → 換一個同源 `<link rel=stylesheet>`(clone + cache-bust)」。**兩半缺一不可**(單獨換樣式表、或單獨拆 inline 都不穩)。解碼時間因機器而異,實務上**在載入後頭幾秒多打幾次**最穩:
+
+```js
+function reviveGlass(root = document) {
+  const panels = [...root.querySelectorAll('[data-lg]')];
+  const saved = panels.map(el => [el, el.style.backdropFilter, el.style.getPropertyValue('-webkit-backdrop-filter')]);
+  saved.forEach(([el,a,b]) => { if (a||b) { el.style.backdropFilter='none'; el.style.setProperty('-webkit-backdrop-filter','none'); } });
+  requestAnimationFrame(() => {
+    saved.forEach(([el,a,b]) => { if (a) el.style.backdropFilter=a; if (b) el.style.setProperty('-webkit-backdrop-filter',b); });
+    const link = [...document.querySelectorAll('link[rel="stylesheet"]')].reverse()
+      .find(e => { try { return new URL(e.href).origin === location.origin; } catch { return false; } });
+    if (!link) return;
+    const base = link.href.split('?')[0];
+    const clone = link.cloneNode();
+    clone.href = base + (base.includes('?') ? '&' : '?') + 'lgrc=' + Date.now();
+    clone.addEventListener('load', () => link.remove(), { once: true });
+    link.after(clone);
+  });
+}
+// 動態建立面板後:
+[400, 900, 1800, 3500].forEach(ms => setTimeout(reviveGlass, ms));
+```
+
+**注意**:`lg-fallback`(非 Chromium / 不支援折射)走純 CSS `backdrop-filter: blur()`,**不受此問題影響**;`LiquidGlass.supported === false` 時直接略過。每次 revive 會有約一影格的拆除閃爍,折射已顯影後再打會閃一下,可在確定的延遲點只打一次以消除。
+**待辦(工具包可內建)**:把上述 revive 收進 `LiquidGlass`(`attach()` 後自動排程,或提供 `LiquidGlass.recomposite()`),讓使用者不必自己處理。發現於一個把本工具包當動態 HUD 的 SPA 專案。
+
+---
+
 ## AI 規格書(元件結構與 API 速查)
 
 下面這份規格也呈現在展示站「AI 整合」分頁,是照工具包開發的核心參考:
