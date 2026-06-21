@@ -605,22 +605,31 @@
    * ------------------------------------------------------------------ */
   function initScrollShrink() {
     var bars = [].slice.call(document.querySelectorAll('[data-lg-shrink]'));
-    if (!bars.length || REDUCED_MOTION) return;
-    var THRESH = 6;
+    if (!bars.length || REDUCED_MOTION) return;   // reduced-motion:定在展開、不隱藏
+    var THRESH = 6, CONDENSE_AT = 24, HIDE_AT = 90;
+    function setCondensed(bar, want) {
+      if (bar.classList.contains('is-condensed') === want) return;
+      bar.classList.toggle('is-condensed', want);
+      // tabs:padding transition 結束後重定位藥丸(只認 bar 自身的 padding 過渡,防子 tab 冒泡與堆疊)
+      if (bar.classList.contains('lg-tabs') && bar._lgRepositionPill && !bar._lgPillPending) {
+        bar._lgPillPending = true;
+        bar.addEventListener('transitionend', function te(e) {
+          if (e.target !== bar || e.propertyName.indexOf('padding') !== 0) return;
+          bar._lgPillPending = false;
+          bar.removeEventListener('transitionend', te);
+          bar._lgRepositionPill();
+        });
+      }
+    }
     getWindowScroll().subscribe(function (s) {
       bars.forEach(function (bar) {
-        var want = s.y < 24 ? false : s.dy > THRESH ? true : s.dy < -THRESH ? false : bar.classList.contains('is-condensed');
-        if (bar.classList.contains('is-condensed') === want) return;
-        bar.classList.toggle('is-condensed', want);
-        if (bar.classList.contains('lg-tabs') && bar._lgRepositionPill && !bar._lgPillPending) {
-          bar._lgPillPending = true;
-          bar.addEventListener('transitionend', function te(e) {
-            if (e.target !== bar || e.propertyName.indexOf('padding') !== 0) return;
-            bar._lgPillPending = false;
-            bar.removeEventListener('transitionend', te);
-            bar._lgRepositionPill();
-          });
-        }
+        setCondensed(bar, s.y >= CONDENSE_AT);     // 第一段:縮小(位置驅動)
+        var hide;                                   // 第二段:隱藏(方向驅動)
+        if (s.y < CONDENSE_AT) hide = false;        // 近頂一律現身
+        else if (s.dy > THRESH && s.y > HIDE_AT) hide = true;   // 往下且夠深 → 隱藏
+        else if (s.dy < -THRESH) hide = false;      // 往上 → 現身
+        else hide = bar.classList.contains('is-hidden');       // 維持
+        bar.classList.toggle('is-hidden', hide);
       });
     });
   }

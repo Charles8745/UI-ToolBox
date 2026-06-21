@@ -983,7 +983,13 @@ html.lg-fallback .lg-switch__track,
  * B1 捲動縮小 — is-condensed
  * ------------------------------------------------------------------ */
 .lg-navbar[data-lg-shrink],
-.lg-tabs[data-lg-shrink] { transition: padding var(--lg-speed) var(--lg-ease); }
+.lg-tabs[data-lg-shrink] {
+  transition: padding var(--lg-speed) var(--lg-ease),
+              transform var(--lg-speed) var(--lg-ease),
+              opacity var(--lg-speed) var(--lg-ease);
+}
+.lg-navbar.is-hidden,
+.lg-tabs.is-hidden { transform: translateY(-140%); opacity: 0; pointer-events: none; }
 
 .lg-navbar.is-condensed { padding-top: 4px; padding-bottom: 4px; }
 .lg-navbar.is-condensed .lg-navbar__brand,

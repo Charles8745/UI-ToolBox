@@ -936,7 +936,7 @@ window.ART = {
     </div>
 
     <div class="shrink-demo">
-      <p class="bento-hint" style="margin:0 0 10px;">↓ 捲動頁面:看這條工具列縮小、回捲展開(iOS 26 行為)</p>
+      <p class="bento-hint" style="margin:0 0 10px;">↓ 捲動頁面:往下滑先縮小、再隱藏;往上滑現身、回頂展開</p>
       <nav class="lg lg-navbar" data-lg data-lg-shrink>
         <span class="lg-navbar__brand"><svg class="ph" width="17" height="17"><use href="#ph-sparkle"/></svg>Atelier</span>
         <span class="lg-navbar__spacer"></span>
@@ -1805,7 +1805,7 @@ var SPEC = [
   '',
   '## 屬性(單一元素覆寫)',
   'data-lg-refraction(折射倍率,預設 1.25)、data-lg-chromatic(色散 0–1)、data-lg-blur、data-lg-saturate、data-lg-bezel(斜面 px)、data-lg-thickness(厚度 px)、data-lg-profile(squircle|circle|lip)',
-  'data-lg-shrink(navbar / tabs:下捲縮小、上捲展開;監聽 window 捲動,reduced-motion 定展開態)',
+  'data-lg-shrink(navbar / tabs:往下捲先縮小、再隱藏(滑出上緣);往上捲現身、回頂展開;監聽 window 捲動,reduced-motion 定展開態)',
   '儀表資料(屬性驅動):data-lg-value(統計卡/進度條/環形儀表的目標值)、data-lg-spark(統計卡走勢逗號數列)、data-lg-points + data-lg-labels(圖表資料)、data-lg-prefix / -suffix / -decimals(數字格式)。改變 data-lg-value / -spark / -points 即觸發彈簧動畫(單一 MutationObserver 自動接手,無需手動呼叫)。',
   '',
   '## JS API',
