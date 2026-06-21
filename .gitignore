@@ -9,3 +9,5 @@ UI_Pompt範例/
 
 # 本機交接 / 狀態文件(僅供本機,不進 repo)
 HANDOFF.md
+.superpowers/        # SDD 執行 ledger / task brief / report(本機 scratch)
+.playwright-mcp/     # chrome-devtools / playwright 瀏覽器暫存
