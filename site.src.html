@@ -626,6 +626,8 @@ body.tour-on .home-dock { display: none !important; }
 .tile__stage { flex: 1; display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 12px; padding: 16px 0; min-height: 96px; }
 .tile__stage--col { flex-direction: column; }
 .tile__stage--pen { padding: 6px 0; }
+.tile__stage--matbg { flex-direction: row; gap: 10px; background: var(--lg-bg-image) center/cover; border-radius: var(--lg-radius-m); overflow: hidden; }
+.tile__stage--matbg .lg-card { flex: 1; min-width: 0; padding: 14px 12px; }
 .demo-pen {
   position: relative; width: 100%; min-height: 250px;
   border-radius: 18px;
@@ -1019,9 +1021,9 @@ window.ART = {
 
         <div class="tile lg-static lg t2">
           <div class="tile__head"><h3>Glass Material</h3></div>
-          <div class="tile__stage tile__stage--col">
-            <div class="lg lg-card lg--clear" data-lg><h4 class="lg-card__title">Clear(預設)</h4><p class="lg-card__meta">媒體上更通透</p></div>
-            <div class="lg lg-card lg--regular" data-lg><h4 class="lg-card__title">Regular</h4><p class="lg-card__meta">內容上更可讀</p></div>
+          <div class="tile__stage tile__stage--matbg" data-art-bg="poppies">
+            <div class="lg lg-card lg--clear" data-lg><h4 class="lg-card__title">Clear</h4><p class="lg-card__meta">通透</p></div>
+            <div class="lg lg-card lg--regular" data-lg><h4 class="lg-card__title">Regular</h4><p class="lg-card__meta">較霧</p></div>
           </div>
         </div>
 
