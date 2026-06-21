@@ -571,7 +571,60 @@
   }
 
   /* ------------------------------------------------------------------ *
-   * 9. 元件行為:tabs / slider / modal / tooltip / dock
+   * 9. 共用 scroll util(B1 建立,B5 沿用)
+   * ------------------------------------------------------------------ */
+  /* makeScrollWatcher(target) → { subscribe(cb) }  cb 收 { y, dy, atTop, atBottom } */
+  function makeScrollWatcher(target) {
+    var t = target || window, subs = [], raf = 0;
+    function getY() { return t === window ? (window.scrollY || window.pageYOffset || 0) : t.scrollTop; }
+    function maxY() {
+      return t === window
+        ? (document.documentElement.scrollHeight - window.innerHeight)
+        : (t.scrollHeight - t.clientHeight);
+    }
+    var lastY = getY();
+    function tick() {
+      raf = 0;
+      var y = getY(), m = maxY();
+      var s = { y: y, dy: y - lastY, atTop: y <= 1, atBottom: y >= m - 1 };
+      lastY = y;
+      subs.forEach(function (cb) { cb(s); });
+    }
+    t.addEventListener('scroll', function () { if (!raf) raf = requestAnimationFrame(tick); }, { passive: true });
+    return {
+      subscribe: function (cb) { subs.push(cb); var y0 = getY(); cb({ y: y0, dy: 0, atTop: y0 <= 1, atBottom: y0 >= maxY() - 1 }); }
+    };
+  }
+  var _winScroll = null;
+  function getWindowScroll() { return _winScroll || (_winScroll = makeScrollWatcher(window)); }
+
+  /* ------------------------------------------------------------------ *
+   * 9b. initScrollShrink(B1):navbar / tabs data-lg-shrink 下捲縮小
+   * ------------------------------------------------------------------ */
+  function initScrollShrink() {
+    var bars = [].slice.call(document.querySelectorAll('[data-lg-shrink]'));
+    if (!bars.length || REDUCED_MOTION) return;
+    var THRESH = 6;
+    getWindowScroll().subscribe(function (s) {
+      bars.forEach(function (bar) {
+        var want = s.y < 24 ? false : s.dy > THRESH ? true : s.dy < -THRESH ? false : bar.classList.contains('is-condensed');
+        if (bar.classList.contains('is-condensed') === want) return;
+        bar.classList.toggle('is-condensed', want);
+        if (bar.classList.contains('lg-tabs') && bar._lgRepositionPill && !bar._lgPillPending) {
+          bar._lgPillPending = true;
+          bar.addEventListener('transitionend', function te(e) {
+            if (e.target !== bar || e.propertyName.indexOf('padding') !== 0) return;
+            bar._lgPillPending = false;
+            bar.removeEventListener('transitionend', te);
+            bar._lgRepositionPill();
+          });
+        }
+      });
+    });
+  }
+
+  /* ------------------------------------------------------------------ *
+   * 10. 元件行為:tabs / slider / modal / tooltip / dock
    * ------------------------------------------------------------------ */
   function initTabs(root) {
     var pill = root.querySelector('.lg-tabs__pill');
@@ -608,6 +661,10 @@
         e.preventDefault();
       });
     });
+    root._lgRepositionPill = function () {
+      var act = root.querySelector('.lg-tabs__tab.is-active') || tabs[0];
+      if (act && pill) { pill.style.width = act.offsetWidth + 'px'; pill.style.left = act.offsetLeft + 'px'; }
+    };
     var active = root.querySelector('.lg-tabs__tab.is-active') || tabs[0];
     if (active) requestAnimationFrame(function () { move(active); });
   }
@@ -1287,6 +1344,7 @@
       initSheen();
       ensureGooFilter();
       initPress();
+      initScrollShrink();
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
     else boot();

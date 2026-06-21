@@ -978,3 +978,22 @@ html.lg-fallback .lg-switch__track,
 }
 .lg-switch__goo i.on { left: 28px; }
 .lg-switch__goo i.fade { transform: scale(0); }
+
+/* ------------------------------------------------------------------ *
+ * B1 捲動縮小 — is-condensed
+ * ------------------------------------------------------------------ */
+.lg-navbar[data-lg-shrink],
+.lg-tabs[data-lg-shrink] { transition: padding var(--lg-speed) var(--lg-ease); }
+
+.lg-navbar.is-condensed { padding-top: 4px; padding-bottom: 4px; }
+.lg-navbar.is-condensed .lg-navbar__brand,
+.lg-navbar.is-condensed .lg-navbar__link {
+  padding-top: 5px; padding-bottom: 5px; font-size: 0.88em;
+  transition: padding var(--lg-speed) var(--lg-ease), font-size var(--lg-speed) var(--lg-ease);
+}
+.lg-tabs.is-condensed { padding: 3px; }
+.lg-tabs.is-condensed .lg-tabs__pill { top: 3px; bottom: 3px; }
+.lg-tabs.is-condensed .lg-tabs__tab {
+  padding-top: 6px; padding-bottom: 6px; font-size: 0.9em;
+  transition: padding var(--lg-speed) var(--lg-ease), font-size var(--lg-speed) var(--lg-ease);
+}

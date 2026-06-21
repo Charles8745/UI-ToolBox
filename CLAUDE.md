@@ -138,6 +138,7 @@ Dock:<div class="lg lg-dock" data-lg><button class="lg-dock__item">icon</button>
 ## 屬性(單一元素覆寫)
 data-lg-refraction(折射倍率,預設 1.25)、data-lg-chromatic(色散 0–1)、data-lg-blur、data-lg-saturate、data-lg-bezel(斜面 px)、data-lg-thickness(厚度 px)、data-lg-profile(squircle|circle|lip)
 data-lg-concentric(同心圓角:子半徑自動 = 最近 lg 父層半徑 − 內距,四角各算)
+data-lg-shrink(navbar / tabs:下捲縮小、上捲展開;監聽 window 捲動,reduced-motion 定展開態)
 儀表資料(屬性驅動):data-lg-value(統計卡/進度條/環形儀表的目標值)、data-lg-spark(統計卡走勢逗號數列)、data-lg-points + data-lg-labels(圖表資料)、data-lg-prefix / -suffix / -decimals(數字格式)。改變 data-lg-value / -spark / -points 即觸發彈簧動畫(單一 MutationObserver 自動接手,無需手動呼叫)。
 
 ## JS API
