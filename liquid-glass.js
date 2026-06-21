@@ -711,26 +711,72 @@
     paint();
   }
 
+  function morphFrom(origin, panel) {
+    // 量測前先中性化 transform:is-open 的 transition 在 t=0 尚未推進,面板仍是 base 的
+    // scale(0.86) translateY(18px),直接量會量到縮放盒 → FLIP 的 sx/sy/dx/dy 全偏(實測差約 14%/33px)。
+    var savedTrans = panel.style.transition;
+    panel.style.transition = 'none';
+    panel.style.transform = 'none';
+    var o = origin.getBoundingClientRect(), p = panel.getBoundingClientRect(); // 強制 reflow → 真正靜止盒
+    panel.style.transform = '';            // 交回 CSS(is-open = transform:none)
+    panel.style.transition = savedTrans;
+    if (!p.width || !p.height) return false;
+    var dx = (o.left + o.width / 2) - (p.left + p.width / 2);
+    var dy = (o.top + o.height / 2) - (p.top + p.height / 2);
+    var sx = Math.max(o.width / p.width, 0.05), sy = Math.max(o.height / p.height, 0.05);
+    panel.animate([
+      { transform: 'translate(' + dx + 'px,' + dy + 'px) scale(' + sx.toFixed(3) + ',' + sy.toFixed(3) + ')', opacity: 0.4 },
+      { transform: 'none', opacity: 1 }
+    ], { duration: 420, easing: 'cubic-bezier(.2,.8,.2,1)' });
+    return true;  // 全程保留折射(不關 backdrop-filter)
+  }
+
   function initModals() {
     var lastFocus = null;
-    function open(modal) {
+    function open(modal, origin) {
       lastFocus = document.activeElement;
       modal.classList.add('is-open');
       modal.setAttribute('aria-hidden', 'false');
+      var panel = modal.querySelector('.lg-modal__panel');
+      if (FULL) instances.forEach(function (g) { if (modal.contains(g.el)) g.update(); });
+      var morphed = false;
+      if (panel && origin && !REDUCED_MOTION && panel.animate) {
+        panel.classList.add('is-morphing');                   // 抑制 keyframe,WAAPI 獨佔
+        morphed = morphFrom(origin, panel);
+        if (!morphed) panel.classList.remove('is-morphing');  // 量不到盒 → 回退既有預設 keyframe
+      }
+      if (panel) panel._lgOrigin = morphed ? origin : null;
       var f = modal.querySelector('button, [href], input, [tabindex]');
       if (f) f.focus();
-      if (FULL) instances.forEach(function (g) { if (modal.contains(g.el)) g.update(); });
     }
-    function close(modal) {
+    function finishClose(modal) {
       modal.classList.remove('is-open');
       modal.setAttribute('aria-hidden', 'true');
+      var panel = modal.querySelector('.lg-modal__panel');
+      if (panel) panel.classList.remove('is-morphing');   // 清乾淨,下次開啟才正常
       if (lastFocus && lastFocus.focus) lastFocus.focus();
+    }
+    function close(modal) {
+      var panel = modal.querySelector('.lg-modal__panel');
+      if (panel && panel._lgOrigin && !REDUCED_MOTION && panel.animate) {
+        var o = panel._lgOrigin.getBoundingClientRect(), p = panel.getBoundingClientRect();
+        var dx = (o.left + o.width / 2) - (p.left + p.width / 2);
+        var dy = (o.top + o.height / 2) - (p.top + p.height / 2);
+        var sx = Math.max(o.width / p.width, 0.05), sy = Math.max(o.height / p.height, 0.05);
+        var anim = panel.animate([
+          { transform: 'none', opacity: 1 },
+          { transform: 'translate(' + dx + 'px,' + dy + 'px) scale(' + sx.toFixed(3) + ',' + sy.toFixed(3) + ')', opacity: 0.3 }
+        ], { duration: 300, easing: 'cubic-bezier(.4,0,.7,.2)' });
+        anim.onfinish = function () { finishClose(modal); };
+      } else {
+        finishClose(modal);
+      }
     }
     document.addEventListener('click', function (e) {
       var t = e.target.closest ? e.target.closest('[data-lg-open]') : null;
       if (t) {
         var m = document.querySelector(t.getAttribute('data-lg-open'));
-        if (m) open(m);
+        if (m) open(m, t);     // t = 觸發按鈕,作為 morph origin
         return;
       }
       var c = e.target.closest ? e.target.closest('[data-lg-close]') : null;

@@ -543,6 +543,7 @@ html.lg-fallback .lg-switch__track,
 @media (prefers-reduced-motion: reduce) {
   .lg-modal.is-open .lg-modal__panel { animation: none; }
 }
+.lg-modal__panel.is-morphing { animation: none !important; }
 
 /* ==================================================================== *
  * 12. 工具提示  .lg-tooltip(JS 建立的單例)
