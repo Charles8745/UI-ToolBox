@@ -298,6 +298,28 @@
     return Math.min(v, Math.min(w, h) / 2);
   }
 
+  function applyConcentric(el) {
+    var parent = el.parentElement;
+    while (parent && !parent.classList.contains('lg')) parent = parent.parentElement;
+    if (!parent) return;                       // 找不到 lg 父層 → no-op
+    function r(v) { return parseFloat(v) || 0; }
+    var pcs = getComputedStyle(parent);
+    var ptl = r(pcs.borderTopLeftRadius), ptr = r(pcs.borderTopRightRadius),
+        pbr = r(pcs.borderBottomRightRadius), pbl = r(pcs.borderBottomLeftRadius);
+    if (!(ptl || ptr || pbr || pbl)) return;   // 父無圓角 → no-op
+    var prc = parent.getBoundingClientRect(), crc = el.getBoundingClientRect();
+    var gapL = crc.left - prc.left - r(pcs.borderLeftWidth);
+    var gapT = crc.top - prc.top - r(pcs.borderTopWidth);
+    var gapR = prc.right - crc.right - r(pcs.borderRightWidth);
+    var gapB = prc.bottom - crc.bottom - r(pcs.borderBottomWidth);
+    var MIN = 4;
+    function corner(prad, ga, gb) { return Math.max(prad - Math.max(ga, gb), MIN); } // 角由相鄰兩邊定義,取大者
+    el.style.borderTopLeftRadius     = corner(ptl, gapL, gapT) + 'px';
+    el.style.borderTopRightRadius    = corner(ptr, gapR, gapT) + 'px';
+    el.style.borderBottomRightRadius = corner(pbr, gapR, gapB) + 'px';
+    el.style.borderBottomLeftRadius  = corner(pbl, gapL, gapB) + 'px';
+  }
+
   function Glass(elm, opts) {
     opts = opts || {};
     this.el = elm;
@@ -1235,6 +1257,15 @@
 
     function boot() {
       [].forEach.call(document.querySelectorAll('[data-lg]'), function (n) { attach(n); });
+      [].forEach.call(document.querySelectorAll('[data-lg-concentric]'), function (n) {
+        applyConcentric(n);
+        if (typeof ResizeObserver === 'undefined') return;
+        var ro = new ResizeObserver(function () { applyConcentric(n); });
+        ro.observe(n);
+        var p = n.parentElement;
+        while (p && !p.classList.contains('lg')) p = p.parentElement;
+        if (p) ro.observe(p);   // 父層尺寸/內距變動也重算
+      });
       [].forEach.call(document.querySelectorAll('.lg-tabs'), initTabs);
       [].forEach.call(document.querySelectorAll('input.lg-slider__input'), initSlider);
       [].forEach.call(document.querySelectorAll('.lg-dock'), initDock);
