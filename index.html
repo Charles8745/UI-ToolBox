@@ -1657,7 +1657,8 @@ body.tour-on .home-dock { display: none !important; }
 
 /* ============ 元件分頁:bento 區塊總提示 ============ */
 .bento-hint { margin: -2px 0 22px; font-size: 14px; line-height: 1.75; color: var(--lg-text-dim); max-width: 66ch; }
-.shrink-demo { position: sticky; top: 12px; z-index: 20; margin-bottom: 44px; }
+.shrink-demo { position: sticky; top: 12px; z-index: 20; margin-bottom: 44px; pointer-events: none; }
+.shrink-demo .lg-navbar, .shrink-demo .lg-tabs { pointer-events: auto; }
 
 /* ============ 元件分頁:迷你儀表板實景(背景同其他展示元件:lg lg-static 霧面玻璃)============ */
 .dash {
@@ -1940,8 +1941,8 @@ window.ART = {
       <p class="desc">十三件互動元件,加上一組會即時更新的儀表板實景。每一件都能按、能拖、能甩;程式碼一行不放——要抄的全在 AI Guide 的「元件程式碼庫」。</p>
     </div>
 
+    <p class="bento-hint" style="margin:0 0 12px;">↓ 捲動頁面:往下滑先縮小、再隱藏;往上滑現身、回頂展開</p>
     <div class="shrink-demo">
-      <p class="bento-hint" style="margin:0 0 10px;">↓ 捲動頁面:往下滑先縮小、再隱藏;往上滑現身、回頂展開</p>
       <nav class="lg lg-navbar" data-lg data-lg-shrink>
         <span class="lg-navbar__brand"><svg class="ph" width="17" height="17"><use href="#ph-sparkle"/></svg>Atelier</span>
         <span class="lg-navbar__spacer"></span>
