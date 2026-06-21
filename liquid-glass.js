@@ -734,6 +734,7 @@
   function initModals() {
     var lastFocus = null;
     function open(modal, origin) {
+      if (modal.classList.contains('is-open')) return;   // 已開啟則不重入(避免雙重 morph)
       lastFocus = document.activeElement;
       modal.classList.add('is-open');
       modal.setAttribute('aria-hidden', 'false');
