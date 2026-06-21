@@ -10,7 +10,7 @@
 
 **開發順序(簡單→難):** B4 → B6 → B1 → B5 → B3。
 
-五項彼此獨立、各自可單獨出貨 → **一份 spec + 一份分五階段帶檢查點的計畫**。每項做完 build + Chromium 實機自驗,再交使用者檢查,核可後才動下一項。
+五項各自可單獨出貨 → **一份 spec + 一份分五階段帶檢查點的計畫**。每項做完 build + Chromium 實機自驗,再交使用者檢查,核可後才動下一項。唯一的共用基建(scroll util)在 **B1 階段建立**(B1 是第一個用到的人),B5 沿用;B1 仍可獨立出貨。
 
 ## 鐵律(遵守 CLAUDE.md)
 
@@ -25,12 +25,13 @@
 
 折射顯影、磨砂降級、morph 縮放中的合成穩定性,**在程式環境無法渲染驗證**,只能 Chromium 實機截圖 + 交使用者檢查。非 Chromium(`LiquidGlass.supported === false`)走磨砂降級,各行為需確保不報錯。
 
-## 共用基建(先建,B1/B5 共用)
+## 共用基建(於 B1 階段建立,B5 沿用)
 
 **rAF 合批 scroll util**(避免 B1、B5 各開一個 listener):
 - 單一 window scroll listener,rAF 合批,提供 `lastY` / `deltaY` / 方向。
 - 訂閱者(B1 的 shrink、B5 的 edge 判斷)註冊回呼,每幀拿到捲動狀態。
 - B5 若監聽指定容器,容器各自一份輕量訂閱(同一套工具,target 可換)。
+- 在 B1 階段隨 `initScrollShrink()` 一併落地;B5 直接 import,不重複造 listener。
 
 ---
 
@@ -40,8 +41,9 @@
 
 **做法:**
 - 在 `attach()` 末尾,若元素帶 `data-lg-concentric`:找**最近的 lg 父容器**,讀其 computed `border-radius`。
-- 內距用「子相對父的 offset」**四角各算**:`gapLeft = child.left − parent.left − parentBorderLeft`,top/right/bottom 同理。
-- `子角半徑 = max(父對應角半徑 − 該邊 gap, 最小值)`,寫進 `el.style.borderRadius`(四角)。
+- 四邊 gap 各算:`gapLeft = child.left − parent.left − parentBorderLeft`,top/right/bottom 同理。
+- 一個**角**由相鄰兩邊定義,故 `角 inset = max(相鄰兩邊 gap)`(取大者確保半徑不溢出;padding 均勻時兩邊相等,退化為單一 inset)。
+- `子角半徑 = max(父對應角半徑 − 角 inset, 最小值)`,四角分別寫進 `el.style.borderRadius`。
 - **父無明確圓角、或找不到 lg 父層 → no-op 不寫入。**
 - 沿用既有 `ResizeObserver` 在尺寸變動時重算。
 
@@ -79,7 +81,7 @@
 - `initScrollShrink()`:訂閱共用 scroll util,依 `deltaY` 方向 + threshold(避免微抖亂跳)切 `.is-condensed` class。
 - CSS 用既有 `--lg-speed` / `--lg-ease` transition 收 padding / font-size / 藥丸高度。
 - navbar 目前**零 JS**,這是它第一支行為。
-- **tabs 特別處理:** `is-condensed` 切換改變 tab rect → **必須重跑一次藥丸定位**。把 `initTabs` 的 pill reposition 抽成可呼叫函式,condensed 切換後呼叫它,否則縮小後藥丸對不準。
+- **tabs 特別處理:** `is-condensed` 切換改變 tab rect → **必須重跑一次藥丸定位**。把 `initTabs` 的 pill reposition 抽成可呼叫函式。**重定位掛在 padding 的 `transitionend` 觸發**(不在 class 切換當下量,否則量到 transition 半途的 rect、藥丸定位錯)。
 - `prefers-reduced-motion`:定在展開態,不隨捲動變化。
 
 **驗收:** 下捲縮小、上捲展開;捲動微抖不亂跳;tabs 縮小後藥丸仍對準 active tab;reduced-motion 定態;非 Chromium 仍正常(只是磨砂)。
@@ -93,14 +95,13 @@
 **API:** `data-lg-scroll-edge="top|bottom|both"`(上/下緣可分別開關)。
 
 **做法:**
-- 漸隱帶用 `mask-image` 線性漸層,讓內容穿越交界處漸隱。
-- **結構陷阱(釘死):** 偽元素掛在可捲動元素上會跟著內容捲走。漸隱層必須是**不隨內容捲動的覆蓋層** → 做成捲動容器內的 `position:sticky` 覆蓋層(或包一層 wrapper,mask 掛 wrapper),spec 採 sticky 覆蓋層。
-- 配共用 scroll util 判斷:未捲到頂 → 不顯頂部漸隱;未捲到底 → 不顯底部漸隱。
-- top / bottom 各自獨立生效。
+- **直接在捲動容器本身套 `mask-image`(`-webkit-mask` 並列)線性漸層。** mask 相對容器 box 定位、**不隨內容捲動**——這正是「捲動邊緣淡出」的標準作法,不需 sticky 覆蓋層或偽元素(那會跟著內容捲走或徒增結構)。
+- 漸層 stops 依捲動位置**動態調整**:到頂 → 頂部漸層收為實心(不淡出頂緣);到底 → 底部同理。用共用 scroll util 每幀更新。
+- `top` / `bottom` / `both` 控制哪一緣參與漸層;各自獨立生效。
 
 **驗收:** 內容捲到 bar 下方淡出無硬邊;`top` / `bottom` 各自獨立;到頂/到底時對應漸隱關閉;漸隱層不隨內容捲動。
 
-**風險:** 中(mask 與 sticky bar 疊放層級)。
+**風險:** 中(動態漸層 stops 與捲動同步的順滑度)。
 
 ---
 
@@ -112,6 +113,7 @@
 - 開啟:記觸發按鈕 rect → `panel.animate()` 從「按鈕位置+尺寸」補間到「面板位置+尺寸」。
 - 關閉:反向補間回按鈕。
 - **降級:** 保留既有「液滴落地」keyframe 作為**無 origin rect 時的 fallback**;morph 是有 origin 時的主路徑。
+- **兩條路徑互斥(避免 WAAPI 與 keyframe 打架):** 有 origin → 走 `panel.animate()`、**不加** keyframe class;無 origin → 加 keyframe class、不跑 WAAPI。同一 panel 任一時刻只有一條動畫。
 
 **折射:** **全程保留折射**(使用者選定)。
 ⚠️ **風險標註:** Chromium 對縮放中的 `backdrop-filter: url(#svg)` 折射合成不一定穩(可能抽圓角/變形)。先實作全程保留版;**若實機證實不穩**,回報使用者,fallback 為「補間期間暫關折射、落定再開」(reviveGlass 思路)。
