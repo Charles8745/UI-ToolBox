@@ -635,6 +635,25 @@
   }
 
   /* ------------------------------------------------------------------ *
+   * 9c. initScrollEdge(B5):data-lg-scroll-edge 容器邊緣漸隱 mask
+   * ------------------------------------------------------------------ */
+  function initScrollEdge() {
+    [].slice.call(document.querySelectorAll('[data-lg-scroll-edge]')).forEach(function (el) {
+      var mode = el.getAttribute('data-lg-scroll-edge') || 'both';
+      var useTop = mode === 'top' || mode === 'both';
+      var useBot = mode === 'bottom' || mode === 'both';
+      var FADE = 28; // 漸隱帶 px(可實機微調)
+      makeScrollWatcher(el).subscribe(function (s) {
+        var t = useTop && !s.atTop ? FADE : 0;
+        var b = useBot && !s.atBottom ? FADE : 0;
+        var m = 'linear-gradient(to bottom, transparent 0, #000 ' + t + 'px, #000 calc(100% - ' + b + 'px), transparent 100%)';
+        el.style.webkitMaskImage = m;
+        el.style.maskImage = m;
+      });
+    });
+  }
+
+  /* ------------------------------------------------------------------ *
    * 10. 元件行為:tabs / slider / modal / tooltip / dock
    * ------------------------------------------------------------------ */
   function initTabs(root) {
@@ -1356,6 +1375,7 @@
       ensureGooFilter();
       initPress();
       initScrollShrink();
+      initScrollEdge();
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
     else boot();
