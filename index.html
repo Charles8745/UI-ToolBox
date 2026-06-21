@@ -412,6 +412,76 @@ html.lg-fallback .lg-switch__track,
 }
 
 /* ==================================================================== *
+ * 8b. 核取方塊  .lg-check(純 CSS,checkbox;box 磨砂,勾為實心內容)
+ * ==================================================================== */
+.lg-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  cursor: pointer;
+  font: 500 14px/1 var(--lg-font);
+  color: var(--lg-text);
+  user-select: none;
+}
+.lg-check input { position: absolute; opacity: 0; width: 0; height: 0; }
+.lg-check__box {
+  position: relative;
+  width: 22px;
+  height: 22px;
+  flex: none;
+  border-radius: var(--lg-radius-s);
+  background: var(--lg-tint);
+  box-shadow: var(--lg-shadow-soft), inset 0 0 0 1px var(--lg-stroke-soft);
+  transition: background var(--lg-speed) var(--lg-ease-out),
+              box-shadow var(--lg-speed) var(--lg-ease-out),
+              scale var(--lg-speed) var(--lg-ease);
+}
+html.lg-fallback .lg-check__box,
+.lg-check__box {
+  -webkit-backdrop-filter: blur(14px) saturate(1.6);
+  backdrop-filter: blur(14px) saturate(1.6);
+}
+.lg-check__mark {
+  position: absolute;
+  inset: 3px;
+  width: calc(100% - 6px);
+  height: calc(100% - 6px);
+  color: #fff;
+  fill: currentColor;
+  scale: 0;
+  transition: scale var(--lg-speed) cubic-bezier(.34, 1.56, .64, 1);
+}
+.lg-check:hover .lg-check__box {
+  box-shadow: var(--lg-shadow-soft), inset 0 0 0 1px var(--lg-stroke);
+  scale: 1.04;
+}
+.lg-check:active .lg-check__box { scale: 0.92; }
+.lg-check input:checked + .lg-check__box,
+.lg-check input:indeterminate + .lg-check__box {
+  background: var(--lg-accent);
+  box-shadow: var(--lg-shadow-soft), inset 0 0 0 1px transparent;
+}
+.lg-check input:checked + .lg-check__box .lg-check__mark { scale: 1; }
+.lg-check input:indeterminate + .lg-check__box .lg-check__mark { scale: 0; }
+.lg-check input:indeterminate + .lg-check__box::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  right: 5px;
+  top: 50%;
+  height: 2px;
+  border-radius: 1px;
+  background: #fff;
+  transform: translateY(-50%);
+}
+.lg-check input:focus-visible + .lg-check__box {
+  outline: 2px solid var(--lg-accent);
+  outline-offset: 3px;
+}
+.lg-check input:disabled ~ .lg-check__box,
+.lg-check input:disabled ~ .lg-check__label { opacity: 0.45; }
+
+/* ==================================================================== *
  * 9. 滑桿  .lg-slider(range)
  * ==================================================================== */
 .lg-slider {
@@ -944,6 +1014,7 @@ html.lg-fallback .lg-switch__track,
   .lg-glow::before,
   .lg-glow::after { animation: none !important; transition: none !important; }
   .lg-btn, .lg-tabs__pill, .lg-switch__thumb, .lg-modal__panel { transition-duration: 0.01s !important; }
+  .lg-check__mark, .lg-check__box { transition-duration: 0.01s !important; }
 }
 
 
@@ -2064,6 +2135,32 @@ window.ART = {
               <input type="checkbox">
               <span class="lg-switch__track"><span class="lg-switch__thumb"></span></span>
               色散效果
+            </label>
+          </div>
+        </div>
+
+        <div class="tile lg-static lg t2">
+          <div class="tile__head"><h3>Checkbox</h3></div>
+          <div class="tile__stage tile__stage--col">
+            <label class="lg-check">
+              <input type="checkbox" checked>
+              <span class="lg-check__box"><svg class="lg-check__mark" viewBox="0 0 256 256"><use href="#ph-check"/></svg></span>
+              <span class="lg-check__label">記住我</span>
+            </label>
+            <label class="lg-check">
+              <input type="checkbox">
+              <span class="lg-check__box"><svg class="lg-check__mark" viewBox="0 0 256 256"><use href="#ph-check"/></svg></span>
+              <span class="lg-check__label">訂閱電子報</span>
+            </label>
+            <label class="lg-check">
+              <input type="checkbox" id="lgCheckInd">
+              <span class="lg-check__box"><svg class="lg-check__mark" viewBox="0 0 256 256"><use href="#ph-check"/></svg></span>
+              <span class="lg-check__label">部分選取</span>
+            </label>
+            <label class="lg-check">
+              <input type="checkbox" disabled>
+              <span class="lg-check__box"><svg class="lg-check__mark" viewBox="0 0 256 256"><use href="#ph-check"/></svg></span>
+              <span class="lg-check__label">停用項目</span>
             </label>
           </div>
         </div>
@@ -4307,6 +4404,9 @@ SNIPPETS.aiChat = '(以下模板會連同規格書一起複製)\n\n[AI 規格書
 document.querySelectorAll('[data-snippet]').forEach(function (n) {
   n.textContent = SNIPPETS[n.getAttribute('data-snippet')] || '';
 });
+
+var _lgCInd = document.getElementById('lgCheckInd');
+if (_lgCInd) _lgCInd.indeterminate = true;
 
 /* ---------- 複製按鈕 ---------- */
 function bindCopy(btn, getText) {
