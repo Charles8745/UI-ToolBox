@@ -646,6 +646,7 @@
       makeScrollWatcher(el).subscribe(function (s) {
         var t = useTop && !s.atTop ? FADE : 0;
         var b = useBot && !s.atBottom ? FADE : 0;
+        if (!t && !b) { el.style.webkitMaskImage = ''; el.style.maskImage = ''; return; }   // 無漸隱時不留多餘 mask
         var m = 'linear-gradient(to bottom, transparent 0, #000 ' + t + 'px, #000 calc(100% - ' + b + 'px), transparent 100%)';
         el.style.webkitMaskImage = m;
         el.style.maskImage = m;
