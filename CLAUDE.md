@@ -121,6 +121,7 @@ function reviveGlass(root = document) {
 導航:<nav class="lg lg-navbar" data-lg><span class="lg-navbar__brand">…</span><span class="lg-navbar__spacer"></span><button class="lg-navbar__link is-active">…</button></nav>
 搜尋:<div class="lg lg-search" data-lg><svg>…</svg><input type="search"><kbd>⌘K</kbd></div>
 開關:<label class="lg-switch"><input type="checkbox"><span class="lg-switch__track"><span class="lg-switch__thumb"></span></span>標籤</label>
+核取方塊:<label class="lg-check"><input type="checkbox"><span class="lg-check__box"><svg class="lg-check__mark" viewBox="0 0 256 256"><use href="#ph-check"/></svg></span><span class="lg-check__label">標籤</span></label>(純 CSS 零 JS;checked/indeterminate 填 accent;indeterminate 由 input.indeterminate=true 驅動;disabled 用原生屬性)
 滑桿:<div class="lg lg-slider" data-lg><input class="lg-slider__input" type="range"></div>
 分頁:<div class="lg lg-tabs" data-lg role="tablist"><span class="lg-tabs__pill"></span><button class="lg-tabs__tab is-active" role="tab">…</button>…</div>
 對話框:<div class="lg-modal" id="m1"><div class="lg-modal__overlay" data-lg-close></div><div class="lg-modal__panel lg" data-lg role="dialog">…</div></div>;以 <button data-lg-open="#m1"> 開啟、data-lg-close 關閉。morph:由 <button data-lg-open> 開啟時,對話框會從該按鈕變形長出(FLIP);ESC / data-lg-close 收回按鈕。reduced-motion 或無觸發按鈕時降級為液滴動畫。
