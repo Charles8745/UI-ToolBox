@@ -1033,7 +1033,9 @@
       var pad = (max - min || Math.abs(max) || 1) * 0.1;
       min -= pad; max += pad;
       if (type === 'bar' && min > 0) min = 0;
-      var px = function (i) { return PL + (W - PL - PR) * (data.length === 1 ? 0.5 : i / (data.length - 1)); };
+      var px = type === 'bar'
+        ? function (i) { return PL + (W - PL - PR) / data.length * (i + 0.5); }   // 長條置中於等寬帶,首尾不被裁切
+        : function (i) { return PL + (W - PL - PR) * (data.length === 1 ? 0.5 : i / (data.length - 1)); };
       var py = function (v) { return PT + (H - PT - PB) * (1 - (v - min) / (max - min)); };
 
       for (var g = 1; g <= 3; g++) {

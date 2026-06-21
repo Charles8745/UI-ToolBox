@@ -1623,25 +1623,11 @@ body.tour-on .home-dock { display: none !important; }
 /* ============ 元件分頁:bento 區塊總提示 ============ */
 .bento-hint { margin: -2px 0 22px; font-size: 14px; line-height: 1.75; color: var(--lg-text-dim); max-width: 66ch; }
 
-/* ============ 元件分頁:迷你儀表板實景(彩色漸層底,讓全折射玻璃顯影)============ */
+/* ============ 元件分頁:迷你儀表板實景(背景同其他展示元件:lg lg-static 霧面玻璃)============ */
 .dash {
-  position: relative;
   border-radius: var(--lg-radius-l);
   padding: clamp(18px, 2.6vw, 26px);
   overflow: hidden;
-  isolation: isolate;
-  background:
-    radial-gradient(135% 130% at 0% 0%, #ffd9ad 0%, rgba(255, 217, 173, 0) 42%),
-    radial-gradient(130% 130% at 100% 4%, #c0acff 0%, rgba(192, 172, 255, 0) 48%),
-    radial-gradient(150% 150% at 52% 118%, #9ed2ff 0%, rgba(158, 210, 255, 0) 56%),
-    linear-gradient(135deg, #f6c8da 0%, #cdbcff 52%, #abdcff 100%);
-}
-[data-lg-theme="dark"] .dash {
-  background:
-    radial-gradient(135% 130% at 0% 0%, #7a5a3a 0%, rgba(122, 90, 58, 0) 42%),
-    radial-gradient(130% 130% at 100% 4%, #4f3f86 0%, rgba(79, 63, 134, 0) 48%),
-    radial-gradient(150% 150% at 52% 118%, #355777 0%, rgba(53, 87, 119, 0) 56%),
-    linear-gradient(135deg, #3a2740 0%, #2a2350 52%, #1f3148 100%);
 }
 .dash__bar { display: flex; align-items: center; gap: 12px 18px; flex-wrap: wrap; margin-bottom: 18px; }
 .dash__title { margin: 0; font: 700 18px/1.2 var(--font-body); color: var(--lg-text); }
@@ -1669,15 +1655,9 @@ body.tour-on .home-dock { display: none !important; }
   .dash__chart, .dash__side { grid-column: auto; }
 }
 
-/* 儀表板獨立 tile 的彩色 stage(讓全折射玻璃元件顯影) */
+/* 儀表板獨立 tile 的 stage:背景與其他展示 tile 一致(透明,露出霧面 tile),只保留讓寬元件填滿的版面 */
 .tile__stage--dash {
   align-items: stretch;
-  border-radius: 16px;
-  padding: 20px 18px;
-  background:
-    radial-gradient(120% 120% at 6% 0%, rgba(255, 196, 150, 0.5), transparent 52%),
-    radial-gradient(120% 130% at 100% 100%, rgba(150, 168, 255, 0.46), transparent 56%),
-    var(--lg-tint);
 }
 .tile__stage--dash > * { width: 100%; }
 .tile__stage--dash.tile__stage--center { align-items: center; justify-content: center; }
@@ -2121,7 +2101,7 @@ window.ART = {
         <p class="desc">五件資料元件:統計卡、進度條、環形儀表、圖表、通知。玻璃只做容器,數字與圖表本身是實心內容層——這是技術上必要的邊界。打開「即時數據」,看所有彈簧一起跳動。</p>
       </div>
 
-      <div class="dash" id="liveDash">
+      <div class="dash lg lg-static" id="liveDash">
         <div class="dash__bar">
           <div>
             <h3 class="dash__title">Analytics Overview</h3>
@@ -3638,7 +3618,9 @@ window.ART = {
       var pad = (max - min || Math.abs(max) || 1) * 0.1;
       min -= pad; max += pad;
       if (type === 'bar' && min > 0) min = 0;
-      var px = function (i) { return PL + (W - PL - PR) * (data.length === 1 ? 0.5 : i / (data.length - 1)); };
+      var px = type === 'bar'
+        ? function (i) { return PL + (W - PL - PR) / data.length * (i + 0.5); }   // 長條置中於等寬帶,首尾不被裁切
+        : function (i) { return PL + (W - PL - PR) * (data.length === 1 ? 0.5 : i / (data.length - 1)); };
       var py = function (v) { return PT + (H - PT - PB) * (1 - (v - min) / (max - min)); };
 
       for (var g = 1; g <= 3; g++) {
