@@ -844,6 +844,60 @@
     });
   }
 
+  function initUpload(panel) {
+    var input = panel.querySelector('.lg-upload__input');
+    var list = panel.querySelector('.lg-upload__list');
+    if (!input || !list) return;
+    var store = new DataTransfer();
+    function fmt(b) {
+      if (b < 1024) return b + ' B';
+      if (b < 1048576) return (b / 1024).toFixed(1) + ' KB';
+      return (b / 1048576).toFixed(1) + ' MB';
+    }
+    function render() {
+      list.innerHTML = '';
+      [].forEach.call(store.files, function (file, i) {
+        var li = document.createElement('li');
+        li.className = 'lg-upload__file';
+        li.innerHTML = '<svg class="lg-upload__fileicon" viewBox="0 0 256 256"><use href="#ph-file-text"/></svg>'
+          + '<span class="lg-upload__name"></span>'
+          + '<span class="lg-upload__size"></span>'
+          + '<button type="button" class="lg-upload__remove" aria-label="移除"><svg viewBox="0 0 256 256"><use href="#ph-x"/></svg></button>';
+        li.querySelector('.lg-upload__name').textContent = file.name;
+        li.querySelector('.lg-upload__size').textContent = fmt(file.size);
+        li.querySelector('.lg-upload__remove').addEventListener('click', function (e) {
+          e.stopPropagation();
+          store.items.remove(i);
+          input.files = store.files;
+          render();
+        });
+        list.appendChild(li);
+      });
+    }
+    function add(files) {
+      [].forEach.call(files, function (f) {
+        var dup = [].some.call(store.files, function (g) { return g.name === f.name && g.size === f.size; });
+        if (!dup) store.items.add(f);
+      });
+      input.files = store.files;
+      render();
+    }
+    panel.addEventListener('click', function (e) {
+      if (e.target.closest('.lg-upload__list')) return;
+      input.click();
+    });
+    input.addEventListener('change', function () { add(input.files); });
+    ['dragenter', 'dragover'].forEach(function (ev) {
+      panel.addEventListener(ev, function (e) { e.preventDefault(); panel.classList.add('is-dragover'); });
+    });
+    panel.addEventListener('dragleave', function (e) { e.preventDefault(); panel.classList.remove('is-dragover'); });
+    panel.addEventListener('drop', function (e) {
+      e.preventDefault();
+      panel.classList.remove('is-dragover');
+      if (e.dataTransfer) add(e.dataTransfer.files);
+    });
+  }
+
   function initTooltips() {
     var tip = null;
     function ensure() {
@@ -1463,6 +1517,7 @@
       });
       [].forEach.call(document.querySelectorAll('.lg-tabs'), initTabs);
       [].forEach.call(document.querySelectorAll('.lg-otp'), initOtp);
+      [].forEach.call(document.querySelectorAll('[data-lg-upload]'), initUpload);
       [].forEach.call(document.querySelectorAll('input.lg-slider__input'), initSlider);
       [].forEach.call(document.querySelectorAll('.lg-dock'), initDock);
       [].forEach.call(document.querySelectorAll('.lg-switch'), initSwitchTension);

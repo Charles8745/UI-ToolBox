@@ -1174,6 +1174,30 @@ window.ART = {
           </div>
         </div>
 
+        <div class="tile lg-static lg t3">
+          <div class="tile__head"><h3>File upload</h3></div>
+          <div class="tile__stage tile__stage--col" style="gap:14px;align-items:stretch;">
+            <div class="lg lg-upload" data-lg data-lg-upload>
+              <input type="file" class="lg-upload__input" multiple aria-label="選擇檔案">
+              <div class="lg-upload__prompt">
+                <svg class="lg-upload__icon" viewBox="0 0 256 256"><use href="#ph-cloud-arrow-up"/></svg>
+                <p class="lg-upload__title">拖放檔案到這裡,或 <strong>點擊瀏覽</strong></p>
+                <p class="lg-upload__hint">支援多檔</p>
+              </div>
+              <ul class="lg-upload__list"></ul>
+            </div>
+            <div class="lg lg-upload lg-upload--disabled" data-lg data-lg-upload>
+              <input type="file" class="lg-upload__input" multiple disabled aria-label="選擇檔案">
+              <div class="lg-upload__prompt">
+                <svg class="lg-upload__icon" viewBox="0 0 256 256"><use href="#ph-cloud-arrow-up"/></svg>
+                <p class="lg-upload__title">已停用</p>
+                <p class="lg-upload__hint">disabled 狀態</p>
+              </div>
+              <ul class="lg-upload__list"></ul>
+            </div>
+          </div>
+        </div>
+
         <div class="tile lg-static lg t2">
           <div class="tile__head"><h3>Text field</h3></div>
           <div class="tile__stage tile__stage--col" style="align-items:stretch;gap:14px;">
