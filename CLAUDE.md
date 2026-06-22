@@ -120,6 +120,7 @@ function reviveGlass(root = document) {
 卡片:<div class="lg lg-card" data-lg><h4 class="lg-card__title">…</h4><p class="lg-card__meta">…</p></div>
 導航:<nav class="lg lg-navbar" data-lg><span class="lg-navbar__brand">…</span><span class="lg-navbar__spacer"></span><button class="lg-navbar__link is-active">…</button></nav>
 搜尋:<div class="lg lg-search" data-lg><svg>…</svg><input type="search"><kbd>⌘K</kbd></div>
+文字輸入:<div class="lg-field"><div class="lg lg-field__box" data-lg><input id="f1" class="lg-field__input" placeholder=" "><label for="f1" class="lg-field__label">標籤</label><button type="button" class="lg-field__clear" data-lg-clear aria-label="清除"><svg viewBox="0 0 256 256"><use href="#ph-x"/></svg></button></div><span class="lg-field__hint">說明</span></div>(浮動標籤純 CSS;placeholder 必須是一個空格 " ";清除鈕點擊由 data-lg-clear 委派處理;error 加 .lg-field--error、disabled 加 .lg-field--disabled、readonly 用原生屬性)
 開關:<label class="lg-switch"><input type="checkbox"><span class="lg-switch__track"><span class="lg-switch__thumb"></span></span>標籤</label>
 核取方塊:<label class="lg-check"><input type="checkbox"><span class="lg-check__box"><svg class="lg-check__mark" viewBox="0 0 256 256"><use href="#ph-check"/></svg></span><span class="lg-check__label">標籤</span></label>(純 CSS 零 JS;checked/indeterminate 填 accent;indeterminate 由 input.indeterminate=true 驅動;disabled 用原生屬性)
 滑桿:<div class="lg lg-slider" data-lg><input class="lg-slider__input" type="range"></div>
