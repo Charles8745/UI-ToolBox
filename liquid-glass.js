@@ -793,6 +793,19 @@
     });
   }
 
+  function initClearFields() {
+    document.addEventListener('click', function (e) {
+      var btn = e.target.closest ? e.target.closest('[data-lg-clear]') : null;
+      if (!btn) return;
+      var box = btn.closest('.lg-field__box');
+      var input = box ? box.querySelector('.lg-field__input') : null;
+      if (!input) return;
+      input.value = '';
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      input.focus();
+    });
+  }
+
   function initTooltips() {
     var tip = null;
     function ensure() {
@@ -1425,6 +1438,7 @@
       initPress();
       initScrollShrink();
       initScrollEdge();
+      initClearFields();
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
     else boot();

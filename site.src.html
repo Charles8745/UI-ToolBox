@@ -1089,6 +1089,34 @@ window.ART = {
         </div>
 
         <div class="tile lg-static lg t2">
+          <div class="tile__head"><h3>Text field</h3></div>
+          <div class="tile__stage tile__stage--col" style="align-items:stretch;gap:14px;">
+            <div class="lg-field">
+              <div class="lg lg-field__box" data-lg>
+                <input id="tf-email" class="lg-field__input" type="email" placeholder=" ">
+                <label for="tf-email" class="lg-field__label">電子郵件</label>
+                <button type="button" class="lg-field__clear" data-lg-clear aria-label="清除"><svg viewBox="0 0 256 256"><use href="#ph-x"/></svg></button>
+              </div>
+              <span class="lg-field__hint">我們不會分享你的信箱</span>
+            </div>
+            <div class="lg-field lg-field--error">
+              <div class="lg lg-field__box" data-lg>
+                <input id="tf-err" class="lg-field__input" type="text" placeholder=" " value="not-an-email">
+                <label for="tf-err" class="lg-field__label">帳號</label>
+                <button type="button" class="lg-field__clear" data-lg-clear aria-label="清除"><svg viewBox="0 0 256 256"><use href="#ph-x"/></svg></button>
+              </div>
+              <span class="lg-field__hint">請輸入有效的帳號</span>
+            </div>
+            <div class="lg-field lg-field--disabled">
+              <div class="lg lg-field__box" data-lg>
+                <input id="tf-dis" class="lg-field__input" type="text" placeholder=" " value="已鎖定" disabled>
+                <label for="tf-dis" class="lg-field__label">停用欄位</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tile lg-static lg t2">
           <div class="tile__head"><h3>Slider</h3></div>
           <div class="tile__stage">
             <div class="lg lg-slider" data-lg style="width:min(330px,100%);">

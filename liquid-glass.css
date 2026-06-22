@@ -348,6 +348,82 @@ html.lg-fallback .lg.lg--regular {
 }
 
 /* ==================================================================== *
+ * 7b. 文字輸入  .lg-field(浮動標籤;玻璃只在 __box,label/hint 為實心內容)
+ * ==================================================================== */
+.lg-field { display: flex; flex-direction: column; gap: 6px; }
+.lg-field__box {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  min-height: 58px;
+  padding: 0 14px;
+  /* 邊框/陰影/圓角沿用 .lg 基底:.lg 已給 border-radius:var(--lg-radius-m)
+     + box-shadow:var(--lg-shadow);.lg::before 已給 inset 1px stroke 與 rim。
+     此處只加 transition 供 focus/error ring 動畫;hover 回饋由 .lg:hover::after 既有 sheen 負責。 */
+  transition: box-shadow var(--lg-speed) var(--lg-ease-out);
+}
+.lg-field__input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  outline: none;
+  font: 400 15px/1.2 var(--lg-font);
+  color: var(--lg-text);
+  padding: 24px 0 6px;
+}
+.lg-field__label {
+  position: absolute;
+  left: 14px;
+  top: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  font: 400 15px/1 var(--lg-font);
+  color: var(--lg-text-dim);
+  pointer-events: none;
+  transform-origin: left center;
+  transition: transform var(--lg-speed) var(--lg-ease-out), color var(--lg-speed) var(--lg-ease-out);
+}
+.lg-field__input:focus + .lg-field__label,
+.lg-field__input:not(:placeholder-shown) + .lg-field__label {
+  transform: translateY(-16px) scale(.78);
+  color: var(--lg-accent);
+}
+.lg-field__box:focus-within {
+  box-shadow: var(--lg-shadow), 0 0 0 2px var(--lg-accent);
+}
+.lg-field__clear {
+  flex: none;
+  align-self: center;
+  width: 24px;
+  height: 24px;
+  margin-left: 8px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--lg-text-dim);
+  cursor: pointer;
+  transition: color var(--lg-speed) var(--lg-ease-out), background var(--lg-speed) var(--lg-ease-out);
+}
+.lg-field__clear svg { width: 15px; height: 15px; fill: currentColor; }
+.lg-field__clear:hover { color: var(--lg-text); background: var(--lg-tint); }
+.lg-field__input:placeholder-shown ~ .lg-field__clear { display: none; }
+.lg-field__hint { font: 400 12.5px/1.3 var(--lg-font); color: var(--lg-text-dim); padding: 0 4px; }
+.lg-field--error .lg-field__box,
+.lg-field--error .lg-field__box:focus-within {
+  box-shadow: var(--lg-shadow), 0 0 0 2px var(--lg-down);
+}
+.lg-field--error .lg-field__input + .lg-field__label { color: var(--lg-down); }
+.lg-field--error .lg-field__hint { color: var(--lg-down); }
+.lg-field--disabled .lg-field__box { opacity: .5; }
+.lg-field--disabled .lg-field__input { cursor: not-allowed; }
+.lg-field__input:read-only { color: var(--lg-text-dim); }
+
+/* ==================================================================== *
  * 8. 開關  .lg-switch(純 CSS,checkbox)
  * ==================================================================== */
 .lg-switch {
@@ -1004,6 +1080,7 @@ html.lg-fallback .lg-check__box,
   .lg-glow::after { animation: none !important; transition: none !important; }
   .lg-btn, .lg-tabs__pill, .lg-switch__thumb, .lg-modal__panel { transition-duration: 0.01s !important; }
   .lg-check__mark, .lg-check__box { transition-duration: 0.01s !important; }
+  .lg-field__label { transition-duration: 0.01s !important; }
 }
 
 
