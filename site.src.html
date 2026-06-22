@@ -1540,6 +1540,10 @@ window.ART = {
           <div class="code"><button class="copy" data-copy><svg class="ph" width="14" height="14"><use href="#ph-copy"/></svg>複製</button><pre><code data-snippet="radio"></code></pre></div>
         </details>
         <details class="acc lg-static lg">
+          <summary><span class="acc__name">步進器<em>Stepper</em></span><svg class="ph acc__caret" width="16" height="16"><use href="#ph-caret-down"/></svg></summary>
+          <div class="code"><button class="copy" data-copy><svg class="ph" width="14" height="14"><use href="#ph-copy"/></svg>複製</button><pre><code data-snippet="stepper"></code></pre></div>
+        </details>
+        <details class="acc lg-static lg">
           <summary><span class="acc__name">卡片<em>Card</em></span><svg class="ph acc__caret" width="16" height="16"><use href="#ph-caret-down"/></svg></summary>
           <div class="code"><button class="copy" data-copy><svg class="ph" width="14" height="14"><use href="#ph-copy"/></svg>複製</button><pre><code data-snippet="card"></code></pre></div>
         </details>
@@ -1906,6 +1910,7 @@ var SNIPPETS = {
   switch: '<label class="lg-switch">\n  <input type="checkbox" checked>\n  <span class="lg-switch__track">\n    <span class="lg-switch__thumb"></span>\n  </span>\n  液態折射\n</label>',
   check: '<label class="lg-check">\n  <input type="checkbox" checked>\n  <span class="lg-check__box">\n    <svg class="lg-check__mark" viewBox="0 0 256 256"><use href="#ph-check"/></svg>\n  </span>\n  <span class="lg-check__label">記住我</span>\n</label>',
   radio: '<div class="lg-radio-group" role="radiogroup" aria-label="方案">\n  <label class="lg-radio">\n    <input type="radio" name="plan" value="free" checked>\n    <span class="lg-radio__box"></span>\n    <span class="lg-radio__label">免費方案</span>\n  </label>\n  <label class="lg-radio">\n    <input type="radio" name="plan" value="pro">\n    <span class="lg-radio__box"></span>\n    <span class="lg-radio__label">專業方案</span>\n  </label>\n</div>',
+  stepper: '<div class="lg lg-stepper" data-lg>\n  <button type="button" class="lg-stepper__btn" data-lg-step="-1" aria-label="減少"><svg viewBox="0 0 256 256"><use href="#ph-minus"/></svg></button>\n  <input class="lg-stepper__input" type="number" value="1" min="0" max="10" step="1" aria-label="數量">\n  <button type="button" class="lg-stepper__btn" data-lg-step="1" aria-label="增加"><svg viewBox="0 0 256 256"><use href="#ph-plus"/></svg></button>\n</div>',
   card: '<div class="lg lg-card" data-lg>\n  <h4 class="lg-card__title">標題</h4>\n  <p class="lg-card__meta">說明文字</p>\n</div>',
   search: '<div class="lg lg-search" data-lg>\n  <svg class="ph" width="18" height="18"><use href="#ph-magnifying-glass"/></svg>\n  <input type="search" placeholder="搜尋…">\n  <kbd>⌘K</kbd>\n</div>',
   field: '<div class="lg-field">\n  <div class="lg lg-field__box" data-lg>\n    <input id="f1" class="lg-field__input" type="email" placeholder=" ">\n    <label for="f1" class="lg-field__label">電子郵件</label>\n    <button type="button" class="lg-field__clear" data-lg-clear aria-label="清除"><svg viewBox="0 0 256 256"><use href="#ph-x"/></svg></button>\n  </div>\n  <span class="lg-field__hint">我們不會分享你的信箱</span>\n</div>',
