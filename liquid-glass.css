@@ -699,6 +699,34 @@ html.lg-fallback .lg-radio__box,
 .lg-rating--disabled { opacity: 0.5; pointer-events: none; }
 
 /* ==================================================================== *
+ * 8f. 驗證碼  .lg-otp(N 個 bespoke 磨砂 input;initOtp 自動進格)
+ * ==================================================================== */
+.lg-otp { display: inline-flex; gap: 8px; }
+.lg-otp__cell {
+  width: 44px;
+  height: 52px;
+  flex: none;
+  border: 0;
+  border-radius: var(--lg-radius-s);
+  background: var(--lg-tint);
+  box-shadow: var(--lg-shadow-soft), inset 0 0 0 1px var(--lg-stroke-soft);
+  text-align: center;
+  font: 600 21px/1 var(--lg-font);
+  color: var(--lg-text);
+  outline: none;
+  transition: box-shadow var(--lg-speed) var(--lg-ease-out);
+}
+html.lg-fallback .lg-otp__cell,
+.lg-otp__cell {
+  -webkit-backdrop-filter: blur(14px) saturate(1.6);
+  backdrop-filter: blur(14px) saturate(1.6);
+}
+.lg-otp__cell:focus {
+  box-shadow: var(--lg-shadow-soft), inset 0 0 0 1px var(--lg-stroke-soft), 0 0 0 2px var(--lg-accent);
+}
+.lg-otp__cell:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ==================================================================== *
  * 9. 滑桿  .lg-slider(range)
  * ==================================================================== */
 .lg-slider {
@@ -1235,6 +1263,7 @@ html.lg-fallback .lg-radio__box,
   .lg-radio__box, .lg-radio__box::after { transition-duration: 0.01s !important; }
   .lg-stepper__btn { transition-duration: 0.01s !important; }
   .lg-rating__star { transition-duration: 0.01s !important; }
+  .lg-otp__cell { transition-duration: 0.01s !important; }
   .lg-field__label { transition-duration: 0.01s !important; }
 }
 

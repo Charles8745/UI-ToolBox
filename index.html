@@ -710,6 +710,34 @@ html.lg-fallback .lg-radio__box,
 .lg-rating--disabled { opacity: 0.5; pointer-events: none; }
 
 /* ==================================================================== *
+ * 8f. 驗證碼  .lg-otp(N 個 bespoke 磨砂 input;initOtp 自動進格)
+ * ==================================================================== */
+.lg-otp { display: inline-flex; gap: 8px; }
+.lg-otp__cell {
+  width: 44px;
+  height: 52px;
+  flex: none;
+  border: 0;
+  border-radius: var(--lg-radius-s);
+  background: var(--lg-tint);
+  box-shadow: var(--lg-shadow-soft), inset 0 0 0 1px var(--lg-stroke-soft);
+  text-align: center;
+  font: 600 21px/1 var(--lg-font);
+  color: var(--lg-text);
+  outline: none;
+  transition: box-shadow var(--lg-speed) var(--lg-ease-out);
+}
+html.lg-fallback .lg-otp__cell,
+.lg-otp__cell {
+  -webkit-backdrop-filter: blur(14px) saturate(1.6);
+  backdrop-filter: blur(14px) saturate(1.6);
+}
+.lg-otp__cell:focus {
+  box-shadow: var(--lg-shadow-soft), inset 0 0 0 1px var(--lg-stroke-soft), 0 0 0 2px var(--lg-accent);
+}
+.lg-otp__cell:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ==================================================================== *
  * 9. 滑桿  .lg-slider(range)
  * ==================================================================== */
 .lg-slider {
@@ -1246,6 +1274,7 @@ html.lg-fallback .lg-radio__box,
   .lg-radio__box, .lg-radio__box::after { transition-duration: 0.01s !important; }
   .lg-stepper__btn { transition-duration: 0.01s !important; }
   .lg-rating__star { transition-duration: 0.01s !important; }
+  .lg-otp__cell { transition-duration: 0.01s !important; }
   .lg-field__label { transition-duration: 0.01s !important; }
 }
 
@@ -2457,6 +2486,28 @@ window.ART = {
               <input type="radio" name="lg-demo-rate2" id="lgrated3" value="3" checked disabled><label for="lgrated3" class="lg-rating__star" aria-label="3 星"><svg viewBox="0 0 256 256"><use href="#ph-star-fill"/></svg></label>
               <input type="radio" name="lg-demo-rate2" id="lgrated2" value="2" disabled><label for="lgrated2" class="lg-rating__star" aria-label="2 星"><svg viewBox="0 0 256 256"><use href="#ph-star-fill"/></svg></label>
               <input type="radio" name="lg-demo-rate2" id="lgrated1" value="1" disabled><label for="lgrated1" class="lg-rating__star" aria-label="1 星"><svg viewBox="0 0 256 256"><use href="#ph-star-fill"/></svg></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="tile lg-static lg t3">
+          <div class="tile__head"><h3>OTP</h3></div>
+          <div class="tile__stage tile__stage--col" style="gap:14px;">
+            <div class="lg-otp" role="group" aria-label="驗證碼">
+              <input class="lg-otp__cell" type="text" inputmode="numeric" maxlength="1" autocomplete="one-time-code" aria-label="第 1 碼">
+              <input class="lg-otp__cell" type="text" inputmode="numeric" maxlength="1" aria-label="第 2 碼">
+              <input class="lg-otp__cell" type="text" inputmode="numeric" maxlength="1" aria-label="第 3 碼">
+              <input class="lg-otp__cell" type="text" inputmode="numeric" maxlength="1" aria-label="第 4 碼">
+              <input class="lg-otp__cell" type="text" inputmode="numeric" maxlength="1" aria-label="第 5 碼">
+              <input class="lg-otp__cell" type="text" inputmode="numeric" maxlength="1" aria-label="第 6 碼">
+            </div>
+            <div class="lg-otp" role="group" aria-label="驗證碼(停用)">
+              <input class="lg-otp__cell" type="text" inputmode="numeric" maxlength="1" value="4" disabled aria-label="第 1 碼">
+              <input class="lg-otp__cell" type="text" inputmode="numeric" maxlength="1" value="2" disabled aria-label="第 2 碼">
+              <input class="lg-otp__cell" type="text" inputmode="numeric" maxlength="1" value="8" disabled aria-label="第 3 碼">
+              <input class="lg-otp__cell" type="text" inputmode="numeric" maxlength="1" value="1" disabled aria-label="第 4 碼">
+              <input class="lg-otp__cell" type="text" inputmode="numeric" maxlength="1" value="9" disabled aria-label="第 5 碼">
+              <input class="lg-otp__cell" type="text" inputmode="numeric" maxlength="1" value="6" disabled aria-label="第 6 碼">
             </div>
           </div>
         </div>
@@ -3967,6 +4018,30 @@ window.ART = {
     });
   }
 
+  function initOtp(otp) {
+    var cells = [].slice.call(otp.querySelectorAll('.lg-otp__cell'));
+    cells.forEach(function (cell, i) {
+      cell.addEventListener('input', function () {
+        if (cell.value.length > 1) cell.value = cell.value.slice(-1);
+        if (cell.value && cells[i + 1]) cells[i + 1].focus();
+      });
+      cell.addEventListener('keydown', function (e) {
+        if (e.key === 'Backspace' && !cell.value && cells[i - 1]) {
+          cells[i - 1].focus();
+          cells[i - 1].value = '';
+          e.preventDefault();
+        }
+      });
+      cell.addEventListener('paste', function (e) {
+        e.preventDefault();
+        var data = ((e.clipboardData || window.clipboardData).getData('text') || '').replace(/\s/g, '');
+        var j = 0;
+        while (j < data.length && j < cells.length) { cells[j].value = data.charAt(j); j++; }
+        (cells[j] || cells[cells.length - 1]).focus();
+      });
+    });
+  }
+
   function initTooltips() {
     var tip = null;
     function ensure() {
@@ -4585,6 +4660,7 @@ window.ART = {
         if (p) ro.observe(p);   // 父層尺寸/內距變動也重算
       });
       [].forEach.call(document.querySelectorAll('.lg-tabs'), initTabs);
+      [].forEach.call(document.querySelectorAll('.lg-otp'), initOtp);
       [].forEach.call(document.querySelectorAll('input.lg-slider__input'), initSlider);
       [].forEach.call(document.querySelectorAll('.lg-dock'), initDock);
       [].forEach.call(document.querySelectorAll('.lg-switch'), initSwitchTension);

@@ -820,6 +820,30 @@
     });
   }
 
+  function initOtp(otp) {
+    var cells = [].slice.call(otp.querySelectorAll('.lg-otp__cell'));
+    cells.forEach(function (cell, i) {
+      cell.addEventListener('input', function () {
+        if (cell.value.length > 1) cell.value = cell.value.slice(-1);
+        if (cell.value && cells[i + 1]) cells[i + 1].focus();
+      });
+      cell.addEventListener('keydown', function (e) {
+        if (e.key === 'Backspace' && !cell.value && cells[i - 1]) {
+          cells[i - 1].focus();
+          cells[i - 1].value = '';
+          e.preventDefault();
+        }
+      });
+      cell.addEventListener('paste', function (e) {
+        e.preventDefault();
+        var data = ((e.clipboardData || window.clipboardData).getData('text') || '').replace(/\s/g, '');
+        var j = 0;
+        while (j < data.length && j < cells.length) { cells[j].value = data.charAt(j); j++; }
+        (cells[j] || cells[cells.length - 1]).focus();
+      });
+    });
+  }
+
   function initTooltips() {
     var tip = null;
     function ensure() {
@@ -1438,6 +1462,7 @@
         if (p) ro.observe(p);   // 父層尺寸/內距變動也重算
       });
       [].forEach.call(document.querySelectorAll('.lg-tabs'), initTabs);
+      [].forEach.call(document.querySelectorAll('.lg-otp'), initOtp);
       [].forEach.call(document.querySelectorAll('input.lg-slider__input'), initSlider);
       [].forEach.call(document.querySelectorAll('.lg-dock'), initDock);
       [].forEach.call(document.querySelectorAll('.lg-switch'), initSwitchTension);
