@@ -681,6 +681,35 @@ html.lg-fallback .lg-radio__box,
 .lg-stepper--disabled { opacity: 0.5; }
 
 /* ==================================================================== *
+ * 8e. 星等評分  .lg-rating(純 CSS,radio;reverse DOM + ~ 選擇器,星非玻璃)
+ * ==================================================================== */
+.lg-rating {
+  display: inline-flex;
+  flex-direction: row-reverse;
+  gap: 2px;
+}
+.lg-rating input { position: absolute; opacity: 0; width: 0; height: 0; }
+.lg-rating__star {
+  display: inline-flex;
+  cursor: pointer;
+  color: var(--lg-text-dim);
+  transition: color var(--lg-speed) var(--lg-ease-out),
+              scale var(--lg-speed) var(--lg-ease);
+}
+.lg-rating__star svg { width: 28px; height: 28px; fill: currentColor; }
+/* 2. 已選及更低星 → accent */
+.lg-rating input:checked ~ label { color: var(--lg-accent); }
+/* 3. 容器 hover 時全部重置 dim(特異度同規則 2、置於其後 → 勝出) */
+.lg-rating:hover input ~ label { color: var(--lg-text-dim); }
+/* 4. hover 預覽:hovered + 更低星 → accent(特異度高於規則 3 → 勝出);hovered 彈一下 */
+.lg-rating:hover label:hover,
+.lg-rating:hover label:hover ~ label { color: var(--lg-accent); }
+.lg-rating:hover label:hover { scale: 1.12; }
+/* focus / disabled */
+.lg-rating input:focus-visible + label { outline: 2px solid var(--lg-accent); outline-offset: 2px; }
+.lg-rating--disabled { opacity: 0.5; pointer-events: none; }
+
+/* ==================================================================== *
  * 9. 滑桿  .lg-slider(range)
  * ==================================================================== */
 .lg-slider {
@@ -1216,6 +1245,7 @@ html.lg-fallback .lg-radio__box,
   .lg-check__mark, .lg-check__box { transition-duration: 0.01s !important; }
   .lg-radio__box, .lg-radio__box::after { transition-duration: 0.01s !important; }
   .lg-stepper__btn { transition-duration: 0.01s !important; }
+  .lg-rating__star { transition-duration: 0.01s !important; }
   .lg-field__label { transition-duration: 0.01s !important; }
 }
 
@@ -2407,6 +2437,26 @@ window.ART = {
               <button type="button" class="lg-stepper__btn" data-lg-step="-1" aria-label="減少" disabled><svg viewBox="0 0 256 256"><use href="#ph-minus"/></svg></button>
               <input class="lg-stepper__input" type="number" value="5" aria-label="數量" disabled>
               <button type="button" class="lg-stepper__btn" data-lg-step="1" aria-label="增加" disabled><svg viewBox="0 0 256 256"><use href="#ph-plus"/></svg></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="tile lg-static lg t2">
+          <div class="tile__head"><h3>Rating</h3></div>
+          <div class="tile__stage tile__stage--col" style="gap:14px;">
+            <div class="lg-rating" role="radiogroup" aria-label="評分">
+              <input type="radio" name="lg-demo-rate" id="lgrate5" value="5"><label for="lgrate5" class="lg-rating__star" aria-label="5 星"><svg viewBox="0 0 256 256"><use href="#ph-star-fill"/></svg></label>
+              <input type="radio" name="lg-demo-rate" id="lgrate4" value="4" checked><label for="lgrate4" class="lg-rating__star" aria-label="4 星"><svg viewBox="0 0 256 256"><use href="#ph-star-fill"/></svg></label>
+              <input type="radio" name="lg-demo-rate" id="lgrate3" value="3"><label for="lgrate3" class="lg-rating__star" aria-label="3 星"><svg viewBox="0 0 256 256"><use href="#ph-star-fill"/></svg></label>
+              <input type="radio" name="lg-demo-rate" id="lgrate2" value="2"><label for="lgrate2" class="lg-rating__star" aria-label="2 星"><svg viewBox="0 0 256 256"><use href="#ph-star-fill"/></svg></label>
+              <input type="radio" name="lg-demo-rate" id="lgrate1" value="1"><label for="lgrate1" class="lg-rating__star" aria-label="1 星"><svg viewBox="0 0 256 256"><use href="#ph-star-fill"/></svg></label>
+            </div>
+            <div class="lg-rating lg-rating--disabled" role="radiogroup" aria-label="評分(停用)">
+              <input type="radio" name="lg-demo-rate2" id="lgrated5" value="5" disabled><label for="lgrated5" class="lg-rating__star" aria-label="5 星"><svg viewBox="0 0 256 256"><use href="#ph-star-fill"/></svg></label>
+              <input type="radio" name="lg-demo-rate2" id="lgrated4" value="4" disabled><label for="lgrated4" class="lg-rating__star" aria-label="4 星"><svg viewBox="0 0 256 256"><use href="#ph-star-fill"/></svg></label>
+              <input type="radio" name="lg-demo-rate2" id="lgrated3" value="3" checked disabled><label for="lgrated3" class="lg-rating__star" aria-label="3 星"><svg viewBox="0 0 256 256"><use href="#ph-star-fill"/></svg></label>
+              <input type="radio" name="lg-demo-rate2" id="lgrated2" value="2" disabled><label for="lgrated2" class="lg-rating__star" aria-label="2 星"><svg viewBox="0 0 256 256"><use href="#ph-star-fill"/></svg></label>
+              <input type="radio" name="lg-demo-rate2" id="lgrated1" value="1" disabled><label for="lgrated1" class="lg-rating__star" aria-label="1 星"><svg viewBox="0 0 256 256"><use href="#ph-star-fill"/></svg></label>
             </div>
           </div>
         </div>

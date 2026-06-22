@@ -670,6 +670,35 @@ html.lg-fallback .lg-radio__box,
 .lg-stepper--disabled { opacity: 0.5; }
 
 /* ==================================================================== *
+ * 8e. 星等評分  .lg-rating(純 CSS,radio;reverse DOM + ~ 選擇器,星非玻璃)
+ * ==================================================================== */
+.lg-rating {
+  display: inline-flex;
+  flex-direction: row-reverse;
+  gap: 2px;
+}
+.lg-rating input { position: absolute; opacity: 0; width: 0; height: 0; }
+.lg-rating__star {
+  display: inline-flex;
+  cursor: pointer;
+  color: var(--lg-text-dim);
+  transition: color var(--lg-speed) var(--lg-ease-out),
+              scale var(--lg-speed) var(--lg-ease);
+}
+.lg-rating__star svg { width: 28px; height: 28px; fill: currentColor; }
+/* 2. 已選及更低星 → accent */
+.lg-rating input:checked ~ label { color: var(--lg-accent); }
+/* 3. 容器 hover 時全部重置 dim(特異度同規則 2、置於其後 → 勝出) */
+.lg-rating:hover input ~ label { color: var(--lg-text-dim); }
+/* 4. hover 預覽:hovered + 更低星 → accent(特異度高於規則 3 → 勝出);hovered 彈一下 */
+.lg-rating:hover label:hover,
+.lg-rating:hover label:hover ~ label { color: var(--lg-accent); }
+.lg-rating:hover label:hover { scale: 1.12; }
+/* focus / disabled */
+.lg-rating input:focus-visible + label { outline: 2px solid var(--lg-accent); outline-offset: 2px; }
+.lg-rating--disabled { opacity: 0.5; pointer-events: none; }
+
+/* ==================================================================== *
  * 9. 滑桿  .lg-slider(range)
  * ==================================================================== */
 .lg-slider {
@@ -1205,6 +1234,7 @@ html.lg-fallback .lg-radio__box,
   .lg-check__mark, .lg-check__box { transition-duration: 0.01s !important; }
   .lg-radio__box, .lg-radio__box::after { transition-duration: 0.01s !important; }
   .lg-stepper__btn { transition-duration: 0.01s !important; }
+  .lg-rating__star { transition-duration: 0.01s !important; }
   .lg-field__label { transition-duration: 0.01s !important; }
 }
 
