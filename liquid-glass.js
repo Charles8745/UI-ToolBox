@@ -802,6 +802,7 @@
       if (!input) return;
       input.value = '';
       input.dispatchEvent(new Event('input', { bubbles: true }));
+      input.dispatchEvent(new Event('change', { bubbles: true }));
       input.focus();
     });
   }
@@ -816,7 +817,9 @@
       var n = parseInt(btn.getAttribute('data-lg-step'), 10) || 0;
       if (n > 0) input.stepUp(n);
       else if (n < 0) input.stepDown(-n);
+      else return;
       input.dispatchEvent(new Event('input', { bubbles: true }));
+      input.dispatchEvent(new Event('change', { bubbles: true }));
     });
   }
 

@@ -631,6 +631,7 @@ html.lg-fallback .lg-radio__box,
   gap: 4px;
   padding: 5px;
   border-radius: var(--lg-radius-pill);
+  transition: box-shadow var(--lg-speed) var(--lg-ease-out);
 }
 .lg-stepper__btn {
   flex: none;
@@ -1304,7 +1305,7 @@ html.lg-fallback .lg-otp__cell,
   .lg-rating__star { transition-duration: 0.01s !important; }
   .lg-otp__cell { transition-duration: 0.01s !important; }
   .lg-upload { transition-duration: 0.01s !important; }
-  .lg-field__label { transition-duration: 0.01s !important; }
+  .lg-field__label, .lg-field__box { transition-duration: 0.01s !important; }
 }
 
 

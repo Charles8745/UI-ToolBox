@@ -1211,11 +1211,11 @@ window.ART = {
             </div>
             <div class="lg-field lg-field--error">
               <div class="lg lg-field__box" data-lg>
-                <input id="tf-err" class="lg-field__input" type="text" placeholder=" " value="not-an-email">
+                <input id="tf-err" class="lg-field__input" type="text" placeholder=" " value="not-an-email" aria-invalid="true" aria-describedby="tf-err-hint">
                 <label for="tf-err" class="lg-field__label">帳號</label>
                 <button type="button" class="lg-field__clear" data-lg-clear aria-label="清除"><svg viewBox="0 0 256 256"><use href="#ph-x"/></svg></button>
               </div>
-              <span class="lg-field__hint">請輸入有效的帳號</span>
+              <span class="lg-field__hint" id="tf-err-hint">請輸入有效的帳號</span>
             </div>
             <div class="lg-field lg-field--disabled">
               <div class="lg lg-field__box" data-lg>
