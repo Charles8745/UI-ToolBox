@@ -563,6 +563,66 @@ html.lg-fallback .lg-check__box,
 .lg-check input:disabled ~ .lg-check__label { opacity: 0.45; }
 
 /* ==================================================================== *
+ * 8c. 單選  .lg-radio(純 CSS,radio;圓 box + 中心圓點,點為實心內容)
+ * ==================================================================== */
+.lg-radio-group { display: flex; flex-direction: column; gap: 12px; }
+.lg-radio {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  cursor: pointer;
+  font: 500 14px/1 var(--lg-font);
+  color: var(--lg-text);
+  user-select: none;
+}
+.lg-radio input { position: absolute; opacity: 0; width: 0; height: 0; }
+.lg-radio__box {
+  position: relative;
+  width: 22px;
+  height: 22px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--lg-tint);
+  box-shadow: var(--lg-shadow-soft), inset 0 0 0 1px var(--lg-stroke-soft);
+  transition: background var(--lg-speed) var(--lg-ease-out),
+              box-shadow var(--lg-speed) var(--lg-ease-out),
+              scale var(--lg-speed) var(--lg-ease);
+}
+html.lg-fallback .lg-radio__box,
+.lg-radio__box {
+  -webkit-backdrop-filter: blur(14px) saturate(1.6);
+  backdrop-filter: blur(14px) saturate(1.6);
+}
+.lg-radio__box::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #fff;
+  scale: 0;
+  transition: scale var(--lg-speed) cubic-bezier(.34, 1.56, .64, 1);
+}
+.lg-radio:hover .lg-radio__box {
+  box-shadow: var(--lg-shadow-soft), inset 0 0 0 1px var(--lg-stroke);
+  scale: 1.04;
+}
+.lg-radio:active .lg-radio__box { scale: 0.92; }
+.lg-radio input:checked + .lg-radio__box {
+  background: var(--lg-accent);
+  box-shadow: var(--lg-shadow-soft), inset 0 0 0 1px transparent;
+}
+.lg-radio input:checked + .lg-radio__box::after { scale: 1; }
+.lg-radio input:focus-visible + .lg-radio__box {
+  outline: 2px solid var(--lg-accent);
+  outline-offset: 3px;
+}
+.lg-radio input:disabled ~ .lg-radio__box,
+.lg-radio input:disabled ~ .lg-radio__label { opacity: 0.45; }
+
+/* ==================================================================== *
  * 9. 滑桿  .lg-slider(range)
  * ==================================================================== */
 .lg-slider {
@@ -1096,6 +1156,7 @@ html.lg-fallback .lg-check__box,
   .lg-glow::after { animation: none !important; transition: none !important; }
   .lg-btn, .lg-tabs__pill, .lg-switch__thumb, .lg-modal__panel { transition-duration: 0.01s !important; }
   .lg-check__mark, .lg-check__box { transition-duration: 0.01s !important; }
+  .lg-radio__box, .lg-radio__box::after { transition-duration: 0.01s !important; }
   .lg-field__label { transition-duration: 0.01s !important; }
 }
 
