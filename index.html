@@ -1973,6 +1973,9 @@ body:not([data-view="home"]) .ctrl-panel { display: none; }
 .home-footer__line { margin: 0; font-size: 14.5px; line-height: 1.9; color: var(--lg-text-dim); max-width: 540px; }
 .home-footer__chips { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
 .home-footer__fine { margin: 8px 0 0; font-size: 11.5px; letter-spacing: 0.04em; color: var(--lg-text-dim); opacity: 0.7; }
+.home-signup { display: flex; gap: 10px; width: 100%; max-width: 440px; flex-wrap: wrap; justify-content: center; }
+.home-signup .lg-field__box { flex: 1 1 220px; min-width: 0; }
+.home-signup .lg-btn { flex: none; align-self: stretch; }
 
 /* 導覽模式 */
 .tour-cap {
@@ -2294,6 +2297,13 @@ window.ART = {
     <div class="home-footer__inner reveal">
       <p class="home-footer__mark">Lumière</p>
       <p class="home-footer__line">Every surface on this page — the navbar, the cards, the lens, the dock — is the same family of glass, bending the same light.</p>
+      <form class="home-signup" id="homeSignup">
+        <div class="lg lg-field__box" data-lg>
+          <input id="nlEmail" class="lg-field__input" type="email" placeholder=" " autocomplete="email" required aria-label="Email">
+          <label for="nlEmail" class="lg-field__label">Email</label>
+        </div>
+        <button class="lg lg-btn lg-btn--accent lg-btn--pill" data-lg type="submit">Subscribe</button>
+      </form>
       <div class="home-footer__chips">
         <button class="lg-chip" data-goto="components"><svg class="ph" width="15" height="15"><use href="#ph-sparkle"/></svg>Play with the components</button>
         <button class="lg-chip" data-goto="ai"><svg class="ph" width="15" height="15"><use href="#ph-book-open"/></svg>Read the AI guide</button>
@@ -5835,6 +5845,14 @@ document.querySelectorAll('#profileTabs [data-profile]').forEach(function (tab) 
       message: btn.getAttribute('data-toast-msg') || '',
       icon: btn.getAttribute('data-toast-icon') || ''
     });
+  });
+
+  /* ---- 首頁展訊訂閱(純前端 demo,送出顯示 toast) ---- */
+  var homeSignup = document.getElementById('homeSignup');
+  if (homeSignup) homeSignup.addEventListener('submit', function (e) {
+    e.preventDefault();
+    LG.toast({ title: 'Subscribed', message: 'See you at the next exhibition.' });
+    homeSignup.reset();
   });
 
   /* ---- 即時數據模擬 ---- */
