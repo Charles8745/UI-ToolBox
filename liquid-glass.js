@@ -890,7 +890,10 @@
     ['dragenter', 'dragover'].forEach(function (ev) {
       panel.addEventListener(ev, function (e) { e.preventDefault(); panel.classList.add('is-dragover'); });
     });
-    panel.addEventListener('dragleave', function (e) { e.preventDefault(); panel.classList.remove('is-dragover'); });
+    panel.addEventListener('dragleave', function (e) {
+      e.preventDefault();
+      if (!panel.contains(e.relatedTarget)) panel.classList.remove('is-dragover');
+    });
     panel.addEventListener('drop', function (e) {
       e.preventDefault();
       panel.classList.remove('is-dragover');
