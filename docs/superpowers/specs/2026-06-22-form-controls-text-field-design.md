@@ -51,8 +51,8 @@ label 在 `__box` 內垂直置中(`position:absolute; left:14px; top:0; height:1
 |---|---|---|
 | 靜止 | 折射玻璃框 + inset 細描邊(`--lg-stroke-soft`);label 置中 dim | 預設 |
 | hover | 描邊略提亮(`--lg-stroke`) | `.lg-field__box:hover` |
-| focus | box accent ring + label 上浮轉 accent。ring 用 `box-shadow`(跟隨圓角),**須保留 base 陰影**:`box-shadow: var(--lg-shadow-soft), inset 0 0 0 1px var(--lg-stroke-soft), 0 0 0 2px var(--lg-accent);` | `.lg-field__box:focus-within` + label float 規則 |
-| **error** | `.lg-field--error` → ring / label / hint 全轉 `--lg-down`(#d2503e,既有紅 token);**error 壓過 focus**(規則置於 focus 之後、特異度相等;ring 同樣 base + `0 0 0 2px var(--lg-down)`) | `.lg-field--error` 後代選擇器 |
+| focus | box accent ring + label 上浮轉 accent。ring 用 `box-shadow`(跟隨圓角),**須保留 `.lg` 基底陰影**:`box-shadow: var(--lg-shadow), 0 0 0 2px var(--lg-accent);`(`.lg` 已給 `var(--lg-shadow)` 與 `.lg::before` inset stroke,**勿重設/重畫**) | `.lg-field__box:focus-within` + label float 規則 |
+| **error** | `.lg-field--error` → ring / label / hint 全轉 `--lg-down`(#d2503e,既有紅 token);**error 壓過 focus**(規則置於 focus 之後、特異度 ≥;ring = `var(--lg-shadow), 0 0 0 2px var(--lg-down)`) | `.lg-field--error` 後代選擇器 |
 | disabled | `.lg-field--disabled .lg-field__box { opacity:.5; }` + `.lg-field--disabled .lg-field__input { cursor:not-allowed; }`(見下) | `.lg-field--disabled` 修飾類 |
 | readonly | native `readonly`:框略淡、`:focus-within` 不顯 accent ring(改用 base 中性 ring) | `.lg-field__input:read-only` |
 
