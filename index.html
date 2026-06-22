@@ -634,6 +634,53 @@ html.lg-fallback .lg-radio__box,
 .lg-radio input:disabled ~ .lg-radio__label { opacity: 0.45; }
 
 /* ==================================================================== *
+ * 8d. 步進器  .lg-stepper(玻璃容器 + native number + −/+ 鈕)
+ * ==================================================================== */
+.lg-stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px;
+  border-radius: var(--lg-radius-pill);
+}
+.lg-stepper__btn {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--lg-text-dim);
+  cursor: pointer;
+  transition: scale var(--lg-speed) var(--lg-ease),
+              background var(--lg-speed) var(--lg-ease-out),
+              color var(--lg-speed) var(--lg-ease-out);
+}
+.lg-stepper__btn svg { width: 18px; height: 18px; fill: currentColor; }
+.lg-stepper__btn:hover { background: var(--lg-tint); color: var(--lg-text); }
+.lg-stepper__btn:active { scale: 0.9; }
+.lg-stepper__input {
+  width: 44px;
+  flex: none;
+  border: 0;
+  background: transparent;
+  outline: none;
+  text-align: center;
+  font: 600 15px/1 var(--lg-font);
+  color: var(--lg-text);
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+.lg-stepper__input::-webkit-outer-spin-button,
+.lg-stepper__input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.lg-stepper:focus-within {
+  box-shadow: var(--lg-shadow), 0 0 0 2px var(--lg-accent);
+}
+.lg-stepper--disabled { opacity: 0.5; }
+
+/* ==================================================================== *
  * 9. 滑桿  .lg-slider(range)
  * ==================================================================== */
 .lg-slider {
@@ -1168,6 +1215,7 @@ html.lg-fallback .lg-radio__box,
   .lg-btn, .lg-tabs__pill, .lg-switch__thumb, .lg-modal__panel { transition-duration: 0.01s !important; }
   .lg-check__mark, .lg-check__box { transition-duration: 0.01s !important; }
   .lg-radio__box, .lg-radio__box::after { transition-duration: 0.01s !important; }
+  .lg-stepper__btn { transition-duration: 0.01s !important; }
   .lg-field__label { transition-duration: 0.01s !important; }
 }
 
@@ -2343,6 +2391,22 @@ window.ART = {
                 <span class="lg-radio__box"></span>
                 <span class="lg-radio__label">企業方案(停用)</span>
               </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="tile lg-static lg t2">
+          <div class="tile__head"><h3>Stepper</h3></div>
+          <div class="tile__stage tile__stage--col" style="gap:14px;">
+            <div class="lg lg-stepper" data-lg>
+              <button type="button" class="lg-stepper__btn" data-lg-step="-1" aria-label="減少"><svg viewBox="0 0 256 256"><use href="#ph-minus"/></svg></button>
+              <input class="lg-stepper__input" type="number" value="2" min="0" max="10" step="1" aria-label="數量">
+              <button type="button" class="lg-stepper__btn" data-lg-step="1" aria-label="增加"><svg viewBox="0 0 256 256"><use href="#ph-plus"/></svg></button>
+            </div>
+            <div class="lg lg-stepper lg-stepper--disabled" data-lg>
+              <button type="button" class="lg-stepper__btn" data-lg-step="-1" aria-label="減少" disabled><svg viewBox="0 0 256 256"><use href="#ph-minus"/></svg></button>
+              <input class="lg-stepper__input" type="number" value="5" aria-label="數量" disabled>
+              <button type="button" class="lg-stepper__btn" data-lg-step="1" aria-label="增加" disabled><svg viewBox="0 0 256 256"><use href="#ph-plus"/></svg></button>
             </div>
           </div>
         </div>
@@ -3831,6 +3895,20 @@ window.ART = {
     });
   }
 
+  function initSteppers() {
+    document.addEventListener('click', function (e) {
+      var btn = e.target.closest ? e.target.closest('[data-lg-step]') : null;
+      if (!btn) return;
+      var box = btn.closest('.lg-stepper');
+      var input = box ? box.querySelector('.lg-stepper__input') : null;
+      if (!input || input.disabled) return;
+      var n = parseInt(btn.getAttribute('data-lg-step'), 10) || 0;
+      if (n > 0) input.stepUp(n);
+      else if (n < 0) input.stepDown(-n);
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+  }
+
   function initTooltips() {
     var tip = null;
     function ensure() {
@@ -4464,6 +4542,7 @@ window.ART = {
       initScrollShrink();
       initScrollEdge();
       initClearFields();
+      initSteppers();
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
     else boot();

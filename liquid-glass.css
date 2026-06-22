@@ -623,6 +623,53 @@ html.lg-fallback .lg-radio__box,
 .lg-radio input:disabled ~ .lg-radio__label { opacity: 0.45; }
 
 /* ==================================================================== *
+ * 8d. 步進器  .lg-stepper(玻璃容器 + native number + −/+ 鈕)
+ * ==================================================================== */
+.lg-stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px;
+  border-radius: var(--lg-radius-pill);
+}
+.lg-stepper__btn {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--lg-text-dim);
+  cursor: pointer;
+  transition: scale var(--lg-speed) var(--lg-ease),
+              background var(--lg-speed) var(--lg-ease-out),
+              color var(--lg-speed) var(--lg-ease-out);
+}
+.lg-stepper__btn svg { width: 18px; height: 18px; fill: currentColor; }
+.lg-stepper__btn:hover { background: var(--lg-tint); color: var(--lg-text); }
+.lg-stepper__btn:active { scale: 0.9; }
+.lg-stepper__input {
+  width: 44px;
+  flex: none;
+  border: 0;
+  background: transparent;
+  outline: none;
+  text-align: center;
+  font: 600 15px/1 var(--lg-font);
+  color: var(--lg-text);
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+.lg-stepper__input::-webkit-outer-spin-button,
+.lg-stepper__input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.lg-stepper:focus-within {
+  box-shadow: var(--lg-shadow), 0 0 0 2px var(--lg-accent);
+}
+.lg-stepper--disabled { opacity: 0.5; }
+
+/* ==================================================================== *
  * 9. 滑桿  .lg-slider(range)
  * ==================================================================== */
 .lg-slider {
@@ -1157,6 +1204,7 @@ html.lg-fallback .lg-radio__box,
   .lg-btn, .lg-tabs__pill, .lg-switch__thumb, .lg-modal__panel { transition-duration: 0.01s !important; }
   .lg-check__mark, .lg-check__box { transition-duration: 0.01s !important; }
   .lg-radio__box, .lg-radio__box::after { transition-duration: 0.01s !important; }
+  .lg-stepper__btn { transition-duration: 0.01s !important; }
   .lg-field__label { transition-duration: 0.01s !important; }
 }
 

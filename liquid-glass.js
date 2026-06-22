@@ -806,6 +806,20 @@
     });
   }
 
+  function initSteppers() {
+    document.addEventListener('click', function (e) {
+      var btn = e.target.closest ? e.target.closest('[data-lg-step]') : null;
+      if (!btn) return;
+      var box = btn.closest('.lg-stepper');
+      var input = box ? box.querySelector('.lg-stepper__input') : null;
+      if (!input || input.disabled) return;
+      var n = parseInt(btn.getAttribute('data-lg-step'), 10) || 0;
+      if (n > 0) input.stepUp(n);
+      else if (n < 0) input.stepDown(-n);
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+  }
+
   function initTooltips() {
     var tip = null;
     function ensure() {
@@ -1439,6 +1453,7 @@
       initScrollShrink();
       initScrollEdge();
       initClearFields();
+      initSteppers();
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
     else boot();
