@@ -16,7 +16,7 @@
 - label 上浮 transform **複用** Text field 既有規則 `translateY(-16px) scale(.78)`;`--area` 只改 label 靜止位置(`align-items:flex-start; padding-top; transform-origin:left top`)。
 - 不引入 `:has()`;不新增圖示;不硬編顏色/圓角(用既有 token)。
 - 改完 `python3 build_site.py` 重生 `index.html`;非 Chromium 磨砂降級、resize/floating 純 DOM 不報錯。
-- 既有 base 值(供對位):`.lg-field__input { padding:24px 0 6px }`、`.lg-field__label { align-items:center; transform-origin:left center }`。`--area` override 以較高特異度(`.lg-field--area .lg-field__input`=0,2,0)勝出。
+- 既有 base 值(供對位):`.lg-field__input { padding:24px 0 6px }`、`.lg-field__label { top:0; height:100%; align-items:center; transform-origin:left center }`。`--area` 以較高特異度(0,2,0 > base 0,1,0)覆寫 input 的 padding/min-height/resize 與 label 的 top/height/transform-origin。`*{box-sizing:border-box}` 全域生效(textarea min-height 含 padding)。
 
 ---
 
@@ -43,13 +43,13 @@
   line-height: 1.45;
 }
 .lg-field--area .lg-field__label {
-  align-items: flex-start;
-  padding-top: 22px;
+  top: 22px;
+  height: auto;
   transform-origin: left top;
 }
 ```
 
-> 說明:label 靜止靠 `align-items:flex-start` + `padding-top:22px` 落在 textarea 首行(textarea `padding-top:22px` 對齊);上浮沿用既有 `translateY(-16px) scale(.78)`,搭配 `transform-origin:left top` 從首行縮到框上緣。確切 px 於 Chromium 微調。**不新增任何 box-shadow / reduced-motion 規則**(沿用 Text field)。
+> 說明:label 靜止改 `top:22px; height:auto`(覆寫 base 的 `top:0; height:100%`)——讓 label 只有文字高度、不含 box 全高,落在 textarea 首行(textarea `padding-top:22px` 對齊)。**關鍵**:用 `top` 定位而非在 `height:100%` 元素上加 padding,否則 `scale(.78)` 會連同整個全高元素一起縮放、浮動位置變得依賴框高且隨 resize 漂移。上浮沿用既有 `translateY(-16px) scale(.78)` + `transform-origin:left top`(從首行 22px 縮到框上緣約 6px,與框高無關)。確切 px 於 Chromium 微調。**不新增任何 box-shadow / reduced-motion 規則**(沿用 Text field)。
 
 - [ ] **Step 2：在 `site.src.html` 元件展示加 Textarea tile**
 
@@ -179,4 +179,7 @@ git commit -m "$(printf '表單家族 A:Textarea 文件同步(AI 規格 + 程式
 
 **2. Placeholder scan:** 無 TBD/TODO;code step 皆完整;指令有 expected。✓
 
-**3. Type/name consistency:** `.lg-field--area`、`data-snippet="textarea"`/`SNIPPETS.textarea`、`.lg-field__input`/`__label`/`__hint`、id `ta-msg`/`ta-note`/`t1` 各處一致;`--area` override 特異度(0,2,0)> base(0,1,0)勝出。✓
+**3. Type/name consistency:** `.lg-field--area`、`data-snippet="textarea"`/`SNIPPETS.textarea`、`.lg-field__input`/`__label`/`__hint`、id `ta-msg`/`ta-note`/`t1` 各處一致;`--area` override 特異度(0,2,0)> base(0,1,0)勝出。
+
+**self-review 修正(已套用):** 原本 `--area` label 用 `align-items:flex-start; padding-top:22px` 加在 base 的 `height:100%` 元素上——`scale(.78)` 會連同整個全高 label 一起縮放,浮動位置依賴框高、且 textarea resize 變高時 label 會漂移。改為 `top:22px; height:auto`(label 僅文字高度),浮動位置與框高無關、resize 不漂移。spec 同步。
+**float 規則複用驗證:** base float 規則只設 `transform`+`color`,不設 `transform-origin`;故各變體保留自己的 origin(input=base `left center`、area=override `left top`),同一條 float 規則對兩者皆正確。`*{box-sizing:border-box}` 全域,textarea `min-height:96px` 含 padding。✓

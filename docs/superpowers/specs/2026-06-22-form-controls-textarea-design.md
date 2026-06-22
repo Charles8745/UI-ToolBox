@@ -27,9 +27,9 @@
 
 ### 與 Text field 的差異(全靠 `.lg-field--area` 修飾,複用其餘)
 
-1. **label 靜止貼頂**:單行 label 垂直置中;textarea 文字從頂部起,故靜止 label 改貼**首行**位置:
-   `.lg-field--area .lg-field__label { align-items: flex-start; padding-top: 22px; transform-origin: left top; }`
-   (上浮 transform **複用** Text field 既有規則 `translateY(-16px) scale(.78)`,搭配 `transform-origin:left top` 從首行縮到框上緣;確切 px 於 Chromium 微調。)
+1. **label 靜止貼頂**:單行 label 垂直置中(`top:0; height:100%`);textarea 文字從頂部起,故靜止 label 改貼**首行**:
+   `.lg-field--area .lg-field__label { top: 22px; height: auto; transform-origin: left top; }`
+   覆寫 base 的 `top:0; height:100%`,讓 label 只有文字高度、定位在首行(22px)。**用 `top` 定位而非在全高元素上加 padding**——否則 `scale(.78)` 會連整個全高元素一起縮、浮動位置依賴框高且隨 resize 漂移。上浮 transform **複用** Text field 既有規則 `translateY(-16px) scale(.78)` + `transform-origin:left top`(從首行 22px 縮到框上緣約 6px,與框高無關);確切 px 於 Chromium 微調。
 2. **多行 + 可垂直 resize**:
    `.lg-field--area .lg-field__input { resize: vertical; min-height: 96px; padding: 22px 0 10px; line-height: 1.45; }`
    `.lg-field__box` 既有 `align-items:stretch` 讓 textarea 撐滿框;resize 時 box 隨之長高、label(絕對定位 top)不動。
