@@ -434,6 +434,19 @@ html.lg-fallback .lg.lg--regular {
 .lg-field--disabled .lg-field__input { cursor: not-allowed; }
 .lg-field__input:read-only { color: var(--lg-text-dim); }
 
+/* Textarea 變體:多行,複用 __box + 浮動標籤;label 貼頂、可垂直 resize、無清除鈕 */
+.lg-field--area .lg-field__input {
+  resize: vertical;
+  min-height: 96px;
+  padding: 22px 0 10px;
+  line-height: 1.45;
+}
+.lg-field--area .lg-field__label {
+  top: 22px;
+  height: auto;
+  transform-origin: left top;
+}
+
 /* ==================================================================== *
  * 8. 開關  .lg-switch(純 CSS,checkbox)
  * ==================================================================== */
@@ -2265,6 +2278,25 @@ window.ART = {
               <div class="lg lg-field__box" data-lg>
                 <input id="tf-dis" class="lg-field__input" type="text" placeholder=" " value="已鎖定" disabled>
                 <label for="tf-dis" class="lg-field__label">停用欄位</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tile lg-static lg t2">
+          <div class="tile__head"><h3>Textarea</h3></div>
+          <div class="tile__stage tile__stage--col" style="align-items:stretch;gap:14px;">
+            <div class="lg-field lg-field--area">
+              <div class="lg lg-field__box" data-lg>
+                <textarea id="ta-msg" class="lg-field__input" placeholder=" " rows="3"></textarea>
+                <label for="ta-msg" class="lg-field__label">訊息內容</label>
+              </div>
+              <span class="lg-field__hint">右下角可拖拉變高</span>
+            </div>
+            <div class="lg-field lg-field--area">
+              <div class="lg lg-field__box" data-lg>
+                <textarea id="ta-note" class="lg-field__input" placeholder=" " rows="2">莫內的睡蓮系列約 250 幅,描繪吉維尼花園的水景與光線。</textarea>
+                <label for="ta-note" class="lg-field__label">備註</label>
               </div>
             </div>
           </div>
