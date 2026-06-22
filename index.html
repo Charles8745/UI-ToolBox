@@ -441,6 +441,9 @@ html.lg-fallback .lg.lg--regular {
   padding: 22px 0 10px;
   line-height: 1.45;
 }
+/* 隱藏原生方形 resizer 抓柄:它落在圓角玻璃框的圓弧角旁、又被 box 內距往內推,
+   位置不協調。仍保留 resize:vertical(底緣可拖、游標仍是 ns-resize) */
+.lg-field--area .lg-field__input::-webkit-resizer { display: none; }
 .lg-field--area .lg-field__label {
   top: 22px;
   height: auto;
