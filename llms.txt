@@ -1,10 +1,11 @@
 # Liquid Glass Kit
 
-> 零依賴液態玻璃 UI 工具包：18 個元件、Snell 定律即時折射、發光背景、慣性拖曳。複製 liquid-glass.css + liquid-glass.js 兩檔即可用，為 AI 協作而生。折射僅 Chromium 完整支援，其他瀏覽器自動降級磨砂。
+> 零依賴液態玻璃 UI 工具包：26 個元件、Snell 定律即時折射、發光背景、慣性拖曳。複製 liquid-glass.css + liquid-glass.js 兩檔即可用，為 AI 協作而生。折射僅 Chromium 完整支援，其他瀏覽器自動降級磨砂。
 
 ## 核心
 
-- [README](README.md): 人類入口；內含「AI 使用規格」全文（元件結構、鐵則、JS API，可直接貼給 AI）
+- [SPEC.md](SPEC.md): 元件規格單一真相（初始化、鐵則、26 件元件結構、屬性、JS API、材質、tokens）——用本 Kit 開發前必讀
+- [README](README.md): 人類入口（展示、快速開始、AI 協作指引）
 - [liquid-glass.css](liquid-glass.css): 工具包樣式
 - [liquid-glass.js](liquid-glass.js): 工具包引擎
 

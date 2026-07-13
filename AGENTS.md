@@ -4,15 +4,15 @@
 
 ## 這是什麼
 
-零依賴液態玻璃 UI 工具包：liquid-glass.css + liquid-glass.js 兩檔即可用，18 個現成元件。
+零依賴液態玻璃 UI 工具包：liquid-glass.css + liquid-glass.js 兩檔即可用，26 個現成元件。
 折射僅 Chromium 完整支援，其他瀏覽器自動降級為磨砂玻璃，版面與互動不變。
 
 ## 開始之前
 
-- 元件規格單一真相：README 的「AI 使用規格」（含一鍵複製全文），先讀再動手。
+- 元件規格單一真相：**SPEC.md**（初始化、鐵則、26 件元件結構、屬性、JS API、材質、tokens），先讀再動手。
 - 深色主題 / 儀表板 / 多模組產品需求：先讀 docs/case-imarine.md
   （實戰 patterns：深色 tokens、頁面節奏、模組色相紀律、背景層與 scrim），
-  其 §5 是可直接接在主規格之後使用的補充規格。
+  其 §5 是可直接接在 SPEC.md 之後使用的補充規格。
 
 ## 鐵則（違反即錯）
 
@@ -31,7 +31,8 @@
 
 ## 文件地圖
 
-- README.md：人類入口 + AI 使用規格全文
+- SPEC.md：元件規格單一真相（先讀這個）
 - docs/case-imarine.md：深色儀表板實戰案例（patterns 層）
+- README.md：人類入口（展示與快速開始）
 - llms.txt：機器可讀索引
 - CLAUDE.md：維護者專用（建置流程與鐵律）
