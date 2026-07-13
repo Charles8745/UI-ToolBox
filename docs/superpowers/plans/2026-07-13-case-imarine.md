@@ -229,13 +229,13 @@ body{
 
 **§2 儀表板頁面節奏（canonical layout：supporting pane 變體）**
 - Why：多頁產品需要每頁一致的縱向節奏，使用者換頁不用重新學版面。
-- 公式五步：eyebrow 標頭 → 標題列（h1 + 技術徽章 + 資料源 chip）→ KPI 統計列 → 主視覺（~62%）+ 右欄卡 → stagger 進場。
+- 公式五步：eyebrow 標頭 → 標題列（h1 + 技術徽章 + 資料源 chip）→ KPI/狀態列（頁面特化）→ 主視覺（~62%）+ 右欄卡 → stagger 進場。其中 eyebrow+標題列（screenHeader）與 stagger 是七頁真·共用；KPI/狀態列與 body 二欄由各頁依內容特化（見下方誠實註記）。
 - 規則：
   - Do 進場 stagger 用 `.anim` + `style="--d:.08s"` 遞增（頁首固定 `--d:0s` 最先進場）；Don't 全頁同時進場。
   - Do KPI 卡守「玻璃容器 + 實心內容」鐵則（數字、sparkline 不透明）；Don't 在內容上再蓋玻璃。
   - Do 小型/大量重複元件用 `lg-static`；Don't 每列都掛折射。
   - Do 資料源如實顯示（live 綠 chip / mock 灰 chip）；Don't 假裝 live。
-- 可複製代碼（頁面 HTML 骨架，自 iMarine 統一頁首元件 `screenHeader()` 輸出與 `.stats4`/`.cols` 格線簡化）：
+- 可複製代碼（頁面 HTML 骨架）：`<header>` 區塊為 iMarine `screenHeader()` 的**實際輸出**（七頁共用，逐字忠實）；`.stats4`/`.cols`/`.stack` 為 tokens.css 提供的**版面基元**（值真實、可直接套用）：
 
 ```html
 <header class="anim" style="--d:0s">
@@ -278,7 +278,8 @@ body{
 ```
 
 （`1.55fr/1fr` 即主視覺 ~62%——supporting pane 的比例。）
-- Anatomy 圖：`![頁面節奏 anatomy](case-imarine/rhythm-anatomy.webp)`，圖說註明實拍頁面（Task 1 Step 2 的探測結果）。
+- **誠實註記（撰稿者務必寫進文件，Task 1 實作查證）**：`.stats4`/`.cols` 是 tokens.css 的版面基元、值真實可直接用，但目前各功能頁多半**特化自己的 body 版面**——carbon 用 4-up `.stats` KPI grid、dispatch 用 62:38 `.dcols` supporting pane、policy 用 `.pcols`。七頁真正共用的是「頁首 `screenHeader()` + `.anim` stagger + supporting pane 的**概念**」，不是逐字同名的 body class。文件請以此框架敘述（把 `.stats4`/`.cols` 定位為「設計層提供、頁面可套用或特化的基元」），**勿宣稱每頁都用 `.stats4`/`.cols`**。
+- Anatomy 圖：`![頁面節奏 anatomy（dispatch 頁）](case-imarine/rhythm-anatomy.webp)`，圖說寫明實拍頁 = **dispatch**；並註明此頁第 3 區塊（`.hero`）是「狀態彙總列（天候/結論時間軸/模型倒數環）」而非四張同構 KPI 卡（4-up KPI 的實例在 carbon 的 `.stats`），第 4/5 區塊是 `.dcols` 的 62:38 二欄。
 
 **§3 模組輔助色相系統（foundations：多模組識別色紀律）**
 - Why：多模組產品需要識別色，但玻璃介面大面積上彩會毀掉材質感。
