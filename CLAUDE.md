@@ -93,6 +93,12 @@ function reviveGlass(root = document) {
 
 ---
 
+## 實戰案例(patterns 層)
+
+深色主題、儀表板、多模組介面的需求,先讀 `docs/case-imarine.md`(iMarine 案例:深色 tokens、頁面節奏、模組色相紀律、背景層與 scrim),再動手拼版面。其 §5 是可接在 AI 規格書之後使用的補充規格。
+
+---
+
 ## AI 規格書(元件結構與 API 速查)
 
 下面這份規格也呈現在展示站「AI 整合」分頁,是照工具包開發的核心參考:

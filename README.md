@@ -24,6 +24,12 @@
 
 ![深色主題](docs/dark-theme.webp)
 
+**實戰案例 — 永續智能航港生態系(iMarine)** — 9 個 screen 的深色儀表板全站,從封面到六大功能頁全部用 Kit 的 class 拼出,零自訂玻璃 CSS:
+
+![iMarine 戰情總覽](docs/case-imarine/hero-overview.webp)
+
+> 深色 tokens、頁面節奏、模組識別色紀律、背景層與 scrim 的完整拆解,以及一份可直接貼給 AI 的「深色儀表板補充規格」,見 **[docs/case-imarine.md](docs/case-imarine.md)**。
+
 ---
 
 ## 🤖 讓 AI 用這套工具開發
