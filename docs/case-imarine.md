@@ -194,3 +194,51 @@ body[data-bg="on"][data-mode="doc"] #backdrop-scrim{background:linear-gradient(1
 ![影片背景 + 輕 scrim（hero 封面）](case-imarine/hero-cover.webp)
 ![背景亮：空間態（twin）](case-imarine/twin-spatial.webp)
 ![scrim 壓暗：文件態（carbon）](case-imarine/carbon-doc.webp)
+
+---
+
+## §5 貼給 AI 的補充規格
+
+以下純文字接在 README「AI 使用規格」主規格之後貼給 AI 使用；與主規格衝突時以主規格為準。
+
+```text
+# Liquid Glass Kit — 深色儀表板補充規格（接在主規格之後）
+來源：iMarine 實戰案例（docs/case-imarine.md）。
+
+## 深色 tokens（:root 覆寫 + <html data-lg-theme="dark">）
+:root{ --lg-accent:#35E0A6; --bg:#070b11;
+  --gold:#E9BC63; --cyan:#38BDF8; --amber:#F5A54A; --rose:#F0648C; --flame:#FF7A59;
+  --ink-90:rgba(255,255,255,.92); --ink-60:rgba(255,255,255,.62);
+  --ink-50:rgba(255,255,255,.5); --ink-40:rgba(255,255,255,.4);
+  --hair:rgba(255,255,255,.1); --ease:cubic-bezier(.22,1,.36,1); }
+body{background:var(--bg);color:var(--ink-90);
+  font-family:"Inter","Noto Sans TC",system-ui,sans-serif;}
+規則：文字只用 ink 四階；分隔線只用 --hair；緩動只用 --ease；數據與小標用 monospace。
+
+## 頁面節奏（由上而下，每頁一致）
+1 eyebrow（模組色圓點 + mono 小標）→ 2 標題列（h1 + lg-chip 技術徽章 + 資料源 chip）
+→ 3 KPI 統計列（lg-stat ×4）→ 4 主視覺(~62%) + 右欄卡（grid 1.55fr/1fr）
+→ 5 stagger 進場（.anim + style="--d:.08s" 遞增，頁首 --d:0s）。
+儀表鐵則：玻璃只做容器，數字/圖表/sparkline 為實心內容層。
+資料源 chip 如實顯示：live 綠 / mock 灰。
+
+## 模組識別色（多模組產品）
+每模組一色相，只准出現在三個位置：導覽 active 態、eyebrow 圓點、徽章。
+Don't：拿色相當卡片底色或大面積填色。主行動色永遠 --lg-accent。
+機制：元件樣式吃 var(--mc)，換模組只換 style="--mc:#..."，零樣式分支。
+範例盤：金 #E9BC63 青 #38BDF8 藍 #7FB4FF 琥珀 #F5A54A 玫紅 #F0648C 橘紅 #FF7A59 紫 #B48CFF
+
+## 背景與 scrim（玻璃的舞台）
+頁面必須有多彩/動態背景；內容層之下依序：背景（圖/影片/canvas）→ scrim 漸層 → 內容。
+影片退為氛圍：opacity:.8 + filter:brightness(.75)。
+scrim 同色系漸層 rgba(7,11,17,x)，依頁型三態：封面輕(.5) / 空間頁略暗(.72) / 文件頁重(.86)。
+reduced-motion：影片換 poster 靜態幀。
+```
+
+---
+
+## §6 變更紀錄
+
+| 日期 | iMarine commit | 摘要 |
+| --- | --- | --- |
+| 2026-07-13 | `89b8d4a` | 初版：自 tokens.css 抽取四組 pattern + 6 張截圖 |
