@@ -57,7 +57,7 @@ Kit 銜接：在根元素設 `document.documentElement.setAttribute('data-lg-the
 **When to use**：需要多個功能頁共存、彼此要有一致操作直覺的儀表板類產品。
 **When NOT**：單頁 marketing / 著陸頁，或內容本身不適合「主視覺 + 右欄卡」二欄配置的場合（例如純表單流程）。
 
-公式五步：eyebrow 標頭 → 標題列（h1 + 技術徽章 + 資料源 chip）→ KPI／狀態列（頁面特化）→ 主視覺（~62%）＋ 右欄卡 → stagger 進場。其中 eyebrow + 標題列（`screenHeader()`）與 `.anim` stagger 是 iMarine 七個功能頁**真．共用**的部分；KPI／狀態列與 body 二欄則由各頁依內容特化（見下方誠實註記）。
+公式五步：eyebrow 標頭 → 標題列（h1 + 技術徽章 + 資料源 chip）→ KPI／狀態列（頁面特化）→ 主視覺（~62%）＋ 右欄卡 → stagger 進場。其中 eyebrow + 標題列（`screenHeader()`）是六個功能頁（carbon / policy / dispatch / epidemic / alert / agent）＋設定頁共用的頁首骨架，**twin 為全幅 WebGL 頁、自訂 chrome，是唯一例外**；`.anim` stagger 進場則為多數頁採用（alert / epidemic 未用）。KPI／狀態列與 body 二欄則由各頁依內容特化（見下方誠實註記）。
 
 規則（Do / Don't）：
 
@@ -66,7 +66,7 @@ Kit 銜接：在根元素設 `document.documentElement.setAttribute('data-lg-the
 - Do 小型／大量重複元件用 `lg-static`；Don't 每一列都掛即時折射運算。
 - Do 資料源如實顯示（live 用綠 chip、mock 用灰 chip）；Don't 假裝 live。
 
-可複製代碼（頁面 HTML 骨架）——`<header>` 區塊是 iMarine `screenHeader()` 的**實際輸出**（七頁共用，逐字忠實照抄）；`.stats4` / `.cols` / `.stack` 是 tokens.css 提供的**版面基元**（值真實、可直接套用）：
+可複製代碼（頁面 HTML 骨架）——`<header>` 區塊是 iMarine `screenHeader()` 的**實際輸出**（六功能頁＋設定頁共用、twin 除外，markup 結構忠實照抄）；`.stats4` / `.cols` / `.stack` 是 tokens.css 提供的**版面基元**（值真實、可直接套用）：
 
 ```html
 <header class="anim" style="--d:0s">
@@ -110,7 +110,7 @@ Kit 銜接：在根元素設 `document.documentElement.setAttribute('data-lg-the
 
 （`1.55fr 1fr` 即主視覺 ~62%——supporting pane 的比例。）
 
-**誠實註記**：`.stats4` / `.cols` 是 tokens.css 提供的版面基元、值真實可直接套用，但目前 iMarine 各功能頁多半**特化自己的 body 版面**，不是逐字同名套用同一組 class：carbon 用 4-up 的 `.stats` KPI grid、dispatch 用 62:38 的 `.dcols` supporting pane、policy 用 `.pcols`。七頁真正共用的是「頁首 `screenHeader()` ＋ `.anim` stagger ＋ supporting pane 的**概念**」，不是逐字同名的 body class。把 `.stats4` / `.cols` 當成設計層提供、頁面可以直接套用、也可以照自己內容特化的基元來用；不要宣稱每一頁都逐字用了 `.stats4` / `.cols`。
+**誠實註記**：`.stats4` / `.cols` 是 tokens.css 提供的版面基元、值真實可直接套用，但目前 iMarine 各功能頁多半**特化自己的 body 版面**，不是逐字同名套用同一組 class：carbon 用 4-up 的 `.stats` KPI grid、dispatch 用 62:38 的 `.dcols` supporting pane、policy 用 `.pcols`。真正跨頁共用的是「頁首 `screenHeader()`（twin 除外）＋ stagger 進場 ＋ supporting pane 的**概念**」，不是逐字同名的 body class。把 `.stats4` / `.cols` 當成設計層提供、頁面可以直接套用、也可以照自己內容特化的基元來用；不要宣稱每一頁都逐字用了 `.stats4` / `.cols`。
 
 Anatomy 標註圖（實拍頁 = **dispatch**）：
 
@@ -168,7 +168,7 @@ Anatomy 標註圖：
 
 分層結構（z-index 由下而上）：`#harbor` 點雲 canvas → `.glowfx` 光暈 → `#veil` 暗罩 → `#backdrop` 影片 → `#backdrop-scrim` → 內容層。全站共用單一 `<video>`，換頁只換 `src`，不重新掛載元素。
 
-兩態：空間型頁（hero / twin）背景亮、文件型頁（表格 / 長文）scrim 壓暗，由 `body[data-mode]` 驅動、純 CSS 切態，不用 JS 算透明度。
+兩類頁型：空間型頁（hero / twin）背景亮、文件型頁（表格 / 長文）scrim 壓暗；實作上由 `body[data-mode]` 驅動出 cover / ov / doc **三段** scrim 強度（見下方代碼），純 CSS 切態、不用 JS 算透明度。
 
 規則（Do / Don't）：
 
