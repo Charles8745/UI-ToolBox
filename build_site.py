@@ -9,6 +9,11 @@ js = open(f'{KIT}/liquid-glass.js', encoding='utf-8').read()
 tpl = open(f'{KIT}/site.src.html', encoding='utf-8').read()
 icons = json.load(open(f'{KIT}/assets/icons.json', encoding='utf-8'))
 
+spec_path = f'{KIT}/SPEC.md'
+if not os.path.exists(spec_path):
+    print('缺少 SPEC.md(元件規格單一真相,build 需注入展示站)'); sys.exit(1)
+spec = open(spec_path, encoding='utf-8').read()
+
 def durl(path):
     return 'data:image/jpeg;base64,' + base64.b64encode(open(path, 'rb').read()).decode()
 
@@ -18,13 +23,17 @@ symbols = ''.join(
 )
 sprite = f'<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">{symbols}</svg>'
 
-refs = set(re.findall(r'#ph-([a-z0-9-]+)', tpl))
+refs = set(re.findall(r'#ph-([a-z0-9-]+)', tpl)) | set(re.findall(r'#ph-([a-z0-9-]+)', spec))
 missing = sorted(r for r in refs if r not in icons)
 if missing:
     print('缺少圖示:', missing); sys.exit(1)
 print(f'圖示引用 {len(refs)} 種,全部存在')
 
+if '{{AI_SPEC}}' not in tpl:
+    print('site.src.html 缺少 {{AI_SPEC}} 佔位符'); sys.exit(1)
+
 out = (tpl
+       .replace('{{AI_SPEC}}', json.dumps(spec, ensure_ascii=False).replace('</', '<\\/'))
        .replace('{{CSS}}', css)
        .replace('{{JS}}', js)
        .replace('{{ICON_SPRITE}}', sprite)

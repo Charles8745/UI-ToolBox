@@ -2025,56 +2025,7 @@ var SNIPPETS = {
 };
 
 /* ---------- AI 規格書 ---------- */
-var SPEC = [
-  '# Liquid Glass Kit — AI 使用規格',
-  '零依賴液態玻璃 UI 工具包(透明玻璃、即時折射、發光背景、拖曳)。',
-  '專案內已有兩個檔案:liquid-glass.css、liquid-glass.js。',
-  '',
-  '## 初始化(每頁一次)',
-  '<link rel="stylesheet" href="liquid-glass.css">',
-  '<script src="liquid-glass.js"><\/script>',
-  '<script>LiquidGlass.init();<\/script>',
-  '',
-  '## 鐵則',
-  '1. 玻璃只用於浮在內容之上的控制層(導航、卡片、面板、對話框、dock);文章、圖片等內容本身不上玻璃。',
-  '2. 折射玻璃 = class="lg" + data-lg;小型或大量重複的元件(列表項、標籤)改用 class="lg lg-static"(磨砂、無折射、便宜)。',
-  '3. 頁面必須有圖像或多彩背景,玻璃效果才看得見。',
-  '4. 不要手寫 backdrop-filter 或自製玻璃 CSS,一律使用工具包的 class 與 API。',
-  '5. 動態插入的節點呼叫 LiquidGlass.attach(el);非 Chromium 瀏覽器會自動降級為磨砂,無需處理。',
-  '6. 儀表元件(統計卡/進度條/環形儀表/圖表)= 玻璃容器 + 實心內容層:數字、走勢圖、圖表本身不透明,只有外框是玻璃——內容上玻璃會看不見,這是技術上必要的邊界。',
-  '',
-  '## 元件結構',
-  '按鈕:<button class="lg lg-btn" data-lg>文字</button>(修飾:lg-btn--pill / --accent / --icon / --lg / --sm)',
-  '卡片:<div class="lg lg-card" data-lg><h4 class="lg-card__title">…</h4><p class="lg-card__meta">…</p></div>',
-  '導航:<nav class="lg lg-navbar" data-lg><span class="lg-navbar__brand">…</span><span class="lg-navbar__spacer"></span><button class="lg-navbar__link is-active">…</button></nav>',
-  '搜尋:<div class="lg lg-search" data-lg><svg>…</svg><input type="search"><kbd>⌘K</kbd></div>',
-  '開關:<label class="lg-switch"><input type="checkbox"><span class="lg-switch__track"><span class="lg-switch__thumb"></span></span>標籤</label>',
-  '滑桿:<div class="lg lg-slider" data-lg><input class="lg-slider__input" type="range"></div>',
-  '分頁:<div class="lg lg-tabs" data-lg role="tablist"><span class="lg-tabs__pill"></span><button class="lg-tabs__tab is-active" role="tab">…</button>…</div>',
-  '對話框:<div class="lg-modal" id="m1"><div class="lg-modal__overlay" data-lg-close></div><div class="lg-modal__panel lg" data-lg role="dialog">…</div></div>;以 <button data-lg-open="#m1"> 開啟、data-lg-close 關閉。',
-  'Dock:<div class="lg lg-dock" data-lg><button class="lg-dock__item">icon</button>…</div>(自帶鄰近放大)',
-  '標籤:<span class="lg-chip">…</span>;徽章:<span class="lg-badge">3</span>',
-  '工具提示:任何元素加 data-lg-tip="文字"',
-  '拖曳:元素加 data-lg-drag="viewport|parent"(可選 data-lg-drag-handle=".selector"),或 LiquidGlass.draggable(el, { bounds, inertia })',
-  '統計卡:<div class="lg lg-stat" data-lg><span class="lg-stat__label">標籤</span><div class="lg-stat__row"><span class="lg-stat__value" data-lg-value="48250" data-lg-prefix="$"></span><span class="lg-stat__delta"><svg><use href="#ph-trend-up"/></svg>12.4%</span></div><svg class="lg-stat__spark" data-lg-spark="28,31,30,36,40,44"></svg></div>(漲綠跌紅:徽章加 lg-stat__delta--down)',
-  '進度條:<div class="lg-meter" data-lg-value="68"></div>(本身非玻璃:凹槽軌道 + 實心液體填充,前緣有彎月鼓頭)',
-  '環形儀表:<div class="lg lg-gauge" data-lg data-lg-press data-lg-profile="circle" data-lg-value="74" data-lg-unit="%" data-lg-label="Goal"></div>',
-  '圖表:<div class="lg lg-chart" data-lg><div class="lg-chart__head"><h4 class="lg-chart__title">標題</h4></div><svg class="lg-chart__svg" data-lg-chart="line" data-lg-points="1240,1390,1180,1620" data-lg-labels="Mon,Tue,Wed,Thu"></svg></div>(data-lg-chart 可為 line 或 bar;手刻 SVG、零依賴、hover 顯數值)',
-  '通知:LiquidGlass.toast({ title, message, icon, duration })(JS 呼叫;右下堆疊、自動消退、最多 4 則)',
-  '發光背景:<div class="lg-glow" style="--lg-glow-base:#7d92ad;"><div class="lg-glow__image" style="--lg-bg-image:url(bg.jpg);"></div></div>',
-  '',
-  '## 屬性(單一元素覆寫)',
-  'data-lg-refraction(折射倍率,預設 1.25)、data-lg-chromatic(色散 0–1)、data-lg-blur、data-lg-saturate、data-lg-bezel(斜面 px)、data-lg-thickness(厚度 px)、data-lg-profile(squircle|circle|lip)',
-  'data-lg-shrink(navbar / tabs:往下捲先縮小、再隱藏(滑出上緣);往上捲現身、回頂展開;監聽 window 捲動,reduced-motion 定展開態)',
-  '儀表資料(屬性驅動):data-lg-value(統計卡/進度條/環形儀表的目標值)、data-lg-spark(統計卡走勢逗號數列)、data-lg-points + data-lg-labels(圖表資料)、data-lg-prefix / -suffix / -decimals(數字格式)。改變 data-lg-value / -spark / -points 即觸發彈簧動畫(單一 MutationObserver 自動接手,無需手動呼叫)。',
-  '',
-  '## JS API',
-  'LiquidGlass.init(config?) / attach(el, opts?) / draggable(el, opts?) / refresh() / toast({ title, message, icon, duration }) / config / supported / reducedMotion',
-  '',
-  '## Tokens(:root 覆寫)',
-  '--lg-accent(品牌色,預設 #cf6045)、--lg-tint、--lg-text、--lg-radius-s/m/l/pill、--lg-blur-fallback、--lg-font',
-  '主題:<html data-lg-theme="dark">,不設則跟隨系統。'
-].join('\n');
+var SPEC = {{AI_SPEC}};
 
 document.getElementById('specCode').textContent = SPEC;
 
