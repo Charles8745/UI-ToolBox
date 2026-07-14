@@ -13,9 +13,9 @@ ffmpeg -y -i "$OUT/wave.mp4" -filter_complex \
   "[0:v]split[a][b];[a]trim=0:9,setpts=PTS-STARTPTS[a1];[b]trim=9:10,setpts=PTS-STARTPTS[b1];[b1][a1]xfade=transition=fade:duration=1:offset=0[v]" \
   -map "[v]" -an -c:v libx264 -crf 28 -preset slow -pix_fmt yuv420p "$OUT/wave-loop.mp4"
 
-# 2) GIF：12fps、寬 960、diff palette + bayer 抖色壓 banding
+# 2) GIF：8fps、寬 640、diff palette + bayer 抖色壓 banding（備援用，主用為 mp4）
 ffmpeg -y -i "$OUT/wave-loop.mp4" -vf \
-  "fps=12,scale=960:-1:flags=lanczos,split[s0][s1];[s0]palettegen=stats_mode=diff[p];[s1][p]paletteuse=dither=bayer:bayer_scale=4" \
+  "fps=8,scale=640:-1:flags=lanczos,split[s0][s1];[s0]palettegen=stats_mode=diff[p];[s1][p]paletteuse=dither=bayer:bayer_scale=4" \
   -loop 0 "$OUT/wave-loop.gif"
 
 # 3) 靜態首幀：第 0 秒幀放大至 1920x1080
