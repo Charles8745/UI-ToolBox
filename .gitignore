@@ -11,3 +11,9 @@ UI_Pompt範例/
 HANDOFF.md
 .superpowers/        # SDD 執行 ledger / task brief / report(本機 scratch)
 .playwright-mcp/     # chrome-devtools / playwright 瀏覽器暫存
+
+# presentation/ 子專案
+presentation/node_modules/
+presentation/dist/
+presentation/assets/media/wave.mp4
+presentation/**/__pycache__/

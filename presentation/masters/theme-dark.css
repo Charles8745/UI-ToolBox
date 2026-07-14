@@ -1,0 +1,17 @@
+/* 深色主題 tokens —— 與 ../tokens.json 同步，改值兩邊都要改（tests/test_tokens.py 把關） */
+:root {
+  --bg: #070B11;
+  --surface: #0D1520;
+  --text: #F5F7FA;
+  --text-dim: #9FB0C0;
+  --hairline: rgba(255, 255, 255, .10);
+  --accent1: #35E0A6;
+  --accent2: #38BDF8;
+  --accent3: #E9BC63;
+  --accent4: #F0648C;
+  --accent5: #7FB4FF;
+  --accent6: #F5A54A;
+  --font-latin: 'Inter';
+  --font-ea: 'Noto Sans TC';
+  --font-mono: 'Geist Mono';
+}
