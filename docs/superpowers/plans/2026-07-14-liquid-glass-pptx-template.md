@@ -166,7 +166,8 @@ cd /Users/charles88/Desktop/UI-ToolBox && git add presentation/ .gitignore && gi
 # 背景影片處理：來源唯讀，複製副本後產出 mp4 loop / gif loop / 靜態首幀
 set -euo pipefail
 cd "$(dirname "$0")"
-SRC="../../iMarine-Carbon-Tokenization-POC/BG_Video/wave.mp4"
+# 來源影片（唯讀）在競賽工作區，非 UI-ToolBox 兄弟目錄；可用 WAVE_SRC 覆寫絕對路徑
+SRC="${WAVE_SRC:-../../2026航港大數據創意應用競賽/iMarine-Carbon-Tokenization-POC/BG_Video/wave.mp4}"
 OUT="assets/media"
 mkdir -p "$OUT"
 [ -f "$OUT/wave.mp4" ] || cp "$SRC" "$OUT/wave.mp4"
