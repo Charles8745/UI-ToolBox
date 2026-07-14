@@ -14,3 +14,8 @@ def test_css_tokens_match_json():
         assert m, f"theme-dark.css 缺 --{css_var}"
         assert m.group(1).upper() == tokens[key].upper(), f"--{css_var} 與 tokens.json 不一致"
     assert f'--hairline: rgba(255, 255, 255, .{tokens["hairlineAlpha"]:02d})' in css
+    fonts = {"fontLatin": "font-latin", "fontEastAsian": "font-ea", "fontMono": "font-mono"}
+    for key, css_var in fonts.items():
+        m = re.search(rf"--{css_var}:\s*'([^']+)'", css)
+        assert m, f"theme-dark.css 缺 --{css_var}"
+        assert m.group(1) == tokens[key], f"--{css_var} 與 tokens.json 不一致"
