@@ -1,0 +1,40 @@
+/* 簡報畫布與排版 primitives —— 玻璃一律用 Kit class，此檔不寫任何 backdrop-filter */
+html, body { margin: 0; background: #000; }
+.slide {
+  position: relative; width: 1920px; height: 1080px; overflow: hidden;
+  background: var(--bg); color: var(--text);
+  font-family: var(--font-latin), var(--font-ea), sans-serif;
+}
+.bg-layer { position: absolute; inset: 0; }
+.glow { position: absolute; border-radius: 50%; filter: blur(140px); }
+.wave {
+  position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 40%;
+  object-fit: cover; opacity: .5;
+  -webkit-mask-image: linear-gradient(to top, #000 55%, transparent);
+  mask-image: linear-gradient(to top, #000 55%, transparent);
+}
+.content { position: absolute; inset: 0; padding: 56px 96px; box-sizing: border-box; }
+.eyebrow {
+  font-size: 22px; font-weight: 600; letter-spacing: .32em;
+  text-transform: uppercase; color: var(--accent1);
+}
+.eyebrow .dot { display: inline-block; width: 12px; height: 12px; border-radius: 50%;
+  background: var(--accent1); margin-right: 14px; vertical-align: 1px; }
+.title { font-size: 64px; font-weight: 700; line-height: 1.15; margin: 12px 0 0; }
+.title-rule { width: 96px; height: 5px; background: var(--accent1); border-radius: 3px; margin-top: 20px; }
+.subtitle { font-size: 30px; color: var(--text-dim); font-weight: 400; }
+.kpi-num { font-family: var(--font-mono), monospace; font-size: 56px; font-weight: 600; color: var(--accent1); }
+.kpi-label { font-size: 22px; color: var(--text-dim); margin-top: 6px; }
+.note-bar { display: flex; align-items: center; gap: 20px; padding: 22px 28px; border-radius: 16px; }
+.note-bar .tag { color: var(--accent1); font-weight: 700; font-size: 24px; white-space: nowrap; }
+.note-bar .txt { font-size: 24px; color: var(--text); }
+.footer {
+  position: absolute; left: 96px; right: 96px; bottom: 28px;
+  display: flex; justify-content: space-between;
+  font-size: 18px; color: var(--text-dim);
+}
+.card-pad { padding: 32px; box-sizing: border-box; border-radius: 20px; }
+.row { display: flex; gap: 24px; }
+.col { display: flex; flex-direction: column; gap: 24px; }
+/* .ppt-text：烘 chrome 時由 bake.mjs 隱藏（文字改由 PPT 文字框承載），平時可見供對位 */
+.ppt-text {}
