@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="zh-Hant" data-lg-theme="dark">
+<head>
+<meta charset="utf-8">
+<title>cover</title>
+<link rel="stylesheet" href="../../liquid-glass.css">
+<link rel="stylesheet" href="theme-dark.css">
+<link rel="stylesheet" href="deck.css">
+</head>
+<body>
+<div class="slide">
+  <div class="bg-layer">
+    <div class="glow" style="left:-200px; top:-300px; width:1100px; height:800px; background:#12354a; opacity:.6"></div>
+    <div class="glow" style="right:-300px; bottom:-200px; width:1000px; height:760px; background:#0d3b31; opacity:.5"></div>
+    <img class="wave" src="../assets/media/wave-frame.png" alt="" style="height:52%; opacity:.65">
+  </div>
+  <!-- 玻璃主面板（chrome）：文字由 PPT 承載 -->
+  <div class="lg lg-card" data-lg style="position:absolute; left:120px; top:300px; width:1160px; height:520px; border-radius:28px;"></div>
+  <div class="ppt-text" style="position:absolute; left:180px; top:380px; width:1040px;">
+    <div style="font-size:76px; font-weight:700; line-height:1.2;">簡報主標題佔位<br>兩行示意</div>
+  </div>
+  <div class="ppt-text subtitle" style="position:absolute; left:180px; top:610px; width:1000px;">副標題佔位 · 一行說明</div>
+  <div class="title-rule" style="position:absolute; left:180px; top:676px;"></div>
+  <div class="ppt-text" style="position:absolute; left:180px; top:716px; width:1000px; font-size:24px; color:var(--text-dim);">作者 / 團隊名稱佔位</div>
+  <script src="../../liquid-glass.js"></script>
+  <script>LiquidGlass.init();</script>
+</div>
+</body>
+</html>

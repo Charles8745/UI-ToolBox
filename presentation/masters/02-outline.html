@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="zh-Hant" data-lg-theme="dark">
+<head>
+<meta charset="utf-8">
+<title>outline</title>
+<link rel="stylesheet" href="../../liquid-glass.css">
+<link rel="stylesheet" href="theme-dark.css">
+<link rel="stylesheet" href="deck.css">
+<style>
+  .ocard { position: absolute; width: 544px; height: 300px; border-radius: 20px; }
+  .obar { position: absolute; width: 8px; height: 240px; border-radius: 4px; top: 30px; }
+</style>
+</head>
+<body>
+<div class="slide">
+  <div class="bg-layer">
+    <div class="glow" style="left:-200px; top:-260px; width:900px; height:700px; background:#12354a; opacity:.55"></div>
+    <div class="glow" style="right:-260px; top:120px; width:800px; height:640px; background:#0d3b31; opacity:.45"></div>
+    <img class="wave" src="../assets/media/wave-frame.png" alt="">
+  </div>
+  <div class="ppt-text" style="position:absolute; left:0; top:70px; width:1920px; text-align:center; font-size:52px; font-weight:700; letter-spacing:.28em;">OUTLINE</div>
+  <div style="position:absolute; left:912px; top:150px; width:96px; height:5px; background:var(--accent1); border-radius:3px;"></div>
+  <!-- 2x3 卡陣：左上角 (96,220) 起，x 間距 592、y 間距 340 -->
+  <div class="lg lg-static ocard" style="left:96px;  top:220px;"><div class="obar" style="left:0; background:var(--accent1)"></div></div>
+  <div class="lg lg-static ocard" style="left:688px; top:220px;"><div class="obar" style="left:0; background:var(--accent2)"></div></div>
+  <div class="lg lg-static ocard" style="left:1280px;top:220px;"><div class="obar" style="left:0; background:var(--accent3)"></div></div>
+  <div class="lg lg-static ocard" style="left:96px;  top:560px;"><div class="obar" style="left:0; background:var(--accent4)"></div></div>
+  <div class="lg lg-static ocard" style="left:688px; top:560px;"><div class="obar" style="left:0; background:var(--accent5)"></div></div>
+  <div class="lg lg-static ocard" style="left:1280px;top:560px;"><div class="obar" style="left:0; background:var(--accent6)"></div></div>
+  <!-- 卡內文字全為 ppt-text（示意一張，其餘由 PPT 範例頁複製） -->
+  <div class="ppt-text" style="position:absolute; left:132px; top:250px; width:470px;">
+    <div style="font-size:20px; letter-spacing:.3em; color:var(--accent1); font-weight:600;">SECTION 01</div>
+    <div style="font-size:36px; font-weight:700; margin-top:10px;">章節標題佔位</div>
+    <div style="font-size:22px; color:var(--text-dim); margin-top:14px;">一行章節描述佔位文字</div>
+  </div>
+  <script src="../../liquid-glass.js"></script>
+  <script>LiquidGlass.init();</script>
+</div>
+</body>
+</html>
