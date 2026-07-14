@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-Hant" data-lg-theme="dark">
+<head>
+<meta charset="utf-8">
+<title>content</title>
+<link rel="stylesheet" href="../../liquid-glass.css">
+<link rel="stylesheet" href="theme-dark.css">
+<link rel="stylesheet" href="deck.css">
+</head>
+<body>
+<div class="slide">
+  <div class="bg-layer">
+    <div class="glow" style="left:-200px; top:-260px; width:900px; height:700px; background:#12354a; opacity:.55"></div>
+    <div class="glow" style="right:-260px; top:120px; width:800px; height:640px; background:#0d3b31; opacity:.45"></div>
+    <img class="wave" src="../assets/media/wave-frame.png" alt="">
+  </div>
+  <div class="content">
+    <div class="eyebrow"><span class="dot"></span>01 / SECTION 佔位</div>
+    <div class="title">標準內容頁標題佔位</div>
+    <div class="title-rule"></div>
+  </div>
+  <!-- 左欄三張列表卡 (96,300) w 980，各 h 180、間距 24 -->
+  <div class="lg lg-static card-pad" style="position:absolute; left:96px; top:300px; width:980px; height:180px;">
+    <div style="font-size:30px; font-weight:700;">列表項標題佔位</div>
+    <div style="font-size:24px; color:var(--text-dim); margin-top:10px;">兩行說明文字佔位，敘述此列表項的重點內容。</div>
+  </div>
+  <div class="lg lg-static card-pad" style="position:absolute; left:96px; top:504px; width:980px; height:180px;"></div>
+  <div class="lg lg-static card-pad" style="position:absolute; left:96px; top:708px; width:980px; height:180px;"></div>
+  <!-- 右主視覺框 (1120,300) 704x588：實心內容層（圖表/圖片不上玻璃） -->
+  <div style="position:absolute; left:1120px; top:300px; width:704px; height:588px; border:1px solid var(--hairline); border-radius:20px; background:var(--surface); display:flex; align-items:center; justify-content:center; color:var(--text-dim); font-size:26px;">主視覺（圖片 placeholder）</div>
+  <div class="footer"><span>簡報名稱佔位</span><span>04 / 19</span></div>
+  <script src="../../liquid-glass.js"></script>
+  <script>LiquidGlass.init();</script>
+</div>
+</body>
+</html>

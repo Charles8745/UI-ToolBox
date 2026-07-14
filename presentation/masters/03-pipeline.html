@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="zh-Hant" data-lg-theme="dark">
+<head>
+<meta charset="utf-8">
+<title>pipeline</title>
+<link rel="stylesheet" href="../../liquid-glass.css">
+<link rel="stylesheet" href="theme-dark.css">
+<link rel="stylesheet" href="deck.css">
+</head>
+<body>
+<div class="slide">
+  <div class="bg-layer">
+    <div class="glow" style="left:-200px; top:-260px; width:900px; height:700px; background:#12354a; opacity:.55"></div>
+    <div class="glow" style="right:-260px; top:120px; width:800px; height:640px; background:#0d3b31; opacity:.45"></div>
+    <img class="wave" src="../assets/media/wave-frame.png" alt="">
+  </div>
+  <div class="content">
+    <div class="eyebrow"><span class="dot"></span>OVERVIEW / 章節佔位</div>
+    <div class="title">流程 Pipeline 標題佔位</div>
+    <div class="title-rule"></div>
+  </div>
+  <!-- 五張步驟卡：x = 96 + i*356，w 320、y 300、h 480 -->
+  <div class="lg lg-static card-pad" style="position:absolute; left:96px;   top:300px; width:320px; height:480px;"></div>
+  <div class="lg lg-static card-pad" style="position:absolute; left:452px;  top:300px; width:320px; height:480px;"></div>
+  <div class="lg lg-static card-pad" style="position:absolute; left:808px;  top:300px; width:320px; height:480px;"></div>
+  <div class="lg lg-static card-pad" style="position:absolute; left:1164px; top:300px; width:320px; height:480px;"></div>
+  <div class="lg lg-static card-pad" style="position:absolute; left:1520px; top:300px; width:320px; height:480px;"></div>
+  <div style="position:absolute; left:96px; top:530px; width:1744px; text-align:center; color:var(--accent1); font-size:34px;">→ 箭頭以 PPT 原生形狀重現 →</div>
+  <div class="lg lg-static note-bar" style="position:absolute; left:96px; top:860px; width:1728px;">
+    <span class="tag">下一步</span><span class="txt">note bar 說明文字佔位，一行結論或補充。</span>
+  </div>
+  <div class="footer"><span>簡報名稱佔位</span><span>03 / 19</span></div>
+  <script src="../../liquid-glass.js"></script>
+  <script>LiquidGlass.init();</script>
+</div>
+</body>
+</html>
